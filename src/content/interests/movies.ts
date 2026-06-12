@@ -71,4 +71,6 @@ export const books: Book[] = [
   { title: "Geostorm", author: "", status: "finished", date: "0000" },
   { title: "Avatar", author: "", status: "finished", date: "0000" },
   { title: "2001: A Space Odyssey", author: "", status: "finished", date: "2025" },
+  { title: "Backrooms", author: "", status: "finished", date: "2026" },
+  { title: "Iron Lung", author: "", status: "finished", date: "2026" },
 ];
