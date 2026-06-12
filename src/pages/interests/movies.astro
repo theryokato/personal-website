@@ -1,0 +1,16 @@
+---
+import Base from '../../layouts/Base.astro';
+import BookList from '../../components/List.astro';
+import { books } from '../../content/interests/movies';
+---
+
+<Base title="Movies" activeNav="movies">
+  <h1 class="text-[1.75rem] font-normal leading-tight tracking-tight text-text mb-2">
+    Movies
+  </h1>
+  <p class="font-mono text-xs text-subtext0 mb-10">
+    Good weekend watch after a tiring week
+  </p>
+
+  <BookList books={books} />
+</Base>

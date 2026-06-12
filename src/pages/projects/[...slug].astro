@@ -1,0 +1,112 @@
+---
+import Base from "../../layouts/Base.astro";
+import NavList from "../../components/NavList.astro";
+
+export async function getStaticPaths() {
+  const modules = import.meta.glob("../../content/projects/*.mdx", {
+    eager: true,
+  }) as Record<string, any>;
+  const projects = Object.values(modules);
+
+  const projectPaths = projects.map((proj: any) => ({
+    params: { slug: proj.frontmatter.slug },
+    props: { proj, isList: false },
+  }));
+
+  const allProjects = projects.map((proj: any) => ({
+    slug: proj.frontmatter.slug,
+    title: proj.frontmatter.title,
+    image: proj.frontmatter.image ?? null,
+    year: new Date(proj.frontmatter.publishedAt).getFullYear(),
+  }));
+
+  return [
+    {
+      params: { slug: undefined },
+      props: { proj: null, isList: true, allProjects },
+    },
+    ...projectPaths,
+  ];
+}
+
+const { proj, isList, allProjects } = Astro.props as any;
+const Content = proj?.Content;
+---
+
+{
+  isList ? (
+    <Base title="Projects" activeNav="projects">
+      <h1 class="text-[1.75rem] font-normal leading-tight tracking-tight text-text mb-8">
+        Projects
+      </h1>
+      <div class="grid grid-cols-2 gap-5">
+        {allProjects.map((p: any) => (
+          <a href={`/projects/${p.slug}`} class="group no-underline block">
+            <div class="overflow-hidden rounded-sm bg-mantle aspect-4/3 mb-2">
+              {p.image ? (
+                <img
+                  src={p.image}
+                  alt={p.title}
+                  class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                />
+              ) : (
+                <div class="w-full h-full bg-surface0" />
+              )}
+            </div>
+            <div class="flex items-baseline justify-between gap-2">
+              <span class="text-sm text-text leading-snug truncate">
+                {p.title}
+              </span>
+              <span class="font-mono text-xs text-subtext0 whitespace-nowrap">
+                {p.year}
+              </span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </Base>
+  ) : (
+    <Base
+      title={proj.frontmatter.title}
+      description={proj.frontmatter.description}
+    >
+      <a
+        href="/projects"
+        class="font-mono text-xs text-subtext0 hover:text-text no-underline mb-8 inline-block transition-colors"
+      >
+        &larr; projects
+      </a>
+      {proj.frontmatter.image && (
+        <div class="mb-8 rounded-sm overflow-hidden border border-surface0 aspect-16/7">
+          <img
+            src={proj.frontmatter.image}
+            alt={proj.frontmatter.title}
+            class="w-full h-full object-cover"
+          />
+        </div>
+      )}
+
+      <article>
+        <header class="mb-8">
+          <h1 class="text-[1.75rem] font-normal leading-tight tracking-tight text-text mb-2">
+            {proj.frontmatter.title}
+          </h1>
+          <div class="flex flex-wrap items-center gap-3 font-mono text-xs text-subtext0">
+            <span>
+              {proj.frontmatter.startDate}
+              {proj.frontmatter.endDate && <> — {proj.frontmatter.endDate}</>}
+            </span>
+            {proj.frontmatter.tags?.map((tag: string) => (
+              <span class="border border-surface1 px-2 py-0.5 rounded-sm text-overlay1">
+                {tag}
+              </span>
+            ))}
+          </div>
+        </header>
+        <div class="prose">
+          <Content />
+        </div>
+      </article>
+    </Base>
+  )
+}

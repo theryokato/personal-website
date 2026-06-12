@@ -1,0 +1,57 @@
+---
+import Base from './Base.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  publishedAt: Date;
+  tags?: string[];
+  backHref?: string;
+  backLabel?: string;
+}
+
+const {
+  title,
+  description,
+  publishedAt,
+  tags = [],
+  backHref = '/posts',
+  backLabel = '← posts',
+} = Astro.props;
+
+const dateStr = publishedAt.toLocaleDateString('en-US', {
+  year: 'numeric', month: 'long', day: 'numeric',
+});
+---
+
+<Base title={title} description={description}>
+  <a
+    href={backHref}
+    class="font-mono text-xs text-[var(--color-subtext0)] hover:text-[var(--color-text)] no-underline transition-colors inline-block mb-8"
+  >
+    {backLabel}
+  </a>
+
+  <article>
+    <header class="mb-8">
+      <h1 class="text-[1.75rem] font-normal leading-tight tracking-tight text-[var(--color-text)] mb-2">
+        {title}
+      </h1>
+      <div class="flex flex-wrap items-center gap-4 font-mono text-xs text-[var(--color-subtext0)]">
+        <time datetime={publishedAt.toISOString()}>{dateStr}</time>
+        {tags.map(tag => (
+          <a
+            href={`/posts?tag=${tag}`}
+            class="border border-[var(--color-surface1)] text-[var(--color-subtext0)] no-underline px-2 py-0.5 rounded-sm hover:border-[var(--color-mauve)] hover:text-[var(--color-mauve)] transition-colors"
+          >
+            {tag}
+          </a>
+        ))}
+      </div>
+    </header>
+
+    <div class="prose">
+      <slot />
+    </div>
+  </article>
+</Base>

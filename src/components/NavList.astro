@@ -1,0 +1,35 @@
+---
+interface Item {
+  title: string;
+  description: string;
+  href: string;
+  active?: boolean;
+}
+
+interface Props {
+  items: Item[];
+}
+
+const { items } = Astro.props;
+---
+
+<nav class="flex flex-col -mx-3">
+  {items.map(({ title, description, href, active }) => (
+    <a
+      href={href}
+      class:list={[
+        'group px-3 py-3 rounded-lg no-underline transition-colors',
+        active
+          ? 'bg-surface0'
+          : 'hover:bg-surface0',
+      ]}
+    >
+      <span class="block text-lg font-light text-text leading-snug">
+        {title}
+      </span>
+      <span class="block text-sm text-[var(--color-subtext0)] leading-snug mt-0.5">
+        {description}
+      </span>
+    </a>
+  ))}
+</nav>
