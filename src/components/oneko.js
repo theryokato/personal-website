@@ -86,7 +86,7 @@
   };
 
   function init() {
-    let nekoFile = "public/oneko.gif"
+    let nekoFile = "/oneko.gif"
     const curScript = document.currentScript
     if (curScript && curScript.dataset.cat) {
       nekoFile = curScript.dataset.cat
@@ -98,7 +98,6 @@
         persistPosition = JSON.parse(curScript.dataset.persistPosition.toLowerCase());
       }
     }
-  
     if (persistPosition) {
       let storedNeko = JSON.parse(window.localStorage.getItem("oneko"));
       if (storedNeko !== null) {
