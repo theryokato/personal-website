@@ -1,6 +1,13 @@
 ---
 import Base from "../../layouts/Base.astro";
-import NavList from "../../components/NavList.astro";
+
+function formatDate(input?: string): string {
+  if (!input) return "";
+  // Accept "YYYY-MM" or "YYYY-MM-DD"
+  const [y, m] = input.split("-");
+  const date = new Date(Number(y), Number(m) - 1);
+  return date.toLocaleString("en-US", { month: "short", year: "numeric" });
+}
 
 export async function getStaticPaths() {
   const modules = import.meta.glob("../../content/projects/*.mdx", {
@@ -13,12 +20,15 @@ export async function getStaticPaths() {
     props: { proj, isList: false },
   }));
 
-  const allProjects = projects.map((proj: any) => ({
-    slug: proj.frontmatter.slug,
-    title: proj.frontmatter.title,
-    image: proj.frontmatter.image ?? null,
-    year: new Date(proj.frontmatter.publishedAt).getFullYear(),
-  }));
+  const allProjects = projects
+    .map((proj: any) => ({
+      slug: proj.frontmatter.slug,
+      title: proj.frontmatter.title,
+      image: proj.frontmatter.image ?? null,
+      startDate: proj.frontmatter.startDate,
+      endDate: proj.frontmatter.endDate,
+    }))
+    .sort((a, b) => (b.startDate ?? "").localeCompare(a.startDate ?? ""));
 
   return [
     {
@@ -58,7 +68,9 @@ const Content = proj?.Content;
                 {p.title}
               </span>
               <span class="font-mono text-xs text-subtext0 whitespace-nowrap">
-                {p.year}
+                {formatDate(p.startDate)}
+                {" — "}
+                {p.endDate ? formatDate(p.endDate) : "Present"}
               </span>
             </div>
           </a>
@@ -69,6 +81,7 @@ const Content = proj?.Content;
     <Base
       title={proj.frontmatter.title}
       description={proj.frontmatter.description}
+      activeNav="projects"
     >
       <a
         href="/projects"
@@ -93,8 +106,11 @@ const Content = proj?.Content;
           </h1>
           <div class="flex flex-wrap items-center gap-3 font-mono text-xs text-subtext0">
             <span>
-              {proj.frontmatter.startDate}
-              {proj.frontmatter.endDate && <> — {proj.frontmatter.endDate}</>}
+              {formatDate(proj.frontmatter.startDate)}
+              {" — "}
+              {proj.frontmatter.endDate
+                ? formatDate(proj.frontmatter.endDate)
+                : "Present"}
             </span>
             {proj.frontmatter.tags?.map((tag: string) => (
               <span class="border border-surface1 px-2 py-0.5 rounded-sm text-overlay1">
