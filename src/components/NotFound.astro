@@ -1,0 +1,33 @@
+---
+import Base from "../layouts/Base.astro";
+
+const currentLocale = (Astro.currentLocale || 'en') as 'en' | 'ja';
+
+const content = {
+  en: {
+    title: "404 Page Not Found",
+    message: "Sorry, the cat must have eaten the page you were looking for.",
+    linkText: "Back to home",
+  },
+  ja: {
+    title: "404 ページが見つかりません",
+    message: "すみません、お探しのページは猫に食べられてしまったようです。",
+    linkText: "ホームに戻る",
+  },
+};
+
+const t = content[currentLocale];
+---
+
+<Base title={t.title} activeNav="home">
+  <div class="flex flex-col items-center justify-center py-20 text-center">
+    <h1 class="text-4xl font-bold mb-4">404</h1>
+    <p class="text-xl mb-8 text-subtext0">{t.message}</p>
+    <a 
+      href={`/${currentLocale}/`} 
+      class="font-mono text-xs tracking-widest lowercase no-underline transition-colors text-text hover:underline underline-offset-[3px]"
+    >
+      {t.linkText}
+    </a>
+  </div>
+</Base>
