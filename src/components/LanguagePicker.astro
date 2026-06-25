@@ -1,0 +1,48 @@
+---
+const { currentLocale } = Astro.props;
+
+// Get current path and create localized versions
+const { pathname } = Astro.url;
+
+function getLocalizedPath(targetLocale: string) {
+  if (pathname === '/' || pathname === '/en' || pathname === '/en/') {
+    return `/${targetLocale}/`;
+  }
+  if (pathname === '/ja' || pathname === '/ja/') {
+    return `/en/`;
+  }
+  
+  // Replace the first occurrence of /en/ or /ja/
+  return pathname.replace(/^\/(en|ja)(\/|$)/, `/${targetLocale}$2`);
+}
+
+const enPath = getLocalizedPath('en');
+const jaPath = getLocalizedPath('ja');
+---
+
+<div class="flex items-center bg-base border border-surface1 rounded-md overflow-hidden font-mono text-[10px] tracking-widest">
+  <a 
+    href={enPath} 
+    class:list={[
+      "flex-1 text-center py-1 px-2 transition-colors border-r border-surface1",
+      currentLocale === 'en' 
+        ? "bg-text text-base" 
+        : "text-subtext0 hover:text-text"
+    ]}
+    aria-label="English"
+  >
+    EN
+  </a>
+  <a 
+    href={jaPath} 
+    class:list={[
+      "flex-1 text-center py-1 px-2 transition-colors",
+      currentLocale === 'ja' 
+        ? "bg-text text-base" 
+        : "text-subtext0 hover:text-text"
+    ]}
+    aria-label="日本語"
+  >
+    JA
+  </a>
+</div>

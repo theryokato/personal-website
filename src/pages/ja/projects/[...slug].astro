@@ -1,16 +1,16 @@
 ---
-import Base from "../../layouts/Base.astro";
+import Base from "../../../layouts/Base.astro";
 
 function formatDate(input?: string): string {
   if (!input) return "";
   // Accept "YYYY-MM" or "YYYY-MM-DD"
   const [y, m] = input.split("-");
   const date = new Date(Number(y), Number(m) - 1);
-  return date.toLocaleString("en-US", { month: "short", year: "numeric" });
+  return date.toLocaleString("ja-JP", { month: "short", year: "numeric" });
 }
 
 export async function getStaticPaths() {
-  const modules = import.meta.glob("../../content/projects/*.mdx", {
+  const modules = import.meta.glob("../../../content/projects/ja/*.mdx", {
     eager: true,
   }) as Record<string, any>;
   const projects = Object.values(modules);
@@ -45,13 +45,13 @@ const Content = proj?.Content;
 
 {
   isList ? (
-    <Base title="Projects" activeNav="projects">
+    <Base title="プロジェクト" activeNav="projects">
       <h1 class="text-[1.75rem] font-normal leading-tight tracking-tight text-text mb-8">
-        Projects
+        プロジェクト
       </h1>
       <div class="grid grid-cols-2 gap-5">
         {allProjects.map((p: any) => (
-          <a href={`/projects/${p.slug}`} class="group no-underline block">
+          <a href={`/ja/projects/${p.slug}`} class="group no-underline block">
             <div class="overflow-hidden rounded-sm bg-mantle aspect-4/3 mb-2">
               {p.image ? (
                 <img
@@ -70,7 +70,7 @@ const Content = proj?.Content;
               <span class="font-mono text-xs text-subtext0 whitespace-nowrap">
                 {formatDate(p.startDate)}
                 {" — "}
-                {p.endDate ? formatDate(p.endDate) : "Present"}
+                {p.endDate ? formatDate(p.endDate) : "現在"}
               </span>
             </div>
           </a>
@@ -83,17 +83,17 @@ const Content = proj?.Content;
       description={proj.frontmatter.description}
       activeNav="projects"
     >
-      <a
-        href="/projects"
-        class="font-mono text-xs text-subtext0 hover:text-text no-underline mb-8 inline-block transition-colors"
-      >
-        &larr; projects
-      </a>
+       <a
+         href="/ja/projects"
+         class="font-mono text-xs text-subtext0 hover:text-text no-underline mb-8 inline-block transition-colors"
+       >
+         &larr; プロジェクト一覧へ
+       </a>
       {proj.frontmatter.image && (
         <div class="mb-8 rounded-sm overflow-hidden border border-surface0 aspect-16/7">
           <img
             src={proj.frontmatter.image}
-            alt={proj.frontmatter.title}  
+            alt={proj.frontmatter.title}
             class="w-full h-full object-cover"
           />
         </div>
@@ -110,7 +110,7 @@ const Content = proj?.Content;
               {" — "}
               {proj.frontmatter.endDate
                 ? formatDate(proj.frontmatter.endDate)
-                : "Present"}
+                : "現在"}
             </span>
             {proj.frontmatter.tags?.map((tag: string) => (
               <span class="border border-surface1 px-2 py-0.5 rounded-sm text-overlay1">

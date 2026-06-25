@@ -13,14 +13,17 @@
     "generate-types": "wrangler types"
   },
   "dependencies": {
+    "@astrojs/check": "^0.9.9",
     "@astrojs/cloudflare": "^13.7.0",
     "@astrojs/mdx": "^6.0.3",
     "@tailwindcss/vite": "^4.3.0",
     "astro": "^6.4.6",
     "node": "^26.3.0",
-    "tailwindcss": "^4.3.0"
+    "tailwindcss": "^4.3.0",
+    "typescript": "^6.0.3"
   },
   "devDependencies": {
+    "astro-icon": "^1.1.5",
     "wrangler": "^4.100.0"
   },
   "overrides": {

@@ -1,0 +1,15 @@
+---
+import Base from '../../layouts/Base.astro';
+import NavList from '../../components/NavList.astro';
+const currentPath = Astro.url.pathname;
+
+const sections = [
+  { title: 'bookshelf',    description: 'A collection of literature', href: '/ja/interests/books'},
+  { title: 'manga',    description: 'Usually better than the anime', href: '/ja/interests/manga'},
+  { title: 'movies',    description: 'Wish I had more time to watch them', href: '/ja/interests/movies'},
+];
+---
+
+<Base title="Your Name" activeNav="interests">
+<NavList items={sections} />
+</Base>

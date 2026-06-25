@@ -1,84 +1,73 @@
 @import "tailwindcss";
 
-/* ─── Catppuccin palettes via @theme ────────────────────────
-   Tailwind v4: @theme defines design tokens exposed as both
-   CSS custom properties and Tailwind utility classes.
-   We override the semantic tokens via [data-theme] so all
-   Tailwind utilities (bg-base, text-text, etc.) respond
-   automatically to theme switches.
-──────────────────────────────────────────────────────────── */
-
 @theme {
   /* Shared */
-  --font-serif: "Georgia", "Times New Roman", serif;
-  --font-mono:  "JetBrains Mono", "Fira Code", "Menlo", monospace;
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: Georgia, "Times New Roman", serif;
+  --font-mono: SFMono-Regular, Consolas, "Liberation Mono", "Courier New", monospace;
   --max-w-prose: 42rem;
 
-  /* Semantic tokens — default: Latte (light) */
-  --color-base:    #eff1f5;
-  --color-mantle:  #e6e9ef;
-  --color-crust:   #dce0e8;
-  --color-surface0:#ccd0da;
-  --color-surface1:#bcc0cc;
-  --color-surface2:#acb0be;
-  --color-overlay0:#9ca0b0;
-  --color-overlay1:#8c8fa1;
-  --color-overlay2:#7c7f93;
-  --color-subtext0:#6c6f85;
-  --color-subtext1:#5c5f77;
-  --color-text:    #4c4f69;
-  --color-lavender:#7287fd;
-  --color-blue:    #1e66f5;
-  --color-sapphire:#209fb5;
-  --color-sky:     #04a5e5;
-  --color-teal:    #179299;
-  --color-green:   #40a02b;
-  --color-yellow:  #df8e1d;
-  --color-peach:   #fe640b;
-  --color-maroon:  #e64553;
-  --color-red:     #d20f39;
-  --color-mauve:   #8839ef;
-  --color-pink:    #ea76cb;
-  --color-flamingo:#dd7878;
-  --color-rosewater:#dc8a78;
+  /* Semantic tokens — default: Nord Light */
+  --color-base:    #FFFFFF;
+  --color-mantle:  #E5E9F0;
+  --color-crust:   #D8DEE9;
+  --color-surface0:#D8DEE9;
+  --color-surface1:#B0B8C3;
+  --color-surface2:#81A2B5;
+  --color-overlay0:#81A2B5;
+  --color-overlay1:#88C0D0;
+  --color-overlay2:#8B9ABB;
+  --color-subtext0:#4C566A;
+  --color-subtext1:#D8DEE9;
+  --color-text:    #2E3440;
+  --color-lavender:#B48EAD;
+  --color-blue:    #81A2B5;
+  --color-sapphire:#88C0D0;
+  --color-sky:     #8FBCBB;
+  --color-green:   #A3BE8C;
+  --color-yellow:  #EBCB8B;
+  --color-peach:   #D08770;
+  --color-red:     #BF616A;
+  --color-mauve:   #B48EAD;
+  --color-pink:    #B48EAD;
+  --color-flamingo:#D08770;
+  --color-rosewater:#EBCB8B;
 }
 
-/* ─── Mocha (dark) overrides ───────────────────────────── */
-[data-theme="mocha"] {
-  --color-base:    #1e1e2e;
-  --color-mantle:  #181825;
-  --color-crust:   #11111b;
-  --color-surface0:#313244;
-  --color-surface1:#45475a;
-  --color-surface2:#585b70;
-  --color-overlay0:#6c7086;
-  --color-overlay1:#7f849c;
-  --color-overlay2:#9399b2;
-  --color-subtext0:#a6adc8;
-  --color-subtext1:#bac2de;
-  --color-text:    #cdd6f4;
-  --color-lavender:#b4befe;
-  --color-blue:    #89b4fa;
-  --color-sapphire:#74c7ec;
-  --color-sky:     #89dceb;
-  --color-teal:    #94e2d5;
-  --color-green:   #a6e3a1;
-  --color-yellow:  #f9e2af;
-  --color-peach:   #fab387;
-  --color-maroon:  #eba0ac;
-  --color-red:     #f38ba8;
-  --color-mauve:   #cba6f7;
-  --color-pink:    #f5c2e7;
-  --color-flamingo:#f2cdcd;
-  --color-rosewater:#f5e0dc;
+/* ─── Nord Dark overrides ────────────────────────────────── */
+[data-theme="nord-dark"] {
+  --color-base:    #2E3440;
+  --color-mantle:  #242933;
+  --color-crust:   #1B1E23;
+  --color-surface0:#3B4252;
+  --color-surface1:#434C5E;
+  --color-surface2:#4C566A;
+  --color-overlay0:#4C566A;
+  --color-overlay1:#D8DEE9;
+  --color-overlay2:#E5E9F0;
+  --color-subtext0:#D8DEE9;
+  --color-subtext1:#E5E9F0;
+  --color-text:    #ECEFF4;
+  --color-lavender:#B48EAD;
+  --color-blue:    #81A2B5;
+  --color-sapphire:#88C0D0;
+  --color-sky:     #8FBCBB;
+  --color-green:   #A3BE8C;
+  --color-yellow:  #EBCB8B;
+  --color-peach:   #D08770;
+  --color-red:     #BF616A;
+  --color-mauve:   #B48EAD;
+  --color-pink:    #B48EAD;
+  --color-flamingo:#D08770;
+  --color-rosewater:#EBCB8B;
 }
 
 /* ─── Base styles ──────────────────────────────────────── */
 html {
   background-color: var(--color-base);
   color: var(--color-text);
-  font-family: var(--font-serif);
-  font-size: 16px;
+  font-family: var(--font-sans);
+  font-size: 15px;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   transition: background-color 0.2s ease, color 0.2s ease;
@@ -95,7 +84,7 @@ body {
 
 /* ─── Prose styles for MDX ──────────────────────────────── */
 .prose h1, .prose h2, .prose h3, .prose h4 {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-weight: normal;
   line-height: 1.25;
   letter-spacing: -0.01em;
@@ -163,24 +152,6 @@ body {
 
 .prose strong { color: var(--color-text); font-weight: 600; }
 
-/* ─── Theme toggle button ───────────────────────────────── */
-.theme-toggle {
-  background: none;
-  border: 1px solid var(--color-surface1);
-  border-radius: 999px;
-  padding: 0.2em 0.65em;
-  cursor: pointer;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.04em;
-  color: var(--color-subtext0);
-  transition: border-color 0.15s, color 0.15s;
-  line-height: 1.6;
-}
-.theme-toggle:hover {
-  border-color: var(--color-mauve);
-  color: var(--color-mauve);
-}
 
 /* ─── Reduced motion ────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {

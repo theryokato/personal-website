@@ -4,8 +4,17 @@ import tailwindcss from '@tailwindcss/vite';
 
 import cloudflare from '@astrojs/cloudflare';
 
+import icon from 'astro-icon';
+
 export default defineConfig({
-  integrations: [mdx()],
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en', 'ja'],
+    routing: {
+      prefixDefaultLocale: true,
+    },
+  },
+  integrations: [mdx(), icon()],
 
   vite: {
     plugins: [tailwindcss()],

@@ -21,13 +21,13 @@ const { items } = Astro.props;
         'group px-3 py-3 rounded-lg no-underline transition-colors',
         active
           ? 'bg-surface0'
-          : 'hover:bg-surface0',
+          : 'hover:bg-mantle',
       ]}
     >
-      <span class="block text-lg font-light text-text leading-snug">
+      <span class="block text-lg font-normal text-text leading-snug">
         {title}
       </span>
-      <span class="block text-sm text-[var(--color-subtext0)] leading-snug mt-0.5">
+      <span class="block text-sm text-subtext0 leading-snug mt-0.5">
         {description}
       </span>
     </a>

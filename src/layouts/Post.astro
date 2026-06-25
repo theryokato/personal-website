@@ -27,22 +27,22 @@ const dateStr = publishedAt.toLocaleDateString('en-US', {
 <Base title={title} description={description}>
   <a
     href={backHref}
-    class="font-mono text-xs text-[var(--color-subtext0)] hover:text-[var(--color-text)] no-underline transition-colors inline-block mb-8"
+    class="font-mono text-xs text-subtext0 hover:text-text no-underline transition-colors inline-block mb-8"
   >
     {backLabel}
   </a>
 
   <article>
     <header class="mb-8">
-      <h1 class="text-[1.75rem] font-normal leading-tight tracking-tight text-[var(--color-text)] mb-2">
+      <h1 class="text-[1.75rem] font-normal leading-tight tracking-tight text-text mb-2">
         {title}
       </h1>
-      <div class="flex flex-wrap items-center gap-4 font-mono text-xs text-[var(--color-subtext0)]">
+      <div class="flex flex-wrap items-center gap-4 font-mono text-xs text-subtext0">
         <time datetime={publishedAt.toISOString()}>{dateStr}</time>
         {tags.map(tag => (
           <a
             href={`/posts?tag=${tag}`}
-            class="border border-[var(--color-surface1)] text-[var(--color-subtext0)] no-underline px-2 py-0.5 rounded-sm hover:border-[var(--color-mauve)] hover:text-[var(--color-mauve)] transition-colors"
+            class="border border-surface1 text-subtext0 no-underline px-2 py-0.5 rounded-sm hover:border-(--color-mauve) hover:text-(--color-mauve) transition-colors"
           >
             {tag}
           </a>

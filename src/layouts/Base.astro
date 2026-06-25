@@ -1,5 +1,6 @@
 ---
-import '../styles/global.css';
+import "../styles/global.css";
+import LanguagePicker from "../components/LanguagePicker.astro";
 
 interface Props {
   title?: string;
@@ -8,22 +9,31 @@ interface Props {
 }
 
 const {
-  title = 'Your Name',
-  description = 'A personal site.',
+  title = "Your Name",
+  description = "A personal site.",
   activeNav,
 } = Astro.props;
 
-const fullTitle = title === 'Your Name' ? title : `${title} — Your Name`;
+const currentLocale = Astro.currentLocale || 'en';
+const fullTitle = title === "Your Name" ? title : `${title} — Your Name`;
+
+const navLabels: Record<string, Record<string, string>> = {
+  en: { home: "home", projects: "projects", interests: "interests" },
+  ja: { home: "ホーム", projects: "プロジェクト", interests: "興味" },
+};
 
 const nav = [
-  { href: '/',          label: 'home'     },
-  { href: '/projects',  label: 'projects' },
-  { href: '/interests',     label: 'interests'    },
-];
+  { href: `/${currentLocale}/`, key: "home" },
+  { href: `/${currentLocale}/projects`, key: "projects" },
+  { href: `/${currentLocale}/interests`, key: "interests" },
+].map(link => ({
+  ...link,
+  label: navLabels[currentLocale][link.key]
+}));
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={currentLocale}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -32,41 +42,43 @@ const nav = [
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <script is:inline>
       (function () {
-        const stored = localStorage.getItem('theme');
-        const preferred = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'mocha' : 'latte');
-        document.documentElement.setAttribute('data-theme', preferred);
+        const stored = localStorage.getItem("theme");
+        const preferred =
+          stored ||
+          (window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "nord-dark"
+            : "nord-light");
+        document.documentElement.setAttribute("data-theme", preferred);
       })();
     </script>
   </head>
   <body>
     <div class="mx-auto max-w-2xl">
-
       <!-- Nav: just links + theme toggle, no name -->
       <nav class="mb-12 flex items-center justify-between">
         <ul class="flex flex-wrap gap-x-4 gap-y-1 list-none p-0 m-0">
-          {nav.map(({ href, label }) => (
-            <li>
-              <a
-                href={href}
-                class:list={[
-                  'font-mono text-xs tracking-widest lowercase no-underline transition-colors',
-                  activeNav === label
-                    ? 'text-textunderline underline-offset-[3px]'
-                    : 'text-subtext0 hover:text-text'
-                ]}
-              >
-                {label}
-              </a>
-            </li>
-          ))}
+          {
+            nav.map(({ href, key, label }) => (
+              <li>
+                <a
+                  href={href}
+                  class:list={[
+                    "font-mono text-xs tracking-widest lowercase no-underline transition-colors",
+                    activeNav === key
+                      ? "text-text underline underline-offset-[3px]"
+                      : "text-subtext0 hover:text-text",
+                  ]}
+                >
+                  {label}
+                </a>
+              </li>
+            ))
+          }
         </ul>
-        <button
-          id="theme-toggle"
-          class="theme-toggle"
-          aria-label="Switch theme"
-        >
-          <span id="theme-label">mocha</span>
-        </button>
+        <div class="flex items-center gap-3">
+          <LanguagePicker currentLocale={currentLocale} />
+        
+        </div>
       </nav>
 
       <!-- Main content -->
@@ -75,27 +87,58 @@ const nav = [
       </main>
 
       <!-- Footer -->
-      <footer class="mt-24 pt-6 border-t border-surface0 font-mono text-xs text-overlay1">
-        <span>© {new Date().getFullYear()}</span>
+      <footer
+        class="mt-24 pt-2 border-t border-surface0 font-mono text-xs text-subtext0 flex items-center justify-between"
+      >
+        <span>© {new Date().getFullYear()} Ryo Kato</span>
+
+      <button
+          id="theme-toggle"
+          class="theme-toggle bg-transparent p-0 outline-none border-none cursor-pointer"
+          aria-label="Switch theme"
+        >
+          <!-- Sun Icon (shown in dark mode to switch to light) -->
+          <svg id="sun-icon" class="hidden w-5 h-5 text-text" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 1.25a.75.75 0 0 1 .75.75v1a.75.75 0 0 1-1.5 0V2a.75.75 0 0 1 .75-.75M1.25 12a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5H2a.75.75 0 0 1-.75-.75m19 0a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75M12 20.25a.75.75 0 0 1 .75.75v1a.75.75 0 0 1-1.5 0v-1a.75.75 0 0 1 .75-.75" clip-rule="evenodd" />
+  <path fill="currentColor" d="M4.398 4.398a.75.75 0 0 1 1.061 0l.393.393a.75.75 0 0 1-1.06 1.06l-.394-.392a.75.75 0 0 1 0-1.06m15.202 0a.75.75 0 0 1 0 1.06l-.392.393a.75.75 0 0 1-1.06-1.06l.392-.393a.75.75 0 0 1 1.06 0m-1.453 13.748a.75.75 0 0 1 1.061 0l.393.393a.75.75 0 0 1-1.06 1.06l-.394-.392a.75.75 0 0 1 0-1.06m-12.295 0a.75.75 0 0 1 0 1.06l-.393.393a.75.75 0 1 1-1.06-1.06l.392-.393a.75.75 0 0 1 1.06 0"  clip-rule="evenodd"/>
+          </svg>
+          <!-- Moon Icon (shown in light mode to switch to dark) -->
+          <svg id="moon-icon" class="hidden w-5 h-5 text-text" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 22c5.523 0 10-4.477 10-10c0-.463-.694-.54-.933-.143a6.5 6.5 0 1 1-8.924-8.924C12.54 2.693 12.463 2 12 2C6.477 2 2 6.477 2 12s4.477 10 10 10"/>
+          </svg>
+        </button>
       </footer>
     </div>
 
     <script>
-      const toggle = document.getElementById('theme-toggle');
-      const label  = document.getElementById('theme-label');
-      const html   = document.documentElement;
+      const toggle = document.getElementById("theme-toggle");
+      const label = document.getElementById("theme-label");
+      const html = document.documentElement;
 
       function getTheme() {
-        return html.getAttribute('data-theme') || 'latte';
+        return html.getAttribute("data-theme") || "nord-light";
       }
       function applyTheme(theme: string) {
-        html.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-        if (label) label.textContent = theme === 'latte' ? 'mocha' : 'latte';
+        html.setAttribute("data-theme", theme);
+        localStorage.setItem("theme", theme);
+        updateIcons(theme);
       }
-      if (label) label.textContent = getTheme() === 'latte' ? 'mocha' : 'latte';
-      toggle?.addEventListener('click', () => {
-        applyTheme(getTheme() === 'latte' ? 'mocha' : 'latte');
+
+      function updateIcons(theme: string) {
+        const sun = document.getElementById("sun-icon");
+        const moon = document.getElementById("moon-icon");
+        if (theme === "nord-dark") {
+          sun?.classList.remove("hidden");
+          moon?.classList.add("hidden");
+        } else {
+          sun?.classList.add("hidden");
+          moon?.classList.remove("hidden");
+        }
+      }
+
+      updateIcons(getTheme());
+      toggle?.addEventListener("click", () => {
+        applyTheme(getTheme() === "nord-light" ? "nord-dark" : "nord-light");
       });
     </script>
     <script src="../components/oneko.js"></script>
