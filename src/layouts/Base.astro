@@ -9,13 +9,13 @@ interface Props {
 }
 
 const {
-  title = "Your Name",
+  title = "Ryo Kato",
   description = "A personal site.",
   activeNav,
 } = Astro.props;
 
 const currentLocale = Astro.currentLocale || 'en';
-const fullTitle = title === "Your Name" ? title : `${title} — Your Name`;
+const fullTitle = title === "Ryo Kato" ? title : `${title} — Ryo Kato`;
 
 const navLabels: Record<string, Record<string, string>> = {
   en: { home: "home", projects: "projects", interests: "interests" },
