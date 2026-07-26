@@ -17,7 +17,6 @@ export const books: Book[] = [
   { title: "The Apothecary Diaries", author: "Natsu Hyuuga, Nekokurage", status: "partially", date: "May 2026" },
   
   // 2025
-  { title: "Nihonkoku Shoukan", author: "Minorou, Chiharu Takano", status: "finished", date: "2025" },
   { title: "Jujutsu Kaisen", author: "Gege Akutami", status: "finished", date: "2025" },
 
   // 2024
@@ -25,7 +24,6 @@ export const books: Book[] = [
   { title: "A Chef of Obunaga", author: "Mitsuru Nishimura, Takuro Kajikawa", status: "finished", date: "2024" },
   { title: "Solo Leveling", author: "Chugong, DUBU", status: "finished", date: "2024" },
   { title: "One-Punch Man", author: "ONE, Yusuke Murata", status: "partially", date: "2024" },
-  { title: "Nihonkoku Shoukan", author: "Minorou, Chiharu Takano", status: "partially", date: "2024" },
 
   // Before cutoff year (2023)
   { title: "Dragon Ball", author: "Akira Toriyama", status: "finished", date: "0000" },
