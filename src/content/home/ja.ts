@@ -4,7 +4,7 @@ export const homeContent = {
          href="https://www.tamu.edu"
          class="text-text underline underline-offset-[3px] decoration-1 hover:text-red transition-colors"
          >テキサスA&M大学</a
-       >機械工学科3年生。数学副専攻。現在、テキサス州最大の学生主導ロボット工学団体<a
+       >機械工学科3年生。数学副専攻。現在、テキサス州最大規模の学生主導ロボット工学団体<a
          href="https://turtlerobotics.org"
          class="text-text underline underline-offset-[3px] decoration-1 hover:text-yellow transition-colors"
          >「TURTLE Robotics」</a
