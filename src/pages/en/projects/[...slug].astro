@@ -1,13 +1,6 @@
 ---
 import Base from "../../../layouts/Base.astro";
-
-function formatDate(input?: string): string {
-  if (!input) return "";
-  // Accept "YYYY-MM" or "YYYY-MM-DD"
-  const [y, m] = input.split("-");
-  const date = new Date(Number(y), Number(m) - 1);
-  return date.toLocaleString("en-US", { month: "short", year: "numeric" });
-}
+import { formatDate } from "../../../utils/dates";
 
 export async function getStaticPaths() {
   const modules = import.meta.glob("../../../content/projects/en/*.mdx", {
@@ -70,7 +63,7 @@ const Content = proj?.Content;
               <span class="font-mono text-xs text-subtext0 whitespace-nowrap">
                 {formatDate(p.startDate)}
                 {" — "}
-                {p.endDate ? formatDate(p.endDate) : "Present"}
+                {formatDate(p.endDate)}
               </span>
             </div>
           </a>
@@ -106,11 +99,9 @@ const Content = proj?.Content;
           </h1>
           <div class="flex flex-wrap items-center gap-3 font-mono text-xs text-subtext0">
             <span>
-              {formatDate(proj.frontmatter.startDate)}
-              {" — "}
-              {proj.frontmatter.endDate
-                ? formatDate(proj.frontmatter.endDate)
-                : "Present"}
+                {formatDate(proj.frontmatter.startDate)}
+                {" — "}
+                {formatDate(proj.frontmatter.endDate)}
             </span>
             {proj.frontmatter.tags?.map((tag: string) => (
               <span class="border border-surface1 px-2 py-0.5 rounded-sm text-overlay1">
