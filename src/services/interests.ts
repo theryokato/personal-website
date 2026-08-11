@@ -68,12 +68,14 @@ export const InterestService = {
         query {
           me {
             user_books {
-              title
               status_id
               updated_at
-              contributions {
-                author {
-                  name
+              book {
+                title
+                contributions {
+                  author {
+                    name
+                  }
                 }
               }
             }
@@ -85,23 +87,33 @@ export const InterestService = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
+          'Authorization': `Bearer ${apiKey}`,
         },
         body: JSON.stringify({ query }),
       });
-      if (!response.ok) throw new Error('Hardcover API response not ok');
 
-      const { data } = await response.json();
-      console.log('Hardcover API Response:', JSON.stringify(data, null, 2));
-      const books = data?.me?.user_books || [];
+      if (!response.ok) {
+        throw new Error(`Hardcover API response not ok: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      if (result.errors) {
+        console.error('Hardcover GraphQL errors:', result.errors);
+        throw new Error('Hardcover GraphQL query failed');
+      }
+
+      const books = result.data?.me?.[0]?.user_books || [];
 
       if (books.length === 0) {
         return null;
       }
 
       return books.map((item: any) => ({
-        title: item.title,
-        author: item.contributions?.[0]?.author?.name || 'Unknown Author',
+        title: item.book?.title || 'Unknown Title',
+        author:
+          item.book?.contributions?.[0]?.author?.name ||
+          'Unknown Author',
         status: mapHardcoverStatus(item.status_id),
       }));
     } catch (e) {
