@@ -13,6 +13,16 @@ export const homeContent = {
          href="https://herc.engr.tamu.edu/"
          class="text-text underline underline-offset-[3px] decoration-1 hover:text-peach transition-colors"
          >Human-Empowering Robotics and Control (HERC) Lab</a
+       >.
+       <br /><br />
+       I am always down to chat, preferably by <a
+         href="mailto:contact@theryokato.com"
+         class="text-text underline underline-offset-[3px] decoration-1 hover:text-blue transition-colors"
+         >email</a
+       > <a
+         href="/pgp"
+         class="text-text underline underline-offset-[3px] decoration-1 hover:text-mauve transition-colors"
+         >(PGP key)</a
        >.`,
   sections: [
     {
