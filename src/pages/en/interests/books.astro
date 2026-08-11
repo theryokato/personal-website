@@ -1,7 +1,10 @@
 ---
 import Base from '../../../layouts/Base.astro';
-import BookList from '../../../components/List.astro';
-import { books } from '../../../content/interests/en/books';
+import MediaList from '../../../components/MediaList.astro';
+import { InterestService } from '../../../services/interests';
+
+const items = await InterestService.getBooks('en');
+if (!items) return Astro.redirect('/404');
 ---
 
 <Base title="Bookshelf" activeNav="bookshelf">
@@ -9,8 +12,8 @@ import { books } from '../../../content/interests/en/books';
     Bookshelf
   </h1>
   <p class="font-mono text-xs text-subtext0 mb-10">
-    Incomplete list of the top books I've read.
+    Incomplete list of the books I've read.
   </p>
 
-  <BookList books={books} />
+  <MediaList items={items} />
 </Base>

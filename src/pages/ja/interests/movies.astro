@@ -1,16 +1,19 @@
 ---
 import Base from '../../../layouts/Base.astro';
-import BookList from '../../../components/List.astro';
-import { books } from '../../../content/interests/ja/movies';
+import MediaList from '../../../components/MediaList.astro';
+import { InterestService } from '../../../services/interests';
+
+const items = await InterestService.getMovies('ja');
+if (!items) return Astro.redirect('/404');
 ---
 
-<Base title="Movies" activeNav="movies">
+<Base title="映画" activeNav="movies">
   <h1 class="text-[1.75rem] font-normal leading-tight tracking-tight text-text mb-2">
-    Movies
+    映画
   </h1>
   <p class="font-mono text-xs text-subtext0 mb-10">
-    Good weekend watch after a tiring week
+    疲れた週の後の最高の週末の楽しみ。
   </p>
 
-  <BookList books={books} />
+  <MediaList items={items} />
 </Base>

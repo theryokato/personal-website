@@ -1,0 +1,19 @@
+---
+import Base from '../../../layouts/Base.astro';
+import MediaList from '../../../components/MediaList.astro';
+import { InterestService } from '../../../services/interests';
+
+const items = await InterestService.getAnime('ja');
+if (!items) return Astro.redirect('/404');
+---
+
+<Base title="アニメ" activeNav="anime">
+  <h1 class="text-[1.75rem] font-normal leading-tight tracking-tight text-text mb-2">
+    アニメ
+  </h1>
+  <p class="font-mono text-xs text-subtext0 mb-10">
+    私が観たアニメの不完全なリストです。
+  </p>
+
+  <MediaList items={items} showDetailedStatus={true} showAuthorOnRight={true} />
+</Base>
