@@ -25,10 +25,10 @@ export const homeContent = {
       description: "Stuff I like.",
       href: "/en/interests",
     },
-    {
-      title: "about me",
-      description: "Who am I?",
-      href: "/en/aboutme",
-    },
+    // {
+    //   title: "about me",
+    //   description: "Who am I?",
+    //   href: "/en/aboutme",
+    // },
   ],
 };

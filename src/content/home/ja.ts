@@ -24,10 +24,10 @@ export const homeContent = {
       description: "好きなもの",
       href: "/ja/interests",
     },
-    {
-      title: "自己紹介",
-      description: "私は誰か？",
-      href: "/ja/aboutme",
-    },
+    // {
+    //   title: "自己紹介",
+    //   description: "私は誰か？",
+    //   href: "/ja/aboutme",
+    // },
   ],
 };

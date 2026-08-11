@@ -13,17 +13,17 @@ image: ""
 import ProjectImage from '../../../components/ProjectImage.astro';
 
 ## Overview
-The Disaster Response Observation Network (DRON) is a proof-of-concept initiative that aims to leverage unmanned aerial vehicles (UAVs) 
+The Disaster Response Observation Network (DRON) is a proof-of-concept initiative that aims to leverage unmanned aerial vehicles (UAVs)
 to gather intelligence during structural fires to aide first responders in their scene assessment and emergency response.
 
 Autonomous swarm functionality allows DRON to assist in emergency situations with minimal required human input. DRON is designed around ease of use, speed of deployment, and quality of data gathered and presented.
 
 ### Mechanical
-DRON is designed to balance weight, structural stability, and modularity to withstand the high stress involved in a flight, namely torque from the propellers and internal stresses from payloads, and continue to function in order to complete a mission. 
+DRON is designed to balance weight, structural stability, and modularity to withstand the high stress involved in a flight, namely torque from the propellers and internal stresses from payloads, and continue to function in order to complete a mission.
 DRON has adopted the use of carbon fiber tubes in the arms in the next V4 design to minimize potentially devastating vibrations during flight that can cause failure. All of our parts are connected via heat inserts and screws for ease of repair.
 
 ### Visual
-The software has the role of managing communications between components, detecting hotspots, and 3D mapping the environment. Two stereo cameras were successfully calibrated to capture depth of their surroundings. Stereo images are published through a ROS2 node into Unity where they are visualized. 
+The software has the role of managing communications between components, detecting hotspots, and 3D mapping the environment. Two stereo cameras were successfully calibrated to capture depth of their surroundings. Stereo images are published through a ROS2 node into Unity where they are visualized.
 The software stack relies on many modules and libraries for flight control, data gathering, image processing, and environment visualization in 3D.
 
 ### Autonomy
@@ -35,8 +35,8 @@ The GPS and IMU provide low-level waypoint based autonomy, and the Raspberry Pi 
 The battery selected is rated for 3000mAh and can deliver enough power to sustain maneuvering flight for ~12 min, and low speed flight and hovering for ~15 min.
 
 
-<ProjectImage 
-  src="" 
-  alt="DRON prototype demonstration" 
-  caption="The initial prototype of the DRON unit during field testing." 
+<ProjectImage
+  src=""
+  alt="DRON prototype demonstration"
+  caption="The initial prototype of the DRON unit during field testing."
 />
