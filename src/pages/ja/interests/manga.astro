@@ -1,16 +1,19 @@
 ---
 import Base from '../../../layouts/Base.astro';
-import BookList from '../../../components/List.astro';
-import { books } from '../../../content/interests/ja/manga';
+import MediaList from '../../../components/MediaList.astro';
+import { InterestService } from '../../../services/interests';
+
+const items = await InterestService.getManga('ja');
+if (!items) return Astro.redirect('/404');
 ---
 
-<Base title="Manga" activeNav="manga">
+<Base title="漫画" activeNav="manga">
   <h1 class="text-[1.75rem] font-normal leading-tight tracking-tight text-text mb-2">
-    Manga
+    漫画
   </h1>
   <p class="font-mono text-xs text-subtext0 mb-10">
-    Incomplete list of the top manga I've read.
+    私が読んだ漫画の不完全なリストです。
   </p>
 
-  <BookList books={books} />
+  <MediaList items={items} showDetailedStatus={true} showAuthorOnRight={true} />
 </Base>

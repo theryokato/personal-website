@@ -1,16 +1,19 @@
 ---
 import Base from '../../../layouts/Base.astro';
-import BookList from '../../../components/List.astro';
-import { books } from '../../../content/interests/ja/books';
+import MediaList from '../../../components/MediaList.astro';
+import { InterestService } from '../../../services/interests';
+
+const items = await InterestService.getBooks('ja');
+if (!items) return Astro.redirect('/404');
 ---
 
-<Base title="Bookshelf" activeNav="bookshelf">
+<Base title="本棚" activeNav="bookshelf">
   <h1 class="text-[1.75rem] font-normal leading-tight tracking-tight text-text mb-2">
-    Bookshelf
+    本棚
   </h1>
   <p class="font-mono text-xs text-subtext0 mb-10">
-    Incomplete list of the top books I've read.
+    私が読んだ本の不完全なリストです。
   </p>
 
-  <BookList books={books} />
+  <MediaList items={items} />
 </Base>

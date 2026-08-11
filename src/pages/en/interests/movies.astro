@@ -1,7 +1,10 @@
 ---
 import Base from '../../../layouts/Base.astro';
-import BookList from '../../../components/List.astro';
-import { books } from '../../../content/interests/en/movies';
+import MediaList from '../../../components/MediaList.astro';
+import { InterestService } from '../../../services/interests';
+
+const items = await InterestService.getMovies('en');
+if (!items) return Astro.redirect('/404');
 ---
 
 <Base title="Movies" activeNav="movies">
@@ -12,5 +15,5 @@ import { books } from '../../../content/interests/en/movies';
     Good weekend watch after a tiring week
   </p>
 
-  <BookList books={books} />
+  <MediaList items={items} />
 </Base>

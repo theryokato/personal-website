@@ -4,12 +4,13 @@ import NavList from '../../components/NavList.astro';
 const currentPath = Astro.url.pathname;
 
 const sections = [
-  { title: 'bookshelf',    description: 'A collection of literature', href: '/ja/interests/books'},
-  { title: 'manga',    description: 'Usually better than the anime', href: '/ja/interests/manga'},
-  { title: 'movies',    description: 'Wish I had more time to watch them', href: '/ja/interests/movies'},
+  { title: '本棚',    description: '文学のコレクション', href: '/ja/interests/books'},
+  { title: '漫画',    description: 'たいていアニメより良い', href: '/ja/interests/manga'},
+  { title: 'アニメ',    description: 'たまに漫画を超える', href: '/ja/interests/anime'},
+  { title: '映画',    description: 'もっと見る時間があればいいのに', href: '/ja/interests/movies'},
 ];
 ---
 
-<Base title="Interests" activeNav="interests">
+<Base title="興味" activeNav="interests">
 <NavList items={sections} />
 </Base>

@@ -3,17 +3,17 @@ import Base from '../../../layouts/Base.astro';
 import MediaList from '../../../components/MediaList.astro';
 import { InterestService } from '../../../services/interests';
 
-const items = await InterestService.getMovies('ja');
+const items = await InterestService.getAnime('ja');
 if (!items) return Astro.redirect('/404');
 ---
 
-<Base title="映画" activeNav="movies">
+<Base title="アニメ" activeNav="anime">
   <h1 class="text-[1.75rem] font-normal leading-tight tracking-tight text-text mb-2">
-    映画
+    アニメ
   </h1>
   <p class="font-mono text-xs text-subtext0 mb-10">
-    疲れた週の後の最高の週末の楽しみ。
+    私が観たアニメの不完全なリストです。
   </p>
 
-  <MediaList items={items} />
+  <MediaList items={items} showDetailedStatus={true} showAuthorOnRight={true} />
 </Base>
