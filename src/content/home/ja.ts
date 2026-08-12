@@ -18,11 +18,11 @@ export const homeContent = {
          href="mailto:contact@theryokato.com"
          class="text-text underline underline-offset-[3px] decoration-1 hover:text-blue transition-colors"
          >メール</a
-       > <a
+       > (<a
          href="/pgp"
          class="text-text underline underline-offset-[3px] decoration-1 hover:text-mauve transition-colors"
-         >(PGPキー)</a
-       >でお願いします。。`,
+         >PGPキー</a
+       >)でお願いします。。`,
   sections: [
     {
       title: "プロジェクト",

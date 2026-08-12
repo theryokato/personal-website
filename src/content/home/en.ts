@@ -19,11 +19,11 @@ export const homeContent = {
          href="mailto:contact@theryokato.com"
          class="text-text underline underline-offset-[3px] decoration-1 hover:text-blue transition-colors"
          >email</a
-       > <a
+       > (<a
          href="/pgp"
          class="text-text underline underline-offset-[3px] decoration-1 hover:text-mauve transition-colors"
-         >(PGP key)</a
-       >.`,
+         >PGP key</a
+       >).`,
   sections: [
     {
       title: "projects",
