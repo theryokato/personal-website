@@ -162,7 +162,7 @@ export const InterestService = {
       if (!response.ok) throw new Error('AniList API response not ok');
 
       const { data } = await response.json();
-      console.log('AniList API Response:', JSON.stringify(data, null, 2));
+      //console.log('AniList API Response:', JSON.stringify(data, null, 2));
       const allEntries = data.MediaListCollection.lists.flatMap((list: any) => list.entries);
 
       if (allEntries.length === 0) {
@@ -235,7 +235,7 @@ export const InterestService = {
       if (!response.ok) throw new Error('AniList API response not ok');
 
       const { data } = await response.json();
-      console.log('AniList API Response:', JSON.stringify(data, null, 2));
+      //console.log('AniList API Response:', JSON.stringify(data, null, 2));
       const allEntries = data.MediaListCollection.lists.flatMap((list: any) => list.entries);
 
       if (allEntries.length === 0) {
@@ -282,7 +282,7 @@ export const InterestService = {
       if (!response.ok) throw new Error('Trakt API response not ok');
 
       const data = await response.json();
-      console.log('Trakt API Response:', JSON.stringify(data, null, 2));
+      //console.log('Trakt API Response:', JSON.stringify(data, null, 2));
       if (!data || data.length === 0) {
         return null;
       }

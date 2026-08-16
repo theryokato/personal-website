@@ -7,7 +7,7 @@ const items = await InterestService.getAnime('ja');
 if (!items) return Astro.redirect('/404');
 ---
 
-<Base title="アニメ" activeNav="anime">
+<Base title="アニメ" activeNav="interests">
   <h1 class="text-[1.75rem] font-normal leading-tight tracking-tight text-text mb-2">
     アニメ
   </h1>
