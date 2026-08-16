@@ -1,0 +1,29 @@
+---
+interface Props {
+  src?: string;
+  alt?: string;
+  caption: string;
+  poster?: string;
+}
+
+const { src, alt, caption, poster } = Astro.props;
+const finalAlt = alt ?? caption;
+---
+
+{src && (
+  <figure class="my-8">
+    <video
+      src={src}
+      poster={poster}
+      controls
+      muted
+      class="w-full h-auto block"
+    >
+      {finalAlt && <track kind="captions" src="" srclang="en" label={finalAlt} />}
+      Your browser does not support the video tag.
+    </video>
+    <figcaption class="mt-2 text-xs text-subtext0 font-mono text-center">
+      {caption}
+    </figcaption>
+  </figure>
+)}

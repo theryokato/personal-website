@@ -1,0 +1,144 @@
+---
+interface Props {
+  src: string;
+  totalPages: number;
+  caption: string;
+}
+
+const { src, totalPages, caption } = Astro.props;
+---
+
+<!-- PDF.js Library -->
+<script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+<figure class="my-8">
+  <div
+    class="project-slides-container relative group cursor-pointer overflow-hidden rounded-lg bg-gray-100"
+    data-src={src}
+    data-total={totalPages}
+  >
+    <!-- Canvas for PDF rendering -->
+    <div class="relative w-full aspect-video bg-gray-100 flex items-center justify-center">
+      <canvas
+        class="project-slide-canvas w-full h-full object-contain"
+      ></canvas>
+
+      <!-- Loading Indicator -->
+      <div class="slide-loader absolute inset-0 flex items-center justify-center bg-gray-100 text-xs font-mono text-text">
+        Loading slide...
+      </div>
+    </div>
+
+    <!-- Counter -->
+    <div
+      class="project-slide-counter absolute bottom-3 right-3 z-20 bg-black/60 text-white text-[10px] px-2 py-1 rounded font-mono pointer-events-none"
+    >
+      1 / {totalPages}
+    </div>
+
+    <!-- Navigation Hints -->
+    <div class="absolute inset-0 z-20 flex items-center justify-between px-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+      <div class="prev-slide w-8 h-8 flex items-center justify-center rounded-full bg-black/20 text-white cursor-pointer hover:bg-black/40 transition-colors">‹</div>
+      <div class="next-slide w-8 h-8 flex items-center justify-center rounded-full bg-black/20 text-white cursor-pointer hover:bg-black/40 transition-colors">›</div>
+    </div>
+  </div>
+  <figcaption class="mt-2 text-xs text-text font-mono text-center">
+    {caption}
+  </figcaption>
+</figure>
+
+<script>
+  // Cache for PDF documents to avoid re-loading the file on every page change
+  const pdfCache = new Map();
+
+  async function renderPage(container: HTMLElement, pageNum: number) {
+    const src = container.getAttribute('data-src');
+    const canvasElement = container.querySelector('.project-slide-canvas');
+    if (!(canvasElement instanceof HTMLCanvasElement)) return;
+    const canvas = canvasElement;
+    const loader = container.querySelector('.slide-loader');
+    const counter = container.querySelector('.project-slide-counter');
+
+    if (!src || !canvas || !counter) return;
+
+    try {
+      loader?.classList.remove('hidden');
+
+      const pdfjsLib = (window as any).pdfjsLib;
+      if (!pdfjsLib) {
+        console.error('PDF.js library not loaded');
+        return;
+      }
+
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+      let pdf = pdfCache.get(src);
+      if (!pdf) {
+        const loadingTask = pdfjsLib.getDocument(src);
+        pdf = await loadingTask.promise;
+        pdfCache.set(src, pdf);
+      }
+
+      const page = await pdf.getPage(pageNum);
+
+      const viewport = page.getViewport({ scale: 2 });
+      const context = canvas.getContext('2d');
+
+      if (!context) return;
+
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+
+      await page.render({
+        canvasContext: context,
+        viewport: viewport
+      }).promise;
+
+      counter.textContent = `${pageNum} / ${pdf.numPages}`;
+    } catch (e) {
+      console.error('Error rendering PDF page:', e);
+    } finally {
+      loader?.classList.add('hidden');
+    }
+  }
+
+  function initSlides() {
+    const containers = document.querySelectorAll('.project-slides-container');
+
+    containers.forEach(container => {
+      const totalPages = parseInt(container.getAttribute('data-total') || '1');
+      let currentIndex = 1;
+
+      // Wait for PDF.js to be available before initial render
+      const attemptInitialRender = setInterval(async () => {
+        if ((window as any).pdfjsLib) {
+          clearInterval(attemptInitialRender);
+          await renderPage(container as HTMLElement, currentIndex);
+        }
+      }, 100);
+
+      const prevBtn = container.querySelector('.prev-slide');
+      const nextBtn = container.querySelector('.next-slide');
+
+      prevBtn?.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        currentIndex = currentIndex === 1 ? totalPages : currentIndex - 1;
+        await renderPage(container as HTMLElement, currentIndex);
+      });
+
+      nextBtn?.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        currentIndex = (currentIndex % totalPages) + 1;
+        await renderPage(container as HTMLElement, currentIndex);
+      });
+
+      container.addEventListener('click', async () => {
+        currentIndex = (currentIndex % totalPages) + 1;
+        await renderPage(container as HTMLElement, currentIndex);
+      });
+    });
+  }
+
+  initSlides();
+  document.addEventListener('astro:after-swap', initSlides);
+</script>

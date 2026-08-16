@@ -1,21 +1,22 @@
 ---
 interface Props {
   src?: string;
-  alt: string;
+  alt?: string;
   caption: string;
 }
 
 const { src, alt, caption } = Astro.props;
+const finalAlt = alt ?? caption;
 ---
 
 {src && (
-  <figure class="my-8 overflow-hidden rounded-sm border border-surface0">
+  <figure class="my-8">
     <img
       src={src}
-      alt={alt}
+      alt={finalAlt}
       class="w-full h-auto block"
     />
-    <figcaption class="px-3 py-2 text-xs text-subtext0 font-mono text-center bg-surface0">
+    <figcaption class="mt-2 text-xs text-text font-mono text-center">
       {caption}
     </figcaption>
   </figure>
