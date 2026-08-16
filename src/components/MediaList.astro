@@ -9,58 +9,38 @@ interface Props {
 
 const { items, showDetailedStatus = false, showAuthorOnRight = false } = Astro.props;
 
-const statusLabels: Record<string, Record<MediaItem['status'], string>> = {
-  en: {
-    reading:   'Ongoing',
-    finished:  'Finished',
-    partially: 'Partially Read',
-    abandoned: 'Abandoned',
-  },
-  ja: {
-    reading:   '読書中',
-    finished:  '読了',
-    partially: '一部読了',
-    abandoned: '断念',
-  },
-};
-
-const locale = Astro.currentLocale || 'en';
-const statusLabel = statusLabels[locale] || statusLabels.en;
-
-const reading = items.filter(b => b.status === 'reading');
+const reading = items.filter(item => item.status === 'reading');
 
 let finished: MediaItem[] = [];
 let others: MediaItem[] = [];
 let done: MediaItem[] = [];
 
 if (showDetailedStatus) {
-  finished = items.filter(b => b.status === 'finished');
-  others = items.filter(b => b.status === 'abandoned' || b.status === 'partially');
+  finished = items.filter(item => item.status === 'finished');
+  others = items.filter(item => item.status === 'abandoned' || item.status === 'partially');
 } else {
-  done = items.filter(b => b.status !== 'reading');
+  done = items.filter(item => item.status !== 'reading');
 }
 ---
 
-<div class="book-list">
+<div class="media-list">
 
   {reading.length > 0 && (
     <section class="mb-10">
       <p class="section-label">Currently Reading</p>
-      <ul class="book-rows">
-        {reading.map(book => (
-          <li class="book-row">
-            <div class="book-left">
-              <span class="book-title">{book.title}</span>
-              <div class="book-meta">
-                {!showAuthorOnRight && book.author && <span class="book-author">{book.author}</span>}
+      <ul class="media-rows">
+        {reading.map(item => (
+          <li class="media-row">
+            <div class="media-left">
+              <span class="media-title">{item.title}</span>
+              <div class="media-meta">
+                {!showAuthorOnRight && item.author && <span class="media-author">{item.author}</span>}
               </div>
             </div>
-            <div class="book-right">
-              {showAuthorOnRight && book.author ? (
-                <span class="book-author">{book.author}</span>
-              ) : (
-                <span class="book-status">{statusLabel[book.status]}</span>
-              )}
+            <div class="media-right">
+              {showAuthorOnRight && item.author ? (
+                <span class="media-author">{item.author}</span>
+              ) : null}
             </div>
           </li>
         ))}
@@ -73,21 +53,19 @@ if (showDetailedStatus) {
       {finished.length > 0 && (
         <section class="mb-10">
           <p class="section-label">Finished</p>
-          <ul class="book-rows">
-            {finished.map(book => (
-              <li class="book-row">
-                <div class="book-left">
-                  <span class="book-title">{book.title}</span>
-                  <div class="book-meta">
-                    {!showAuthorOnRight && book.author && <span class="book-author">{book.author}</span>}
+          <ul class="media-rows">
+            {finished.map(item => (
+              <li class="media-row">
+                <div class="media-left">
+                  <span class="media-title">{item.title}</span>
+                  <div class="media-meta">
+                    {!showAuthorOnRight && item.author && <span class="media-author">{item.author}</span>}
                   </div>
                 </div>
-                <div class="book-right">
-                  {showAuthorOnRight && book.author ? (
-                    <span class="book-author">{book.author}</span>
-                  ) : (
-                    <span class="book-status">{statusLabel[book.status]}</span>
-                  )}
+                <div class="media-right">
+                  {showAuthorOnRight && item.author ? (
+                    <span class="media-author">{item.author}</span>
+                  ) : null}
                 </div>
               </li>
             ))}
@@ -97,21 +75,19 @@ if (showDetailedStatus) {
       {others.length > 0 && (
         <section class="mb-10">
           <p class="section-label">Paused/Abandoned</p>
-          <ul class="book-rows">
-            {others.map(book => (
-              <li class="book-row">
-                <div class="book-left">
-                  <span class="book-title">{book.title}</span>
-                  <div class="book-meta">
-                    {!showAuthorOnRight && book.author && <span class="book-author">{book.author}</span>}
+          <ul class="media-rows">
+            {others.map(item => (
+              <li class="media-row">
+                <div class="media-left">
+                  <span class="media-title">{item.title}</span>
+                  <div class="media-meta">
+                    {!showAuthorOnRight && item.author && <span class="media-author">{item.author}</span>}
                   </div>
                 </div>
-                <div class="book-right">
-                  {showAuthorOnRight && book.author ? (
-                    <span class="book-author">{book.author}</span>
-                  ) : (
-                    <span class="book-status">{statusLabel[book.status]}</span>
-                  )}
+                <div class="media-right">
+                  {showAuthorOnRight && item.author ? (
+                    <span class="media-author">{item.author}</span>
+                  ) : null}
                 </div>
               </li>
             ))}
@@ -123,21 +99,19 @@ if (showDetailedStatus) {
     done.length > 0 && (
       <section class="mb-10">
         <p class="section-label">Finished / Others</p>
-        <ul class="book-rows">
-          {done.map(book => (
-            <li class="book-row">
-              <div class="book-left">
-                <span class="book-title">{book.title}</span>
-                <div class="book-meta">
-                  {!showAuthorOnRight && book.author && <span class="book-author">{book.author}</span>}
+        <ul class="media-rows">
+          {done.map(item => (
+            <li class="media-row">
+              <div class="media-left">
+                <span class="media-title">{item.title}</span>
+                <div class="media-meta">
+                  {!showAuthorOnRight && item.author && <span class="media-author">{item.author}</span>}
                 </div>
               </div>
-              <div class="book-right">
-                {showAuthorOnRight && book.author ? (
-                  <span class="book-author">{book.author}</span>
-                ) : (
-                  <span class="book-status">{statusLabel[book.status]}</span>
-                )}
+              <div class="media-right">
+                {showAuthorOnRight && item.author ? (
+                  <span class="media-author">{item.author}</span>
+                ) : null}
               </div>
             </li>
           ))}
@@ -149,7 +123,7 @@ if (showDetailedStatus) {
 </div>
 
 <style>
-  .book-list {
+  .media-list {
     width: 100%;
   }
 
@@ -161,13 +135,13 @@ if (showDetailedStatus) {
     margin-bottom: 0.75rem;
   }
 
-  .book-rows {
+  .media-rows {
     list-style: none;
     padding: 0;
     margin: 0;
   }
 
-  .book-row {
+  .media-row {
     display: grid;
     grid-template-columns: 1fr auto;
     align-items: start;
@@ -176,46 +150,41 @@ if (showDetailedStatus) {
     border-bottom: 1px solid var(--color-surface0);
   }
 
-  .book-row:first-child {
+  .media-row:first-child {
     border-top: 1px solid var(--color-surface0);
   }
 
-  .book-left {
+  .media-left {
     display: flex;
     flex-direction: column;
     gap: 0.2rem;
   }
 
-  .book-title {
+  .media-title {
     font-size: 0.9375rem;
     font-weight: medium;
     color: var(--color-text);
     line-height: 1.3;
   }
 
-  .book-meta {
+  .media-meta {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     flex-wrap: wrap;
   }
 
-  .book-author {
+  .media-author {
     font-size: 0.8125rem;
     color: var(--color-subtext0);
     line-height: 1.3;
   }
 
-  .book-right {
+  .media-right {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 0.15rem;
     white-space: nowrap;
-  }
-
-  .book-status {
-    font-size: 0.8125rem;
-    color: var(--color-subtext0);
   }
 </style>
