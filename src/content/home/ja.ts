@@ -22,7 +22,7 @@ export const homeContent = {
          href="/pgp"
          class="text-text underline underline-offset-[3px] decoration-1 hover:text-mauve transition-colors"
          >PGPキー</a
-       >)でお願いします。。`,
+       >)でお願いします。`,
   sections: [
     {
       title: "プロジェクト",
