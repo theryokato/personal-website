@@ -1,16 +1,17 @@
 ---
-title: "Rocket Engine Design"
+title: "Rocket Engine Design (RED)"
 slug: "red"
 url: ""
 description: "Rocket Engine Design"
 publishedAt: "2025-08-10"
-startDate: "2025-02-01"
-endDate: "2025-05-31"
+startDate: "2025-02"
+endDate: "2026-01"
 tags: ["Rocketry", "CAD", "Design"]
-image: "/assets/RED_E2_STAND.png"
+image: "/assets/RED/RED_E2_STAND.png"
 ---
 
 import ProjectImage from '../../../components/ProjectImage.astro';
+import ProjectSlides from '../../../components/ProjectSlides.astro';
 
 ## Overview
 While Elysium 1.1 delivered major gains through small, targeted improvements, Elysium 2 represents RED’s next
@@ -19,7 +20,8 @@ engine ever fired at Texas A&M. With built-in throttling and gimbaling capabilit
 platform RED needs to develop more advanced, flight-relevant systems and push the program into a new tier of
 technical complexity.
 
-### Technical Details
+### Flame Diverter
+During my time at Rocket Engine Design (RED), I designed the flame diverter for the E2 hotfire test stand. The diverter was designed to redirect the hot exhaust away from the test stand in a controllable manner, while also being able to withstand the extreme heat and pressure of the rocket engine exhaust.
 - Stacked 0.5" thick 304 Stainless Steel plates, bended
 - 3/4" Carbon Steel square rails (welded, 18ft total)
 - 3/8" Grade 5 Steel Bolts & Nuts
@@ -27,9 +29,22 @@ technical complexity.
 - 45&deg; and 10&deg; angles
 - 31" x 16.5" x 18" (L x W x H)
 
-
 <ProjectImage
-  src="/assets/RED_E2_STAND.png"
+  src="/assets/RED/RED_E2_STAND.png"
   alt="Initial test stand for E2 hotfires"
   caption="Initial test stand for E2 hotfires"
+/>
+
+<ProjectSlides
+  src="/assets/RED/STR_CDR.pdf"
+  totalPages={45}
+  caption="Elysium 2 Critical Design Preview (CDR) Presentation for Structures Subteam"
+/>
+
+### Project Ragnarok
+Project Ragnarok was a project within RED that aims to modify the Elysium 2 engine into a regeneratively cooled engine. As a member of the avionics subteam, I oversaw detailed component analysis for electronics, wires, and sensors to confirm compatibility and prevent integration issues.
+<ProjectSlides
+  src="/assets/RED/DCR_Ragnarok.pdf"
+  totalPages={64}
+  caption="Project Ragnarok Design Concept Review (DCR) Presentation for Avionics Subteam"
 />

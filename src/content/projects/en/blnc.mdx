@@ -1,0 +1,47 @@
+---
+title: "BLNC"
+slug: "blnc"
+url: ""
+description: "Self Balancing Rover"
+publishedAt: "2026-08-11"
+startDate: "2025-08"
+endDate: "2025-12"
+tags: ["Rover", "Self-Balancing", "Inverted Pendulum"]
+image: "/assets/BLNC/blnc_card.png"
+---
+
+import ProjectImage from '../../../components/ProjectImage.astro';
+import ProjectVideo from '../../../components/ProjectVideo.astro';
+import ProjectSlides from '../../../components/ProjectSlides.astro';
+
+
+## Overview
+BLNC is focusing on developing rovers that can adjust the location of their center of gravity to maintain stability in extreme terrains. These rovers follow a two-wheeled inverted pendulum architecture.
+
+The V1 Rover is BLNC’s two-wheeled inverted pendulum testbed to verify and test control systems. The rover is primarily 3D printed with certain mechanical components, such as standoffs and other hardware being COTS parts.
+
+I served as a **Controls System Subteam member** on this project.
+
+### Mechanical
+The V1 Rover is BLNC’s two-wheeled inverted pendulum testbed to verify and test control systems. The rover is primarily 3D printed with certain mechanical components, such as standoffs and other hardware being COTS parts.
+Design Specifications:
+- Total mass: 1.45 kg
+- CoM height: 20 cm from pivot point
+- Wheels: 100 mm diameter
+- 1:10 gear ratio between actuator and wheel
+- Batteries and motors positioned high to raise the CoM as much as possible
+- Material: PLA-CF (main body), PETG (wheel hubs)
+
+
+### Controls
+A cascade Proportional-Integral-Derivative (PID) controller is one of the control solutions we have developed. The outer loop of the controller determines the necessary pitch angle to move the rover to the desired position. The inner loop of the controller determines the necessary motor velocity to rotate the rover to the desired pitch angle. All 6 gains were manually tuned using the Ziegler–Nichols tuning method.
+
+<ProjectImage
+  src="/assets/BLNC/blnc_pid.png"
+  caption="Cascade PID Controller Block Diagram"
+/>
+
+<ProjectImage
+  src="/assets/BLNC/BLNC_F25_Poster.svg"
+  caption="Poster for Fall 2025 TURTLE Project Showcase"
+/>

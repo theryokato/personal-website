@@ -1,35 +1,51 @@
 ---
-title: "Rocket Engine Design"
+title: "Rocket Engine Design (RED)"
 slug: "red"
 url: ""
-description: "Rocket Engine Design"
+description: "ロケットエンジン設計"
 publishedAt: "2025-08-10"
-startDate: "2025-02-01"
-endDate: "2025-05-31"
+startDate: "2025-02"
+endDate: "2026-01"
 tags: ["Rocketry", "CAD", "Design"]
-image: "/assets/RED_E2_STAND.png"
+image: "/assets/RED/RED_E2_STAND.png"
 ---
 
 import ProjectImage from '../../../components/ProjectImage.astro';
+import ProjectSlides from '../../../components/ProjectSlides.astro';
 
 ## 概要
+Elysium 1.1は、小規模かつ的を絞った改良によって大きな成果をもたらしましたが、Elysium 2はREDにとって次の
+歴史的な一歩となります。このエンジンは、テキサスA&M大学でこれまでに打ち上げられた中で最も強力なロケット
+エンジンとなる、まったく新しいアーキテクチャを採用しています。スロットリングおよびジンバリング機能を内蔵したエリジウム2は、
+REDがより高度で実飛行に即したシステムを開発し、プログラムを新たなレベルの
+技術的複雑さへと押し上げるために必要なプラットフォームを提供します。
 
-Elysium 1.1が、小規模かつ的を絞った改良によって大きな性能向上を実現した一方で、Elysium 2はREDにとって次なる歴史的な一歩となります。本エンジンでは、これまでとは全く異なる新しいアーキテクチャを導入し、**Texas A&M Universityでこれまでに点火された中で最も高性能なロケットエンジン**となることを目指しています。
-
-さらに、スロットリング（推力制御）およびジンバリング（推力方向制御）機能を内蔵することで、REDがより高度で実際の飛行を想定したシステムを開発し、技術的な複雑性を新たな段階へ引き上げるための基盤を提供します。
-
-## 技術仕様
-
-* 厚さ 0.5インチの304ステンレス鋼プレートを積層・曲げ加工
-* 3/4インチ角形炭素鋼レール（溶接、総延長18フィート）
-* 3/8インチ Grade 5スチール製ボルト・ナット
-* 26インチアルミニウム製ペネトレーター
-* 45°および10°**の角度
-* 寸法：31 × 16.5 × 18インチ（長さ × 幅 × 高さ
-
-
+### 火炎偏向装置
+Rocket Engine Design（RED）在籍中、私はE2ホットファイア試験スタンド用の火炎偏向装置を設計しました。この偏向装置は、高温の排気を制御可能な形で試験スタンドから遠ざけるように設計されていると同時に、ロケットエンジンの排気がもたらす極度の高温・高圧にも耐えられるようになっています。
+- 厚さ0.5インチの304ステンレス鋼板を積層・曲げ加工
+- 3/4インチ角の炭素鋼レール（溶接、総延長18 ft）
+- 3/8インチ Grade 5 スチール製ボルト・ナット
+- 長さ26インチのアルミニウム製ペネトレーター
+- 45°および10°の角度
+- 寸法：31" × 16.5" × 18"（L × W × H）
 
 <ProjectImage
-  src="/assets/RED_E2_STAND.png"
-  caption="E2ホットファイア用初期フレームディバーター"
+  src="/assets/RED/RED_E2_STAND.png"
+  alt="E2ホットファイア用初期試験スタンド"
+  caption="E2ホットファイア用初期試験スタンド"
+/>
+
+<ProjectSlides
+  src="/assets/RED/STR_CDR.pdf"
+  totalPages={45}
+  caption="Elysium 2 構造サブチーム Critical Design Review（CDR）プレゼンテーション"
+/>
+
+### Project Ragnarok
+「プロジェクト・ラグナロク」は、RED内で行われたプロジェクトであり、Elysium 2エンジンを再生冷却式エンジンへと改造することを目的としていました。私はアビオニクスサブチームのメンバーとして、互換性を確認し、統合時の問題を未然に防ぐため、電子機器、配線、センサーに関する詳細な部品分析を統括しました。
+
+<ProjectSlides
+  src="/assets/RED/DCR_Ragnarok.pdf"
+  totalPages={64}
+  caption="Project Ragnarok Design Concept Review（DCR）プレゼンテーション（アビオニクスサブチーム）"
 />
