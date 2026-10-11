@@ -8,8 +8,11 @@ export const homeContent = {
          href="https://turtlerobotics.org"
          class="text-text underline underline-offset-[3px] decoration-1 hover:text-yellow transition-colors"
          >TURTLE Robotics</a
-       >, the largest student-led robotics org in Texas. Also helping out
-       research at <a
+       >, the largest student-led robotics org in Texas. I'm also a software member of <a
+         href="https://www.karurarobotics.org/"
+         class="text-text underline underline-offset-[3px] decoration-1 hover:text-flamingo transition-colors"
+         >KARURA</a
+       >, and contribue to research at the <a
          href="https://herc.engr.tamu.edu/"
          class="text-text underline underline-offset-[3px] decoration-1 hover:text-peach transition-colors"
          >Human-Empowering Robotics and Control (HERC) Lab</a

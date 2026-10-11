@@ -28,5 +28,8 @@
   },
   "overrides": {
     "vite": "^7"
+  },
+  "allowScripts": {
+    "workerd@1.20260801.1": true
   }
 }
