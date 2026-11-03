@@ -7,7 +7,7 @@ export const homeContent = {
        >機械工学科3年生。数学副専攻。現在、テキサス州最大規模の学生主導ロボット工学団体<a
          href="https://turtlerobotics.org"
          class="text-text underline underline-offset-[3px] decoration-1 hover:text-yellow transition-colors"
-         >「TURTLE Robotics」</a
+         >TURTLE Robotics</a
        >の内部担当副代表を務めるほか、<a
          href="https://www.karurarobotics.org/"
          class="text-text underline underline-offset-[3px] decoration-1 hover:text-flamingo transition-colors"
@@ -15,7 +15,7 @@ export const homeContent = {
        >ではソフトウェア開発に携わっています。また、<a
          href="https://herc.engr.tamu.edu/"
          class="text-text underline underline-offset-[3px] decoration-1 hover:text-peach transition-colors"
-         >「Human-Empowering Robotics and Control（HERC）Lab」</a
+         >Human-Empowering Robotics and Control（HERC）Lab</a
        >での研究活動にも協力しています。
        <br /><br />
        いつでもお気軽に連絡ください。できれば<a
