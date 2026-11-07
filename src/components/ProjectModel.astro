@@ -1,0 +1,152 @@
+---
+interface Annotation {
+  name: string;
+  label: string;
+  position: string;
+  normal: string;
+}
+
+interface Props {
+  src: string;
+  alt: string;
+  caption: string;
+  poster?: string;
+  annotations?: Annotation[];
+}
+
+const { src, alt, caption, poster, annotations = [] } = Astro.props;
+const isJapanese = Astro.currentLocale === 'ja';
+const modelLinkLabel = isJapanese ? '3Dモデルを開く' : 'Open 3D model';
+const loadingLabel = isJapanese ? '3Dモデルを読み込み中…' : 'Loading 3D model…';
+---
+
+<figure class="project-model">
+  <model-viewer
+    data-project-model
+    data-loading-label={loadingLabel}
+    src={src}
+    poster={poster}
+    alt={alt}
+    camera-controls
+    touch-action="pan-y"
+    loading="lazy"
+    reveal="auto"
+    shadow-intensity="1"
+  >
+    {annotations.map((annotation) => (
+      <div
+        slot={`hotspot-${annotation.name}`}
+        class="hotspot"
+        data-position={annotation.position}
+        data-normal={annotation.normal}
+        data-visibility-attribute="visible"
+      >
+        <span>{annotation.label}</span>
+      </div>
+    ))}
+  </model-viewer>
+  <p class="download">
+    <a href={src} target="_blank" rel="noopener noreferrer">{modelLinkLabel}</a>
+  </p>
+  <figcaption>{caption}</figcaption>
+</figure>
+
+<script>
+  const viewers = document.querySelectorAll('model-viewer[data-project-model]');
+
+  if (viewers.length) {
+    let loaded = false;
+    const loadViewer = () => {
+      if (loaded) return;
+      loaded = true;
+      observer?.disconnect();
+      void import('@google/model-viewer');
+    };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) loadViewer();
+      },
+      { rootMargin: '400px 0px' },
+    );
+
+    viewers.forEach((viewer) => observer.observe(viewer));
+  }
+</script>
+
+<style>
+  .project-model {
+    margin-block: 2rem;
+  }
+
+  model-viewer {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: var(--color-mantle);
+    border: 1px solid var(--color-surface0);
+    border-radius: 0.5rem;
+  }
+
+  model-viewer:not(:defined) {
+    display: grid;
+    place-items: center;
+    color: var(--color-subtext0);
+  }
+
+  model-viewer:not(:defined)::after {
+    content: attr(data-loading-label);
+    font-family: monospace;
+    font-size: 0.75rem;
+  }
+
+  .hotspot {
+    display: grid;
+    place-items: center;
+    min-width: 1.5rem;
+    min-height: 1.5rem;
+    padding: 0.25rem;
+    color: var(--color-base);
+    background: var(--color-blue);
+    border: 1px solid var(--color-base);
+    border-radius: 999px;
+  }
+
+  .hotspot span {
+    position: absolute;
+    left: calc(100% + 0.5rem);
+    width: max-content;
+    max-width: min(14rem, 55vw);
+    padding: 0.25rem 0.5rem;
+    color: var(--color-text);
+    background: var(--color-base);
+    border: 1px solid var(--color-surface1);
+    border-radius: 0.25rem;
+    font: 0.75rem/1.25 monospace;
+  }
+
+  .hotspot:not([data-visible]) {
+    display: none;
+  }
+
+  .download,
+  figcaption {
+    margin: 0.5rem 0 0;
+    color: var(--color-subtext0);
+    font: 0.75rem/1.25 monospace;
+    text-align: center;
+  }
+
+  .download a {
+    color: var(--color-blue);
+  }
+
+  @media (max-width: 40rem) {
+    model-viewer {
+      aspect-ratio: 1 / 1;
+    }
+
+    .hotspot span {
+      max-width: 11rem;
+    }
+  }
+</style>
