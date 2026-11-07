@@ -11,6 +11,7 @@ image: "/assets/DRON/v4-bottom.png"
 ---
 
 import ProjectImage from '../../../components/ProjectImage.astro';
+import ProjectModel from '../../../components/ProjectModel.astro';
 import ProjectVideo from '../../../components/ProjectVideo.astro';
 import ProjectSlides from '../../../components/ProjectSlides.astro';
 
@@ -28,6 +29,26 @@ DRON(Disaster Response Observation Network、災害対応観測ネットワー�
 
 ### 機械設計
 DRONは、重量、構造的安定性、モジュール性のバランスを考慮して設計されており、飛行中に生じる高いストレス、すなわちプロペラからのトルクやペイロードによる内部応力に耐え、任務を完了できるようになっています。次期V4設計では、飛行中に機体故障を引き起こしかねない振動を最小限に抑えるため、アーム部にカーボンファイバー製のチューブを採用しました。すべての部品は、修理のしやすさを考慮し、ヒートインサートとネジで接続されています。
+
+### 3Dビューアのデモ
+DRONの実機CADモデルをWeb向けにエクスポートするまで、こちらのインタラクティブな例では[Model ViewerのAstronautサンプル](https://modelviewer.dev/)を使用しています。
+
+<ProjectModel
+  src="/assets/examples/astronaut.glb"
+  alt="宇宙飛行士のインタラクティブな3Dモデル"
+  caption="Model Viewer Astronaut サンプル"
+  annotations={[{
+    name: 'visor',
+    label: 'バイザー',
+    position: '0 1.75 0.35',
+    normal: '0 0 1',
+  }, {
+    name: 'hand',
+    label: '手',
+    position: '-0.54 0.93 0.1',
+    normal: '-0.73 0.05 0.69',
+  }]}
+/>
 
 ### ビジュアル(画像処理)
 ソフトウェアは、各コンポーネント間の通信管理、ホットスポットの検出、および環境の3Dマッピングという役割を担っています。2台のステレオカメラのキャリブレーションに成功し、周囲の奥行き情報を取得できるようになりました。ステレオ画像はROS2ノードを通じてUnityにパブリッシュされ、そこで可視化されます。ソフトウェアスタックは、飛行制御、データ収集、画像処理、環境の3D可視化のために、多数のモジュールおよびライブラリに依存しています。
