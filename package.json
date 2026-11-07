@@ -16,15 +16,18 @@
     "@astrojs/check": "^0.9.9",
     "@astrojs/cloudflare": "^13.7.0",
     "@astrojs/mdx": "^6.0.3",
+    "@google/model-viewer": "^4.4.0",
     "@tailwindcss/vite": "^4.3.0",
     "astro": "^6.4.6",
+    "photoswipe": "^5.4.4",
     "tailwindcss": "^4.3.0",
+    "three": "^0.183.2",
     "typescript": "^6.0.3"
   },
   "devDependencies": {
+    "@types/node": "^22.0.0",
     "astro-icon": "^1.1.5",
-    "wrangler": "^4.100.0",
-    "@types/node": "^22.0.0"
+    "wrangler": "^4.100.0"
   },
   "overrides": {
     "vite": "^7"
