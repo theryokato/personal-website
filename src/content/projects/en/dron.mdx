@@ -11,6 +11,7 @@ image: "/assets/DRON/v4-bottom.png"
 ---
 
 import ProjectImage from '../../../components/ProjectImage.astro';
+import ProjectModel from '../../../components/ProjectModel.astro';
 import ProjectVideo from '../../../components/ProjectVideo.astro';
 import ProjectSlides from '../../../components/ProjectSlides.astro';
 
@@ -30,6 +31,26 @@ I serve as the **Mechanical Systems Lead** for this project.
 ### Mechanical
 DRON is designed to balance weight, structural stability, and modularity to withstand the high stress involved in a flight, namely torque from the propellers and internal stresses from payloads, and continue to function in order to complete a mission.
 DRON has adopted the use of carbon fiber tubes in the arms in the next V4 design to minimize potentially devastating vibrations during flight that can cause failure. All of our parts are connected via heat inserts and screws for ease of repair.
+
+### 3D Viewer Demo
+This interactive example uses the [Model Viewer Astronaut sample](https://modelviewer.dev/) while DRON's production CAD model is prepared for web export.
+
+<ProjectModel
+  src="/assets/examples/astronaut.glb"
+  alt="Interactive 3D model of an astronaut"
+  caption="Model Viewer Astronaut sample"
+  annotations={[{
+    name: 'visor',
+    label: 'Visor',
+    position: '0 1.75 0.35',
+    normal: '0 0 1',
+  }, {
+    name: 'hand',
+    label: 'Hand',
+    position: '-0.54 0.93 0.1',
+    normal: '-0.73 0.05 0.69',
+  }]}
+/>
 
 ### Visual
 The software has the role of managing communications between components, detecting hotspots, and 3D mapping the environment. Two stereo cameras were successfully calibrated to capture depth of their surroundings. Stereo images are published through a ROS2 node into Unity where they are visualized.
