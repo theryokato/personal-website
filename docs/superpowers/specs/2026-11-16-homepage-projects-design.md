@@ -1,6 +1,6 @@
 # Move projects to the homepage
 
-Status: proposed design, awaiting user approval. No application changes made.
+Status: approved by the user on 2026-11-16. No application changes made yet.
 
 ## Intent
 
