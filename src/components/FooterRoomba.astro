@@ -1,18 +1,32 @@
 <!-- Piixpal 0.4.0, MIT. Keep the original sprite and load only Roomba + its engine. -->
-<script is:inline src="/vendor/piixpal/0.4.0/core.min.js" defer></script>
-<script is:inline src="/vendor/piixpal/0.4.0/c/roomba.min.js" defer></script>
 <script is:inline>
   document.addEventListener('DOMContentLoaded', () => {
     const footer = document.querySelector('footer');
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
     let pal;
+    let active = true;
+    let near = false;
+    let library;
+    const loadScript = src => new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = resolve;
+      script.onerror = () => { script.remove(); reject(new Error('Unable to load Roomba')); };
+      document.head.append(script);
+    });
+    const loadLibrary = () => library ??= loadScript('/vendor/piixpal/0.4.0/core.min.js')
+      .then(() => loadScript('/vendor/piixpal/0.4.0/c/roomba.min.js'))
+      .catch(error => { library = undefined; throw error; });
     const remove = () => {
       pal?.remove();
       pal = undefined;
     };
-    const sync = () => {
-      if (reducedMotion.matches) return remove();
-      if (!footer || pal || !customElements.get('piix-pal')) return;
+    const sync = async () => {
+      if (!active || reducedMotion.matches || !near) return remove();
+      if (!footer || pal) return;
+      try { await loadLibrary(); } catch { return; }
+      // Loading can finish after scrolling away, changing preferences, or leaving.
+      if (!active || reducedMotion.matches || !near || pal) return;
       pal = document.createElement('piix-pal');
       pal.setAttribute('pal', 'roomba');
       pal.addEventListener('piix:ready', event => {
@@ -40,9 +54,24 @@
       }, { once: true });
       footer.append(pal);
     };
-    customElements.whenDefined('piix-pal').then(sync);
+    const observer = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
+      near = entries[entries.length - 1].isIntersecting;
+      void sync();
+    }, { rootMargin: '300px 0px' }) : undefined;
+    const observe = () => {
+      active = true;
+      if (!footer) return;
+      if (observer) observer.observe(footer);
+      else { near = true; void sync(); }
+    };
+    observe();
     reducedMotion.addEventListener('change', sync);
-    window.addEventListener('pagehide', remove);
-    window.addEventListener('pageshow', sync);
+    window.addEventListener('pagehide', () => {
+      active = false;
+      near = false;
+      observer?.disconnect();
+      remove();
+    });
+    window.addEventListener('pageshow', observe);
   }, { once: true });
 </script>
