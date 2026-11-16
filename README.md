@@ -4,6 +4,11 @@ Personal space on the Internet.
 
 Uses [Astro](https://astro.build/), [Tailwind](https://tailwindcss.com/), and [MDX](https://mdxjs.com/).
 
+## Writing project pages
+
+Start with the [English/Japanese project-page templates](docs/templates/README.md).
+They include research-based writing prompts, media guidance, and publication checks.
+
 ## Project media
 
 Store project media in `public/assets/<PROJECT>/`.
