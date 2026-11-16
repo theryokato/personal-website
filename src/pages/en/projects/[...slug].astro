@@ -1,4 +1,5 @@
 ---
+import { preview, previewSet } from "../../../utils/previews";
 import Base from "../../../layouts/Base.astro";
 import { formatDate } from "../../../utils/dates";
 
@@ -41,7 +42,7 @@ const Content = proj?.Content;
 
 {
     isList ? (
-        <Base title="Projects" activeNav="projects">
+        <Base title="Projects" description="Things I have worked on." activeNav="projects">
             <h1 class="text-[1.75rem] font-normal leading-tight tracking-tight text-text mb-8">
                 Projects
             </h1>
@@ -56,15 +57,15 @@ const Content = proj?.Content;
                         <div class="overflow-hidden rounded-sm bg-mantle aspect-4/3 mb-2">
                             {p.image ? (
                                 <img
-                                    src={p.image}
+                                    src={preview(p.image)} srcset={previewSet(p.image)} sizes="(max-width: 600px) 45vw, 310px" loading="lazy" decoding="async"
                                     alt={p.title}
-                                    class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                                    class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-150"
                                 />
                             ) : (
                                 <div class="w-full h-full bg-surface0" />
                             )}
                         </div>
-                        <div class="flex items-baseline justify-between gap-2">
+                        <div class="project-summary flex items-baseline justify-between gap-2">
                             <span class="text-sm text-text leading-snug truncate">
                                 {p.title}
                             </span>
@@ -93,7 +94,7 @@ const Content = proj?.Content;
             {proj.frontmatter.image && (
                 <div class="mb-8 rounded-sm overflow-hidden border border-surface0 aspect-16/7">
                     <img
-                        src={proj.frontmatter.image}
+                        src={preview(proj.frontmatter.image)} srcset={previewSet(proj.frontmatter.image)} sizes="(max-width: 660px) 100vw, 660px" decoding="async"
                         alt={proj.frontmatter.title}
                         class="w-full h-full object-cover"
                     />

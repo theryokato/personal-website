@@ -15,11 +15,12 @@ const finalAlt = alt ?? caption;
     <video
       src={src}
       poster={poster}
+      preload="none"
+      aria-label={finalAlt}
       controls
       muted
       class="w-full h-auto block"
     >
-      {finalAlt && <track kind="captions" src="" srclang="en" label={finalAlt} />}
       Your browser does not support the video tag.
     </video>
     <figcaption class="mt-2 text-xs text-subtext0 font-mono text-center">

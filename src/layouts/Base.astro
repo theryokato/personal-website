@@ -10,7 +10,9 @@ interface Props {
 
 const {
   title = "Ryo Kato",
-  description = "A personal site.",
+  description = title === "Ryo Kato"
+    ? "Ryo Kato’s personal website — mechanical engineering, robotics, projects, and interests."
+    : `${title} — Ryo Kato’s personal website.`,
   activeNav,
 } = Astro.props;
 
@@ -39,12 +41,18 @@ const nav = [
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <title>{fullTitle}</title>
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={currentLocale === 'ja' ? 'ja_JP' : 'en_US'} />
+    <meta name="twitter:card" content="summary" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <script is:inline>
       (function () {
-        const stored = localStorage.getItem("theme");
+        let stored;
+        try { stored = localStorage.getItem("theme"); } catch {}
         const preferred =
-          stored ||
+          (stored === "nord-dark" || stored === "nord-light" ? stored : null) ||
           (window.matchMedia("(prefers-color-scheme: dark)").matches
             ? "nord-dark"
             : "nord-light");
@@ -62,6 +70,7 @@ const nav = [
               <li>
                 <a
                   href={href}
+                  aria-current={activeNav === key ? "page" : undefined}
                   class:list={[
                     "font-mono text-xs tracking-widest lowercase no-underline transition-colors",
                     activeNav === key
@@ -112,7 +121,6 @@ const nav = [
 
     <script>
       const toggle = document.getElementById("theme-toggle");
-      const label = document.getElementById("theme-label");
       const html = document.documentElement;
 
       function getTheme() {
@@ -120,11 +128,12 @@ const nav = [
       }
       function applyTheme(theme: string) {
         html.setAttribute("data-theme", theme);
-        localStorage.setItem("theme", theme);
+        try { localStorage.setItem("theme", theme); } catch {}
         updateIcons(theme);
       }
 
       function updateIcons(theme: string) {
+        toggle?.setAttribute("aria-label", theme === "nord-dark" ? "Switch to light theme" : "Switch to dark theme");
         const sun = document.getElementById("sun-icon");
         const moon = document.getElementById("moon-icon");
         if (theme === "nord-dark") {
@@ -136,6 +145,7 @@ const nav = [
         }
       }
 
+      requestAnimationFrame(() => requestAnimationFrame(() => html.classList.add("theme-ready")));
       updateIcons(getTheme());
       toggle?.addEventListener("click", () => {
         applyTheme(getTheme() === "nord-light" ? "nord-dark" : "nord-light");

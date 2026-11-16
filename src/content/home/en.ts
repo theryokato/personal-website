@@ -12,7 +12,7 @@ export const homeContent = {
          href="https://www.karurarobotics.org/"
          class="text-text underline underline-offset-[3px] decoration-1 hover:text-flamingo transition-colors"
          >KARURA</a
-       >, and contribue to research at the <a
+       >, and contribute to research at the <a
          href="https://herc.engr.tamu.edu/"
          class="text-text underline underline-offset-[3px] decoration-1 hover:text-peach transition-colors"
          >Human-Empowering Robotics and Control (HERC) Lab</a
