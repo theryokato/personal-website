@@ -16,8 +16,7 @@
       if (!document.body || reducedMotion.matches) return;
       const segmenter = new Intl.Segmenter(document.documentElement.lang, { granularity: 'grapheme' });
       const highlight = new Highlight();
-      const groups = new Map();
-      const entries = [];
+      const groups = [];
       const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
       let node;
       while ((node = walker.nextNode())) {
@@ -32,32 +31,45 @@
         while (block.parentElement && ['inline', 'contents'].includes(getComputedStyle(block).display)) {
           block = block.parentElement;
         }
-        let group = groups.get(block);
-        if (!group) groups.set(block, group = { total: 0 });
+        // A single continuous range avoids separate highlight paint boundaries at links.
+        // Start a new run at nested blocks so masks never overlap independent content.
+        let group = groups.at(-1);
+        if (!group || group.block !== block) {
+          group = { block, total: 0, entries: [], range };
+          groups.push(group);
+          highlight.add(range);
+        } else {
+          group.range.setEnd(node, node.length);
+        }
         const boundaries = [...segmenter.segment(node.data)].map(part => part.index);
         boundaries.push(node.length);
-        entries.push({ node, text: node.data, range, boundaries, group, start: group.total });
+        group.entries.push({ node, text: node.data, boundaries });
         group.total += boundaries.length - 1;
-        highlight.add(range);
       }
-      if (!entries.length) return;
+      if (!groups.length) return;
       CSS.highlights.set('language-typing', highlight);
       const started = performance.now();
       const tick = now => {
-        const progress = Math.min((now - started) / 450, 1);
+        const progress = Math.min((now - started) / 900, 1);
         if (progress >= 1) {
           finishTyping();
           return;
         }
-        for (const entry of entries) {
-          // Existing components may replace text (e.g. social handles); never overwrite it.
-          if (!entry.node.isConnected || entry.node.data !== entry.text) {
-            highlight.delete(entry.range);
+        for (const group of groups) {
+          // Existing components may replace text; expose that block rather than stale ranges.
+          if (group.entries.some(entry => !entry.node.isConnected || entry.node.data !== entry.text)) {
+            highlight.delete(group.range);
             continue;
           }
-          const count = Math.max(0, Math.min(entry.boundaries.length - 1,
-            Math.floor(entry.group.total * progress) - entry.start));
-          entry.range.setStart(entry.node, entry.boundaries[count]);
+          let count = Math.floor(group.total * progress);
+          for (const entry of group.entries) {
+            const length = entry.boundaries.length - 1;
+            if (count < length) {
+              group.range.setStart(entry.node, entry.boundaries[Math.max(0, count)]);
+              break;
+            }
+            count -= length;
+          }
         }
         typingFrame = requestAnimationFrame(tick);
       };

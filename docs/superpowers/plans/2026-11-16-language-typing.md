@@ -44,3 +44,10 @@
 - Independent review found no blockers; verified real BFCache, five rapid locale switches, inline link order, dynamic node mutation, and live reduced motion. Browser verification uses Chromium; other engines and assistive technology were not independently tested.
 - Deferred minor: Chromium may emit native transition-abort console diagnostics on very rapid Back navigation during a locale reveal. Text restores and reveal cleanup still completes. No visible failure was found.
 - Committed/pushed to the existing preview branch; no merge or environment publication.
+
+## Follow-up verification: inline links and pacing
+
+- User correction: slow the reveal and address missing/out-of-order letters near embedded links in Brave. Duration is now 900ms, superseding the original 450ms plan above.
+- RED: the homepage bio used 14 separate hidden ranges where a continuous suffix should span its inline links. New regression asserts a single continuous mask, activity beyond 450ms, and unchanged text/geometry in EN/JA at 390px and 1280px.
+- Fix: maintain one Range per contiguous block run and move its start through grapheme-safe text offsets. Nested blocks start separate runs; dynamically changed runs are exposed immediately.
+- GREEN: continuous-mask/pacing checks pass in both languages at 390px and 1280px. All six home/Interests/DRON reveal cases preserve text, grapheme boundaries, and geometry and clean up. Expected automatic slide-loader removal is excluded from the static-text comparison. Keyboard/pointer/reduced-motion cancellation, dynamic names, unsupported API/no-JS fallbacks, media/cat regression checks, and eight idle screenshot comparisons pass. Build: 21 pages; Astro check: 0 errors, 0 warnings, 5 existing hints. Verified in Chromium; a Brave binary is not installed here.
