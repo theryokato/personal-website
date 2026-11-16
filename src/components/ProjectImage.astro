@@ -1,4 +1,5 @@
 ---
+import { preview, previewSet } from "../utils/previews";
 interface Props {
   src: string;
   alt?: string;
@@ -22,7 +23,11 @@ const finalAlt = alt ?? caption;
     class="block cursor-zoom-in focus:outline-none focus:ring-2 focus:ring-blue"
   >
     <img
-      src={src}
+      src={preview(src)}
+      srcset={previewSet(src)}
+      sizes="(max-width: 660px) 100vw, 660px"
+      loading="lazy"
+      decoding="async"
       alt={finalAlt}
       width={width}
       height={height}
@@ -42,6 +47,8 @@ const finalAlt = alt ?? caption;
     gallery: '.prose',
     children: 'a[data-project-image]',
     pswpModule: () => import('photoswipe'),
+    showAnimationDuration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 150,
+    hideAnimationDuration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 150,
   });
 
   lightbox.on('uiRegister', () => {
@@ -69,7 +76,8 @@ const finalAlt = alt ?? caption;
 <style is:global>
   .pswp__project-caption {
     bottom: 1rem;
-    color: white;
+    color: var(--color-media-text);
+    background-color: var(--color-media-overlay);
     font-family: var(--font-mono);
     font-size: 0.75rem;
     left: 50%;
