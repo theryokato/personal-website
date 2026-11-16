@@ -2,8 +2,9 @@
 
 Copy the [English starter](project-page.en.mdx) and [Japanese starter](project-page.ja.mdx)
 into `src/content/projects/en/<slug>.mdx` and `src/content/projects/ja/<slug>.mdx`.
-Keep matching slugs and factual claims across languages. These source templates live outside
-the content glob so they do not create sample cards or public pages.
+Keep matching slugs, dates, and factual claims across languages. Use a unique, lowercase,
+hyphenated slug; a duplicate slug can collide with another project route. These source templates
+live outside the content glob so they do not create sample cards or public pages.
 
 ## Writing the page
 
@@ -20,11 +21,37 @@ honest limitations and the reasoning behind an iteration can demonstrate enginee
 Keep the main story understandable without navigating a presentation. Put full slide decks
 and other supporting files after it. Mention tools where they explain a decision or method.
 
+## Choose the depth that fits the project
+
+- **Small build:** keep the overview and ownership, explain one important decision, then show
+  what you tested or learned. Combine headings when separate sections would repeat information.
+- **Larger team project:** summarize the system first, then focus on your own subsystem and two
+  or three distinct decisions. Credit collaborators and link to the wider system where useful.
+- **Ongoing work:** distinguish what is designed, built, simulated, and tested. State the evidence
+  available now and the next validation step; a target is not an achieved result.
+
+The prompts are drafting aids. Replace them with natural prose, and rename decision headings
+so they describe the actual engineering choice. Retain only sections that help the reader.
+
+## Adapt the evidence to your work
+
+| Work | Useful evidence |
+| --- | --- |
+| Mechanical design | Annotated CAD or drawings, load cases, tolerance reasoning, manufacturing choices, and fit or load tests. |
+| Controls and robotics | Control/system diagram, sensing and actuation rates, tuning choices, test conditions, and measured behavior or remaining instability. |
+| Software and tooling | Inputs/outputs, architecture, a baseline comparison, benchmark conditions, correctness tests, or evidence of adoption. |
+| Research | The question, your method and contribution, observations, uncertainty, and the next experiment. |
+
+A deliverable, observation, or well-supported decision can be useful evidence even when no
+meaningful numeric metric exists. For quantitative results, include units, conditions, and
+repeatability when available. Select only evidence you actually have.
+
 ## Frontmatter and publishing
 
 - Replace every `REPLACE` prompt, including the slug, title, and metadata description.
-- Fill `startDate` with the real `YYYY-MM` or `YYYY-MM-DD`. Use `Present` only for ongoing
-  work; otherwise set `endDate` to the actual ending month/date. Dates are not auto-generated.
+- Fill `startDate` with the real `YYYY-MM` or `YYYY-MM-DD`.
+- Set `endDate` to `Present` only for ongoing work; otherwise use the actual ending month/date.
+  Both fields start empty to avoid assuming a project is ongoing. Dates are not auto-generated.
 - Keep `url: ""` for a project hosted on this site. A nonempty URL makes the card an external
   link and prevents generation of its local detail page.
 - `image` is optional. Leave it empty until an appropriate asset exists. The layout renders
@@ -56,6 +83,13 @@ A `ProjectVideo` needs a real video `src`, valid `poster`, and caption. Preserve
 and the component's `preload="none"` behavior. `ProjectSlides` needs a real PDF `src`, accurate
 `totalPages`, and caption; loading remains automatic near the viewport. See the existing
 project MDX files for working usages and the root README for `ProjectModel` props.
+
+## Quick reader check
+
+Before polishing the wording, ask someone to skim the opening: can they identify what the
+project does, what you personally owned, and what evidence supports its outcome or current stage?
+Then check that a technical reader can follow at least one decision from requirement to result
+without opening a slide deck. Remove repeated claims and visuals that do not add evidence.
 
 ## Before publishing
 
