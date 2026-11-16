@@ -1,65 +1,118 @@
 @import "tailwindcss";
 
-@theme {
+@theme static {
   /* Shared */
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-serif: Georgia, "Times New Roman", serif;
   --font-mono: SFMono-Regular, Consolas, "Liberation Mono", "Courier New", monospace;
   --max-w-prose: 42rem;
 
-  /* Semantic tokens — default: Catppuccin Latte */
-  --color-base: #EFF1F5;
-  --color-mantle: #E6E9EF;
-  --color-crust: #DCE0E8;
-  --color-surface0: #CCD0DA;
-  --color-surface1: #BCC0CC;
-  --color-surface2: #ACB0BE;
-  --color-overlay0: #9CA0B0;
-  --color-overlay1: #8C8FA1;
-  --color-overlay2: #7C7F93;
-  --color-subtext0: #6C6F85;
-  --color-subtext1: #5C5F77;
-  --color-text: #4C4F69;
-  --color-lavender: #7287FD;
-  --color-blue: #1E66F5;
-  --color-sapphire: #209FB5;
-  --color-sky: #04A5E5;
-  --color-green: #40A02B;
-  --color-yellow: #DF8E1D;
-  --color-peach: #FE640B;
-  --color-red: #D20F39;
-  --color-mauve: #8839EF;
-  --color-pink: #EA76CB;
-  --color-flamingo: #DD7878;
-  --color-rosewater: #DC8A78;
+  /* Warm Graphite: semantic roles, with AA text variants where needed. */
+  --color-background: var(--palette-background);
+  --color-surface: var(--palette-surface);
+  --color-surface-secondary: var(--palette-surface-secondary);
+  --color-border: var(--palette-border);
+  --color-text-primary: var(--palette-text-primary);
+  --color-text-secondary: var(--palette-text-secondary-readable);
+  --color-text-muted: var(--palette-text-muted-readable);
+  --color-link: var(--palette-steel-blue-readable);
+  --color-link-hover: var(--palette-text-primary);
+  --color-focus: var(--palette-steel-blue-readable);
+  --color-success: var(--palette-forest-green-readable);
+  --color-highlight: var(--palette-copper-readable);
+  --color-achievement: var(--palette-gold-readable);
+  --color-technical: var(--palette-plum-readable);
+  --color-technical-secondary: var(--palette-indigo-readable);
+  --color-info: var(--palette-teal-readable);
+  --color-danger: var(--palette-rust-readable);
+  /* Fixed neutral media colors remain readable over images in either mode. */
+  --color-media-overlay: #1C1B1A;
+  --color-media-text: #F1EEE9;
+  --color-media-danger: #E68B83;
+
+  /* Compatibility aliases for existing utility classes. */
+  --color-base: var(--color-background);
+  --color-mantle: var(--color-surface);
+  --color-crust: var(--color-surface-secondary);
+  --color-surface0: var(--color-border);
+  --color-surface1: var(--color-border);
+  --color-surface2: var(--color-text-muted);
+  --color-overlay0: var(--color-text-muted);
+  --color-overlay1: var(--color-text-secondary);
+  --color-overlay2: var(--color-text-primary);
+  --color-subtext0: var(--color-text-secondary);
+  --color-subtext1: var(--color-text-secondary);
+  --color-text: var(--color-text-primary);
+  --color-blue: var(--color-link);
+  --color-green: var(--color-success);
+  --color-yellow: var(--color-achievement);
+  --color-peach: var(--color-highlight);
+  --color-red: var(--color-danger);
+  --color-mauve: var(--color-technical);
+  --color-lavender: var(--color-technical-secondary);
+  --color-sapphire: var(--color-info);
+  --color-sky: var(--color-info);
+  --color-pink: var(--color-technical);
+  --color-flamingo: var(--color-highlight);
+  --color-rosewater: var(--color-highlight);
 }
 
-/* Catppuccin Mocha; retain the legacy theme ID for saved preferences. */
+/* Supplied reference colors, followed by contrast-adjusted text shades. */
+:root {
+  --palette-background: #F7F6F3;
+  --palette-surface: #FFFFFF;
+  --palette-surface-secondary: #F0EEEA;
+  --palette-border: #E0DCD5;
+  --palette-text-primary: #292724;
+  --palette-text-secondary: #746F69;
+  --palette-text-muted: #8A857E;
+  --palette-steel-blue: #3973A3;
+  --palette-forest-green: #26806A;
+  --palette-copper: #B86C35;
+  --palette-gold: #A88320;
+  --palette-plum: #8055A0;
+  --palette-rust: #B84944;
+  --palette-teal: #258A91;
+  --palette-indigo: #5966A5;
+  --palette-text-secondary-readable: #706B65;
+  --palette-text-muted-readable: #6F6B66;
+  --palette-steel-blue-readable: #37709F;
+  --palette-forest-green-readable: #247864;
+  --palette-copper-readable: #9C5C2D;
+  --palette-gold-readable: #856719;
+  --palette-plum-readable: #8055A0;
+  --palette-rust-readable: #B54843;
+  --palette-teal-readable: #20767C;
+  --palette-indigo-readable: #5966A5;
+}
+
+/* Preserve legacy theme IDs so saved preferences keep working. */
 [data-theme="nord-dark"] {
-  --color-base: #1E1E2E;
-  --color-mantle: #181825;
-  --color-crust: #11111B;
-  --color-surface0: #313244;
-  --color-surface1: #45475A;
-  --color-surface2: #585B70;
-  --color-overlay0: #6C7086;
-  --color-overlay1: #7F849C;
-  --color-overlay2: #9399B2;
-  --color-subtext0: #A6ADC8;
-  --color-subtext1: #BAC2DE;
-  --color-text: #CDD6F4;
-  --color-lavender: #B4BEFE;
-  --color-blue: #89B4FA;
-  --color-sapphire: #74C7EC;
-  --color-sky: #89DCEB;
-  --color-green: #A6E3A1;
-  --color-yellow: #F9E2AF;
-  --color-peach: #FAB387;
-  --color-red: #F38BA8;
-  --color-mauve: #CBA6F7;
-  --color-pink: #F5C2E7;
-  --color-flamingo: #F2CDCD;
-  --color-rosewater: #F5E0DC;
+  --palette-background: #1C1B1A;
+  --palette-surface: #262421;
+  --palette-surface-secondary: #302D29;
+  --palette-border: #393631;
+  --palette-text-primary: #F1EEE9;
+  --palette-text-secondary: #A9A39B;
+  --palette-text-muted: #918B83;
+  --palette-steel-blue: #80B5E1;
+  --palette-forest-green: #75C5A6;
+  --palette-copper: #DDA06E;
+  --palette-gold: #E0BC65;
+  --palette-plum: #BEA0DD;
+  --palette-rust: #E68B83;
+  --palette-teal: #73C6C9;
+  --palette-indigo: #A0ACE7;
+  --palette-text-secondary-readable: #A9A39B;
+  --palette-text-muted-readable: #9A948D;
+  --palette-steel-blue-readable: #80B5E1;
+  --palette-forest-green-readable: #75C5A6;
+  --palette-copper-readable: #DDA06E;
+  --palette-gold-readable: #E0BC65;
+  --palette-plum-readable: #BEA0DD;
+  --palette-rust-readable: #E68B83;
+  --palette-teal-readable: #73C6C9;
+  --palette-indigo-readable: #A0ACE7;
 }
 
 /* ─── Base styles ──────────────────────────────────────── */
@@ -102,12 +155,13 @@ body {
 .prose li         { margin-bottom: 0.5rem; }
 
 .prose a {
-  color: var(--color-blue);
+  color: var(--color-link);
   text-decoration: underline;
   text-underline-offset: 3px;
   text-decoration-thickness: 1px;
 }
-.prose a:hover { color: var(--color-lavender); }
+.prose a:hover { color: var(--color-link-hover); }
+.social-icon:hover { color: var(--color-link); }
 
 .prose blockquote {
   border-left: 2px solid var(--color-surface1);
@@ -120,8 +174,8 @@ body {
 .prose code {
   font-family: var(--font-mono);
   font-size: 0.875em;
-  background-color: var(--color-surface0);
-  color: var(--color-peach);
+  background-color: var(--color-surface-secondary);
+  color: var(--color-technical);
   padding: 0.1em 0.35em;
   border-radius: 2px;
 }
@@ -164,7 +218,7 @@ body {
 /* Keep feedback brief and focus immediate. */
 html.theme-ready { transition: background-color 150ms ease, color 150ms ease; }
 a, button { transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease; }
-:focus-visible { outline: 2px solid var(--color-blue) !important; outline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--color-focus) !important; outline-offset: 3px; }
 button { transition-duration: 150ms; transition-property: color, background-color, border-color, transform; }
 button:active { transform: scale(0.97); }
 a[data-project-image] img { transition: filter 150ms ease; }
@@ -176,4 +230,24 @@ a[data-project-image] img { transition: filter 150ms ease; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
   button:active, .group:hover img { transform: none !important; }
+}
+
+/* Use the same neutral media palette for the existing zoom viewer. */
+.pswp.pswp {
+  --pswp-bg: var(--color-media-overlay);
+  --pswp-placeholder-bg: var(--color-media-overlay);
+  --pswp-icon-color: var(--color-media-text);
+  --pswp-icon-color-secondary: var(--color-media-overlay);
+  --pswp-icon-stroke-color: var(--color-media-overlay);
+  --pswp-preloader-color: var(--color-media-overlay);
+  --pswp-preloader-color-secondary: var(--color-media-text);
+  --pswp-error-text-color: var(--color-media-danger);
+}
+
+.pswp__error-msg { background-color: var(--color-media-overlay); }
+
+/* Back the existing focus outline with a neutral halo over variable images. */
+.pswp :focus-visible {
+  outline-color: var(--color-media-text) !important;
+  box-shadow: 0 0 0 5px var(--color-media-overlay);
 }
