@@ -3,6 +3,66 @@
   (() => {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     let activeTransition;
+    let typingFrame;
+    const canType = Boolean(CSS.highlights && typeof Highlight === 'function' && typeof Intl.Segmenter === 'function');
+
+    function finishTyping() {
+      cancelAnimationFrame(typingFrame);
+      CSS.highlights?.delete('language-typing');
+    }
+
+    function revealText() {
+      finishTyping();
+      if (!document.body || reducedMotion.matches) return;
+      const segmenter = new Intl.Segmenter(document.documentElement.lang, { granularity: 'grapheme' });
+      const highlight = new Highlight();
+      const groups = new Map();
+      const entries = [];
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      let node;
+      while ((node = walker.nextNode())) {
+        const parent = node.parentElement;
+        if (!node.data.trim() || !parent || parent.closest('script, style, noscript, svg, canvas, video, audio, template, [hidden], [aria-hidden="true"]')) continue;
+        if (getComputedStyle(parent).visibility !== 'visible') continue;
+        const range = document.createRange();
+        range.selectNodeContents(node);
+        if (!range.getClientRects().length) continue;
+        // Inline links share their paragraph's progress; independent blocks type together.
+        let block = parent;
+        while (block.parentElement && ['inline', 'contents'].includes(getComputedStyle(block).display)) {
+          block = block.parentElement;
+        }
+        let group = groups.get(block);
+        if (!group) groups.set(block, group = { total: 0 });
+        const boundaries = [...segmenter.segment(node.data)].map(part => part.index);
+        boundaries.push(node.length);
+        entries.push({ node, text: node.data, range, boundaries, group, start: group.total });
+        group.total += boundaries.length - 1;
+        highlight.add(range);
+      }
+      if (!entries.length) return;
+      CSS.highlights.set('language-typing', highlight);
+      const started = performance.now();
+      const tick = now => {
+        const progress = Math.min((now - started) / 450, 1);
+        if (progress >= 1) {
+          finishTyping();
+          return;
+        }
+        for (const entry of entries) {
+          // Existing components may replace text (e.g. social handles); never overwrite it.
+          if (!entry.node.isConnected || entry.node.data !== entry.text) {
+            highlight.delete(entry.range);
+            continue;
+          }
+          const count = Math.max(0, Math.min(entry.boundaries.length - 1,
+            Math.floor(entry.group.total * progress) - entry.start));
+          entry.range.setStart(entry.node, entry.boundaries[count]);
+        }
+        typingFrame = requestAnimationFrame(tick);
+      };
+      typingFrame = requestAnimationFrame(tick);
+    }
 
     function localizedPath(value) {
       if (typeof value !== 'string') return null;
@@ -16,14 +76,19 @@
       }
     }
 
-    function prepare(transition, from, to) {
-      if (!transition) return;
+    function prepare(transition, from, to, reveal = false) {
       const previous = localizedPath(from);
       const next = localizedPath(to);
       if (reducedMotion.matches || !previous || !next || (previous.locale === next.locale && previous.path === next.path)) {
-        transition.skipTransition();
+        transition?.skipTransition();
         return;
       }
+      if (previous.locale !== next.locale && previous.path === next.path && canType) {
+        transition?.skipTransition();
+        if (reveal) revealText();
+        return;
+      }
+      if (!transition) return;
       activeTransition = transition;
       document.documentElement.setAttribute('data-page-transition', '');
       if (previous.locale !== next.locale && previous.path === next.path) {
@@ -39,13 +104,21 @@
     }
 
     window.addEventListener('pageswap', event => {
+      finishTyping();
       prepare(event.viewTransition, location.href, event.activation?.entry?.url);
     });
     window.addEventListener('pagereveal', event => {
-      prepare(event.viewTransition, window.navigation?.activation?.from?.url, location.href);
+      prepare(event.viewTransition, window.navigation?.activation?.from?.url, location.href, true);
     });
+    window.addEventListener('pagehide', finishTyping);
+    window.addEventListener('keydown', finishTyping);
+    window.addEventListener('focusin', finishTyping);
+    window.addEventListener('pointerdown', finishTyping, { passive: true });
     reducedMotion.addEventListener('change', () => {
-      if (reducedMotion.matches) activeTransition?.skipTransition();
+      if (reducedMotion.matches) {
+        activeTransition?.skipTransition();
+        finishTyping();
+      }
     });
   })();
 </script>

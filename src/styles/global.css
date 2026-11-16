@@ -263,7 +263,14 @@ a[data-project-image] img { transition: filter 200ms var(--motion-ease); }
   a.underline:hover, .prose a:hover { text-underline-offset: 3px !important; }
 }
 
-/* Native content crossfades; only locale counterparts animate the control. */
+/* Paint-only language typing preserves complete text, shaping, and layout. */
+::highlight(language-typing) {
+  color: transparent;
+  text-decoration-color: transparent;
+  text-shadow: none;
+}
+
+/* Native page crossfades also provide the unsupported-typing locale fallback. */
 @view-transition { navigation: auto; }
 ::view-transition-group(root) { animation: none; }
 ::view-transition-old(root), ::view-transition-new(root) {
