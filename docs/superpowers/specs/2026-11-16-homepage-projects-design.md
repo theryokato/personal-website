@@ -1,6 +1,6 @@
 # Move projects to the homepage
 
-Status: approved by the user on 2026-11-16. No application changes made yet.
+Status: approved by the user on 2026-11-16. Implemented and verified, including the later mobile single-column requirement.
 
 ## Intent
 
@@ -12,7 +12,7 @@ Show the existing projects directly on the homepage while preserving the site's 
 - Remove the homepage's Projects link and Interests link. Keep a small Projects section heading and the existing localized description above the grid, as shown in the mockups.
 - Top navigation contains Home and Interests only, alongside the existing language picker. Remove the Projects tab everywhere.
 - Remove the standalone project listing. Keep individual project URLs and external project destinations unchanged.
-- Preserve the current six projects and date ordering, two-column grid, previews, mobile title/date treatment, fonts, sizes, colors, theme controls, and cat.
+- Preserve the current six projects and date ordering, two-column desktop grid and single-column mobile grid (600px and below), previews, mobile title/date treatment, fonts, sizes, colors, theme controls, and cat.
 - Preserve automatic slide loading, media controls, zoom, and existing 3D functionality.
 
 ## Approaches considered
@@ -40,3 +40,7 @@ These are implementation recommendations, rather than separate user requirements
 ## Scope boundary
 
 This is a homepage/listing relocation, not a visual redesign or changes to Interests content. Implementation starts after design approval. A separate implementation plan follows approval.
+
+## Follow-up requirement
+
+On 2026-11-16, the user requested single-column project cards on mobile. Retain two columns above the existing 600px mobile breakpoint and size responsive previews for the wider mobile cards. Dark-mode colors are under discussion only; no palette change is included yet.

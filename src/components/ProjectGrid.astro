@@ -25,7 +25,7 @@ const projects = Object.values(modules)
 const dateLocale = locale === 'ja' ? 'ja-JP' : 'en-US';
 ---
 
-<div class="grid grid-cols-2 gap-5 mt-4">
+<div class="grid grid-cols-1 min-[601px]:grid-cols-2 gap-5 mt-4">
     {projects.map((p: any) => (
         <a
             href={p.url || `/${locale}/projects/${p.slug}`}
@@ -36,7 +36,7 @@ const dateLocale = locale === 'ja' ? 'ja-JP' : 'en-US';
             <div class="overflow-hidden rounded-sm bg-mantle aspect-4/3 mb-2">
                 {p.image ? (
                     <img
-                        src={preview(p.image)} srcset={previewSet(p.image)} sizes="(max-width: 600px) 45vw, 310px" loading="lazy" decoding="async"
+                        src={preview(p.image)} srcset={previewSet(p.image)} sizes="(max-width: 600px) calc(100vw - 2rem), 310px" loading="lazy" decoding="async"
                         alt={p.title}
                         class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-150"
                     />
