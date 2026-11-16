@@ -9,6 +9,7 @@ interface Props {
 interface Project {
   slug: string;
   title: string;
+  description?: string;
   image?: string;
   startDate?: string;
   endDate?: string;
@@ -19,9 +20,16 @@ const { locale } = Astro.props;
 const en = import.meta.glob("../content/projects/en/*.mdx", { eager: true });
 const ja = import.meta.glob("../content/projects/ja/*.mdx", { eager: true });
 const modules = (locale === 'ja' ? ja : en) as Record<string, { frontmatter: Project }>;
+// Lead with engineering work; keep the same editorial order in both languages.
+const projectOrder = new Map(
+  ['dron', 'blnc', 'red', 'herc', 'kb', 'website'].map((slug, index) => [slug, index])
+);
 const projects = Object.values(modules)
   .map(module => module.frontmatter)
-  .sort((a, b) => (b.startDate ?? "").localeCompare(a.startDate ?? ""));
+  .sort((a, b) =>
+    (projectOrder.get(a.slug) ?? projectOrder.size) - (projectOrder.get(b.slug) ?? projectOrder.size)
+    || (b.startDate ?? "").localeCompare(a.startDate ?? "")
+  );
 const dateLocale = locale === 'ja' ? 'ja-JP' : 'en-US';
 ---
 
@@ -44,10 +52,13 @@ const dateLocale = locale === 'ja' ? 'ja-JP' : 'en-US';
                     <div class="w-full h-full bg-surface-secondary" />
                 )}
             </div>
-            <div class="project-summary flex items-baseline justify-between gap-2">
-                <span class="text-sm text-text leading-snug truncate">
+            <div class="project-summary flex flex-col items-start gap-0.5">
+                <span class="text-sm text-text leading-snug break-words">
                     {p.title}
                 </span>
+                {p.description && (
+                    <span class="text-sm text-subtext0 leading-snug">{p.description}</span>
+                )}
                 <span class="font-mono text-xs text-subtext0 whitespace-nowrap">
                     {formatDate(p.startDate, dateLocale)}
                     {" — "}
