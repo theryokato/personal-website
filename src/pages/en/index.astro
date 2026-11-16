@@ -10,13 +10,15 @@ import { homeContent } from "../../content/home/en";
   <section class="mb-1">
     <h1
       id="hero-name"
-      class="mb-4 text-text text-xl font-semibold leading-7 transition-opacity duration-200"
+      class="mb-4 text-text text-2xl font-semibold leading-[1.95rem] whitespace-nowrap transition-opacity duration-200"
     >
       {homeContent.name}
     </h1>
 
     <!-- Bio -->
-    <p class="mb-4 text-text text-lg leading-relaxed" set:html={homeContent.bio} />
+    {homeContent.bio.map(paragraph => (
+      <p class="mb-4 text-text text-lg leading-relaxed" set:html={paragraph} />
+    ))}
   </section>
 
   <!-- Social icons row -->

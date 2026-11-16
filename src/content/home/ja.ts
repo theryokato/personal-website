@@ -1,10 +1,12 @@
 export const homeContent = {
   name: "加藤 遼",
-  bio: `<a
+  bio: [
+    `<a
          href="https://www.tamu.edu"
          class="text-text underline underline-offset-[3px] decoration-1 hover:text-danger transition-colors"
          >テキサスA&M大学</a
-       >機械工学科3年生。数学副専攻。現在、テキサス州最大規模の学生主導ロボット工学団体<a
+       >機械工学科3年生。数学副専攻。`,
+    `現在、テキサス州最大規模の学生主導ロボット工学団体<a
          href="https://turtlerobotics.org"
          class="text-text underline underline-offset-[3px] decoration-1 hover:text-achievement transition-colors"
          >TURTLE Robotics</a
@@ -17,8 +19,8 @@ export const homeContent = {
          class="text-text underline underline-offset-[3px] decoration-1 hover:text-danger transition-colors"
          >Human-Empowering Robotics and Control（HERC）Lab</a
        >での研究活動にも協力しています。
-       <br /><br />
-       いつでもお気軽に連絡ください。できれば<a
+    `,
+    `いつでもお気軽に連絡ください。できれば<a
          href="mailto:contact@theryokato.com"
          class="text-text underline underline-offset-[3px] decoration-1 hover:text-link transition-colors"
          >メール</a
@@ -27,6 +29,7 @@ export const homeContent = {
          class="text-text underline underline-offset-[3px] decoration-1 hover:text-technical-secondary transition-colors"
          >PGPキー</a
        >)`,
+  ],
   sections: [
     {
       title: "プロジェクト",
