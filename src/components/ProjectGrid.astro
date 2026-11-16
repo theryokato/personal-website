@@ -9,7 +9,6 @@ interface Props {
 interface Project {
   slug: string;
   title: string;
-  description?: string;
   image?: string;
   startDate?: string;
   endDate?: string;
@@ -56,9 +55,6 @@ const dateLocale = locale === 'ja' ? 'ja-JP' : 'en-US';
                 <span class="text-sm text-text leading-snug break-words">
                     {p.title}
                 </span>
-                {p.description && (
-                    <span class="text-sm text-subtext0 leading-snug">{p.description}</span>
-                )}
                 <span class="font-mono text-xs text-subtext0 whitespace-nowrap">
                     {formatDate(p.startDate, dateLocale)}
                     {" — "}
