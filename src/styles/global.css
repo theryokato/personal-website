@@ -219,8 +219,23 @@ body {
 html.theme-ready { transition: background-color 150ms ease, color 150ms ease; }
 a, button { transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease; }
 :focus-visible { outline: 2px solid var(--color-focus) !important; outline-offset: 3px; }
-button { transition-duration: 150ms; transition-property: color, background-color, border-color, transform; }
-button:active { transform: scale(0.97); }
+button, .language-picker a {
+  transition-property: color, background-color, border-color, transform;
+  transition-duration: 150ms, 150ms, 150ms, 140ms;
+  transition-timing-function: ease, ease, ease, ease-out;
+}
+button:active, .language-picker a:active {
+  transform: scale(0.985);
+  transition-duration: 150ms, 150ms, 150ms, 80ms;
+}
+a.underline, .prose a {
+  transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease, text-underline-offset 140ms ease-out;
+}
+.project-preview { transition: transform 160ms ease-out; }
+@media (hover: hover) {
+  a.underline:hover, .prose a:hover { text-underline-offset: 4px; }
+  .group:hover .project-preview { transform: scale(1.012); }
+}
 a[data-project-image] img { transition: filter 150ms ease; }
 @media (hover: hover) { a[data-project-image]:hover img { filter: brightness(0.97); } }
 @media (max-width: 600px) {
@@ -229,7 +244,34 @@ a[data-project-image] img { transition: filter 150ms ease; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
-  button:active, .group:hover img { transform: none !important; }
+  button:active, .language-picker a:active, .group:hover img {
+    transform: none !important;
+  }
+  a.underline:hover, .prose a:hover { text-underline-offset: 3px !important; }
+}
+
+/* Native locale navigation only; ordinary navigation has no root animation. */
+@view-transition { navigation: auto; }
+::view-transition-group(root) { animation: none; }
+::view-transition-old(root), ::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+html[data-language-transition] main { view-transition-name: language-content; }
+html[data-language-transition] .language-picker { view-transition-name: language-control; }
+::view-transition-group(language-content), ::view-transition-group(language-control) { animation: none; }
+::view-transition-old(language-content), ::view-transition-old(language-control) {
+  height: auto;
+  animation: locale-fade-out 120ms ease-out both;
+}
+::view-transition-new(language-content), ::view-transition-new(language-control) {
+  height: auto;
+  animation: locale-fade-in 120ms ease-out both;
+}
+@keyframes locale-fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes locale-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
 }
 
 /* Use the same neutral media palette for the existing zoom viewer. */

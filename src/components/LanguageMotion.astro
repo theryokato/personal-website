@@ -1,0 +1,47 @@
+<!-- Classic head script registers pagereveal before the first render. -->
+<script is:inline>
+  (() => {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let activeTransition;
+
+    function localizedPath(value) {
+      if (typeof value !== 'string') return null;
+      try {
+        const url = new URL(value, location.href);
+        if (url.origin !== location.origin) return null;
+        const match = url.pathname.match(/^\/(en|ja)(\/.*)?$/);
+        return match ? { locale: match[1], path: (match[2] || '/').replace(/\/$/, '') } : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function prepare(transition, from, to) {
+      if (!transition) return;
+      const previous = localizedPath(from);
+      const next = localizedPath(to);
+      if (reducedMotion.matches || !previous || !next || previous.locale === next.locale || previous.path !== next.path) {
+        transition.skipTransition();
+        return;
+      }
+      activeTransition = transition;
+      document.documentElement.setAttribute('data-language-transition', '');
+      const clear = () => {
+        if (activeTransition !== transition) return;
+        document.documentElement.removeAttribute('data-language-transition');
+        activeTransition = undefined;
+      };
+      transition.finished.then(clear, clear);
+    }
+
+    window.addEventListener('pageswap', event => {
+      prepare(event.viewTransition, location.href, event.activation?.entry?.url);
+    });
+    window.addEventListener('pagereveal', event => {
+      prepare(event.viewTransition, window.navigation?.activation?.from?.url, location.href);
+    });
+    reducedMotion.addEventListener('change', () => {
+      if (reducedMotion.matches) activeTransition?.skipTransition();
+    });
+  })();
+</script>

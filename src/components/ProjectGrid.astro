@@ -38,7 +38,7 @@ const dateLocale = locale === 'ja' ? 'ja-JP' : 'en-US';
                     <img
                         src={preview(p.image)} srcset={previewSet(p.image)} sizes="(max-width: 600px) calc(100vw - 2rem), 310px" loading="lazy" decoding="async"
                         alt={p.title}
-                        class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-150"
+                        class="project-preview w-full h-full object-cover"
                     />
                 ) : (
                     <div class="w-full h-full bg-surface-secondary" />
