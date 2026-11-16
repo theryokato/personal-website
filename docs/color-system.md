@@ -4,7 +4,7 @@
 
 - Background, surface, surface-secondary, and border remain neutral.
 - Primary, secondary, and muted text use their corresponding text roles.
-- Link and focus use Steel Blue; link hover uses primary neutral text.
+- Standard inline links and focus use Steel Blue; standard link hover uses primary neutral text. Homepage bio links are neutral until hover: Texas A&M/HERC use Rust Red, KARURA Copper, TURTLE Muted Gold, email Steel Blue, and PGP Indigo. Social icons remain secondary neutral normally and become Text Primary on hover.
 - Success uses Forest Green; highlight uses Copper; achievement uses Muted Gold.
 - Technical and technical-secondary use Plum and Indigo; info uses Teal; danger uses Rust Red, including the existing 404 code.
 - Navigation, cards, language controls, and standard buttons retain neutral surfaces. Status colors are available for meaningful states, not applied as arbitrary decoration.

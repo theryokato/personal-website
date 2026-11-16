@@ -161,7 +161,7 @@ body {
   text-decoration-thickness: 1px;
 }
 .prose a:hover { color: var(--color-link-hover); }
-.social-icon:hover { color: var(--color-link); }
+.social-icon:hover { color: var(--color-text-primary); }
 
 .prose blockquote {
   border-left: 2px solid var(--color-surface1);
