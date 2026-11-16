@@ -25,7 +25,7 @@ const finalAlt = alt ?? caption;
     <img
       src={preview(src)}
       srcset={previewSet(src)}
-      sizes="(max-width: 660px) 100vw, 660px"
+      sizes="(max-width: 600px) calc(100vw - 2rem), (max-width: 45rem) calc(100vw - 3rem), 42rem"
       loading="lazy"
       decoding="async"
       alt={finalAlt}
@@ -34,7 +34,7 @@ const finalAlt = alt ?? caption;
       class="w-full h-auto block"
     />
   </a>
-  <figcaption class="mt-2 text-xs text-text font-mono text-center">
+  <figcaption class="mt-2 text-caption text-subtext0 font-mono text-center">
     {caption}
   </figcaption>
 </figure>
