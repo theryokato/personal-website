@@ -48,107 +48,139 @@ const { src, totalPages, caption } = Astro.props;
 </figure>
 
 <script>
-  // Cache for PDF documents to avoid re-loading the file on every page change
-  const pdfCache = new Map();
-  let library: Promise<void>;
+  const pdfCache = new Map<string, Promise<any>>();
+  const initialized = new WeakSet<Element>();
+  let library: Promise<void> | undefined;
+  let worker: any;
+
   function loadLibrary() {
-    return library ??= new Promise((resolve, reject) => {
+    return library ??= new Promise<void>((resolve, reject) => {
       const script = document.createElement('script');
       script.src = '/vendor/pdfjs/pdf.min.js';
       script.onload = () => resolve();
-      script.onerror = () => reject(new Error('Unable to load PDF viewer'));
+      script.onerror = () => {
+        script.remove();
+        library = undefined;
+        reject(new Error('Unable to load PDF viewer'));
+      };
       document.head.append(script);
     });
   }
 
+  async function documentFor(src: string) {
+    await loadLibrary();
+    const lib = (window as any).pdfjsLib;
+    lib.GlobalWorkerOptions.workerSrc = '/vendor/pdfjs/pdf.worker.min.js';
+    // Every presentation on this page shares the same worker and initialization.
+    const currentWorker = worker ??= new lib.PDFWorker();
+    try {
+      await currentWorker.promise;
+    } catch (error) {
+      if (worker === currentWorker) {
+        worker = undefined;
+        // PDF.js also caches failed fake-worker initialization; reload only on failure.
+        library = undefined;
+        currentWorker.destroy();
+      }
+      throw error;
+    }
+    let pdf = pdfCache.get(src);
+    if (!pdf) {
+      pdf = lib.getDocument({ url: src, worker: currentWorker, isEvalSupported: false }).promise;
+      pdfCache.set(src, pdf!);
+      pdf!.catch(() => pdfCache.delete(src));
+    }
+    return pdf;
+  }
+
+  const pixelWidth = (container: HTMLElement) =>
+    Math.max(1, Math.ceil(container.clientWidth * (window.devicePixelRatio || 1)));
+
   async function renderPage(container: HTMLElement, pageNum: number) {
-    const src = container.getAttribute('data-src');
-    const canvasElement = container.querySelector('.project-slide-canvas');
-    if (!(canvasElement instanceof HTMLCanvasElement)) return;
-    const canvas = canvasElement;
+    const src = container.dataset.src;
+    const canvas = container.querySelector('canvas');
     const loader = container.querySelector('.slide-loader');
     const counter = container.querySelector('.project-slide-counter');
-
-    if (!src || !canvas || !counter) return;
-
+    if (!src || !canvas || !counter) return 0;
+    loader?.classList.remove('hidden');
     try {
-      loader?.classList.remove('hidden');
-
-      await loadLibrary();
-      const pdfjsLib = (window as any).pdfjsLib;
-      if (!pdfjsLib) {
-        console.error('PDF.js library not loaded');
-        return;
-      }
-
-      pdfjsLib.GlobalWorkerOptions.workerSrc = '/vendor/pdfjs/pdf.worker.min.js';
-
-      let pdf = pdfCache.get(src);
-      if (!pdf) {
-        const loadingTask = pdfjsLib.getDocument({ url: src, isEvalSupported: false });
-        pdf = await loadingTask.promise;
-        pdfCache.set(src, pdf);
-      }
-
+      const pdf = await documentFor(src);
       const page = await pdf.getPage(pageNum);
-
-      const viewport = page.getViewport({ scale: 2 });
+      const viewport = page.getViewport({ scale: pixelWidth(container) / page.getViewport({ scale: 1 }).width });
       const context = canvas.getContext('2d');
-
-      if (!context) return;
-
-      canvas.height = viewport.height;
-      canvas.width = viewport.width;
-
-      await page.render({
-        canvasContext: context,
-        viewport: viewport
-      }).promise;
-
+      if (!context) throw new Error('Unable to create slide canvas');
+      canvas.width = Math.ceil(viewport.width);
+      canvas.height = Math.ceil(viewport.height);
+      await page.render({ canvasContext: context, viewport }).promise;
       counter.textContent = `${pageNum} / ${pdf.numPages}`;
-    } catch (e) {
-      console.error('Error rendering PDF page:', e);
-      if (loader) loader.innerHTML = '';
+      loader?.classList.add('hidden');
+      return canvas.width;
+    } catch (error) {
+      console.error('Error rendering PDF page:', error);
       const link = document.createElement('a');
-      link.href = src; link.textContent = 'Open PDF';
-      loader?.append(link);
-    } finally {
-      if (canvas.width > 300) loader?.classList.add('hidden');
+      link.href = src;
+      link.textContent = 'Open PDF';
+      loader?.replaceChildren(link);
+      return 0;
     }
   }
 
   function initSlides() {
-    const containers = document.querySelectorAll('.project-slides-container');
+    const observer = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
+      for (const entry of entries) if (entry.isIntersecting) {
+        observer?.unobserve(entry.target);
+        entry.target.dispatchEvent(new Event('slides:near'));
+      }
+    }, { rootMargin: '300px 0px' }) : undefined;
 
-    containers.forEach(container => {
-      const totalPages = parseInt(container.getAttribute('data-total') || '1');
+    document.querySelectorAll<HTMLElement>('.project-slides-container').forEach(container => {
+      if (initialized.has(container)) return;
+      initialized.add(container);
+      const totalPages = parseInt(container.dataset.total || '1');
       let currentIndex = 1;
-
+      let started = false;
       let busy = false;
+      let renderedWidth = 0;
+      let resizeTimer: ReturnType<typeof setTimeout>;
+      let pendingResize = false;
+
       async function show(index: number) {
         if (busy) return;
+        started = true;
         busy = true;
         currentIndex = index;
-        await renderPage(container as HTMLElement, currentIndex);
+        renderedWidth = await renderPage(container, currentIndex);
         busy = false;
+        if (pendingResize) {
+          pendingResize = false;
+          if (renderedWidth && pixelWidth(container) !== renderedWidth) void show(currentIndex);
+        }
       }
-      void show(1);
 
-      const prevBtn = container.querySelector('.prev-slide');
-      const nextBtn = container.querySelector('.next-slide');
+      container.addEventListener('slides:near', () => { if (!started) void show(1); }, { once: true });
+      if (observer) observer.observe(container);
+      else void show(1);
 
-      prevBtn?.addEventListener('click', async (e) => {
-        e.stopPropagation();
-        await show(currentIndex === 1 ? totalPages : currentIndex - 1);
+      if ('ResizeObserver' in window) new ResizeObserver(() => {
+        if (!started || pixelWidth(container) === renderedWidth) return;
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          if (busy) pendingResize = true;
+          else void show(currentIndex);
+        }, 120);
+      }).observe(container);
+
+      container.querySelector('.prev-slide')?.addEventListener('click', event => {
+        event.stopPropagation();
+        void show(currentIndex === 1 ? totalPages : currentIndex - 1);
       });
-
-      nextBtn?.addEventListener('click', async (e) => {
-        e.stopPropagation();
-        await show((currentIndex % totalPages) + 1);
+      container.querySelector('.next-slide')?.addEventListener('click', event => {
+        event.stopPropagation();
+        void show((currentIndex % totalPages) + 1);
       });
-
-      container.addEventListener('click', async () => {
-        await show((currentIndex % totalPages) + 1);
+      container.addEventListener('click', event => {
+        if ((event.target as Element).closest('a')) return;
+        void show((currentIndex % totalPages) + 1);
       });
     });
   }

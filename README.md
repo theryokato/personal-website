@@ -33,3 +33,16 @@ import ProjectModel from '../../../components/ProjectModel.astro';
 ```
 
 `src`, `alt`, and `caption` are required. External model links open in a new tab.
+
+## Localized 404 checks
+
+Build and start the production preview:
+
+```sh
+npm run build
+npm run preview -- --host 127.0.0.1 --port 4335
+```
+
+In another terminal, run `node --test tests/localized-404.test.mjs`.
+Set `TEST_BASE_URL` to check a deployed preview instead. These checks verify
+localized HTTP 404 responses, unchanged missing URLs, existing pages, and redirects.
