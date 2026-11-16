@@ -8,9 +8,6 @@ interface Props {
 const { src, totalPages, caption } = Astro.props;
 ---
 
-<!-- PDF.js Library -->
-
-
 <figure class="my-8">
   <div
     class="project-slides-container relative group cursor-pointer overflow-hidden rounded-lg bg-gray-100"
@@ -27,7 +24,7 @@ const { src, totalPages, caption } = Astro.props;
 
       <!-- Loading Indicator -->
       <div class="slide-loader absolute inset-0 flex items-center justify-center bg-gray-100 text-xs font-mono text-text">
-        <button type="button" class="open-slides cursor-pointer" aria-label={`Open presentation: ${caption}`}>Open presentation</button>
+        <span role="status">Loading slide...</span>
       </div>
     </div>
 
@@ -127,19 +124,15 @@ const { src, totalPages, caption } = Astro.props;
       const totalPages = parseInt(container.getAttribute('data-total') || '1');
       let currentIndex = 1;
 
-      let opened = false;
       let busy = false;
       async function show(index: number) {
         if (busy) return;
         busy = true;
-        currentIndex = opened ? index : 1;
-        opened = true;
+        currentIndex = index;
         await renderPage(container as HTMLElement, currentIndex);
         busy = false;
       }
-      container.querySelector('.open-slides')?.addEventListener('click', (e) => {
-        e.stopPropagation(); void show(1);
-      });
+      void show(1);
 
       const prevBtn = container.querySelector('.prev-slide');
       const nextBtn = container.querySelector('.next-slide');
