@@ -24,7 +24,7 @@ if (nameElement) {
     }
 
     const fadeOut = nameElement.animate([{ opacity }, { opacity: 0 }], {
-      duration: 60, easing: 'ease-out', fill: 'forwards',
+      duration: 90, easing: 'ease-in-out', fill: 'forwards',
     });
     animation = fadeOut;
     await fadeOut.finished.catch(() => {});
@@ -32,7 +32,7 @@ if (nameElement) {
     nameElement.textContent = nextName;
     fadeOut.cancel();
     const fadeIn = nameElement.animate([{ opacity: 0 }, { opacity: 1 }], {
-      duration: 80, easing: 'ease-out',
+      duration: 110, easing: 'ease-in-out',
     });
     animation = fadeIn;
     await fadeIn.finished.catch(() => {});

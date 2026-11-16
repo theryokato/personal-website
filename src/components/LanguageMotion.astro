@@ -20,14 +20,18 @@
       if (!transition) return;
       const previous = localizedPath(from);
       const next = localizedPath(to);
-      if (reducedMotion.matches || !previous || !next || previous.locale === next.locale || previous.path !== next.path) {
+      if (reducedMotion.matches || !previous || !next || (previous.locale === next.locale && previous.path === next.path)) {
         transition.skipTransition();
         return;
       }
       activeTransition = transition;
-      document.documentElement.setAttribute('data-language-transition', '');
+      document.documentElement.setAttribute('data-page-transition', '');
+      if (previous.locale !== next.locale && previous.path === next.path) {
+        document.documentElement.setAttribute('data-language-transition', '');
+      }
       const clear = () => {
         if (activeTransition !== transition) return;
+        document.documentElement.removeAttribute('data-page-transition');
         document.documentElement.removeAttribute('data-language-transition');
         activeTransition = undefined;
       };

@@ -215,28 +215,41 @@ body {
 @media (prefers-reduced-motion: reduce) {
   html, * { transition: none !important; }
 }
-/* Keep feedback brief and focus immediate. */
-html.theme-ready { transition: background-color 150ms ease, color 150ms ease; }
-a, button { transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease; }
+/* Shared, gentle feedback; focus remains immediate. */
+:root { --motion-ease: cubic-bezier(0.4, 0, 0.2, 1); }
+/* Enable palette interpolation only for a user toggle, never initial paint. */
+html.theme-switching, html.theme-switching *,
+html.theme-switching *::before, html.theme-switching *::after {
+  transition-property: color, background-color, border-color, fill, stroke, opacity, transform, filter, text-underline-offset !important;
+  transition-duration: 240ms !important;
+  transition-timing-function: var(--motion-ease) !important;
+}
+.theme-toggle { display: grid; }
+.theme-toggle svg { grid-area: 1 / 1; }
+#sun-icon { opacity: 0; }
+#moon-icon { opacity: 1; }
+[data-theme="nord-dark"] #sun-icon { opacity: 1; }
+[data-theme="nord-dark"] #moon-icon { opacity: 0; }
+a, button { transition: color 200ms var(--motion-ease), background-color 200ms var(--motion-ease), border-color 200ms var(--motion-ease); }
 :focus-visible { outline: 2px solid var(--color-focus) !important; outline-offset: 3px; }
 button, .language-picker a {
   transition-property: color, background-color, border-color, transform;
-  transition-duration: 150ms, 150ms, 150ms, 140ms;
-  transition-timing-function: ease, ease, ease, ease-out;
+  transition-duration: 200ms, 200ms, 200ms, 180ms;
+  transition-timing-function: var(--motion-ease), var(--motion-ease), var(--motion-ease), ease-out;
 }
 button:active, .language-picker a:active {
   transform: scale(0.985);
-  transition-duration: 150ms, 150ms, 150ms, 80ms;
+  transition-duration: 200ms, 200ms, 200ms, 100ms;
 }
 a.underline, .prose a {
-  transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease, text-underline-offset 140ms ease-out;
+  transition: color 200ms var(--motion-ease), background-color 200ms var(--motion-ease), border-color 200ms var(--motion-ease), text-underline-offset 200ms var(--motion-ease);
 }
-.project-preview { transition: transform 160ms ease-out; }
+.project-preview { transition: transform 220ms var(--motion-ease); }
 @media (hover: hover) {
   a.underline:hover, .prose a:hover { text-underline-offset: 4px; }
   .group:hover .project-preview { transform: scale(1.012); }
 }
-a[data-project-image] img { transition: filter 150ms ease; }
+a[data-project-image] img { transition: filter 200ms var(--motion-ease); }
 @media (hover: hover) { a[data-project-image]:hover img { filter: brightness(0.97); } }
 @media (max-width: 600px) {
   .project-summary { flex-direction: column; align-items: flex-start; gap: 0.125rem; }
@@ -250,23 +263,23 @@ a[data-project-image] img { transition: filter 150ms ease; }
   a.underline:hover, .prose a:hover { text-underline-offset: 3px !important; }
 }
 
-/* Native locale navigation only; ordinary navigation has no root animation. */
+/* Native content crossfades; only locale counterparts animate the control. */
 @view-transition { navigation: auto; }
 ::view-transition-group(root) { animation: none; }
 ::view-transition-old(root), ::view-transition-new(root) {
   animation: none;
   mix-blend-mode: normal;
 }
-html[data-language-transition] main { view-transition-name: language-content; }
+html[data-page-transition] main { view-transition-name: language-content; }
 html[data-language-transition] .language-picker { view-transition-name: language-control; }
 ::view-transition-group(language-content), ::view-transition-group(language-control) { animation: none; }
 ::view-transition-old(language-content), ::view-transition-old(language-control) {
   height: auto;
-  animation: locale-fade-out 120ms ease-out both;
+  animation: locale-fade-out 220ms var(--motion-ease) both;
 }
 ::view-transition-new(language-content), ::view-transition-new(language-control) {
   height: auto;
-  animation: locale-fade-in 120ms ease-out both;
+  animation: locale-fade-in 220ms var(--motion-ease) both;
 }
 @keyframes locale-fade-out { from { opacity: 1; } to { opacity: 0; } }
 @keyframes locale-fade-in { from { opacity: 0; } to { opacity: 1; } }

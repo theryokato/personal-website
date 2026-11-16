@@ -106,12 +106,12 @@ const nav = [
           aria-label="Switch theme"
         >
           <!-- Sun Icon (shown in dark mode to switch to light) -->
-          <svg id="sun-icon" class="hidden w-5 h-5 text-text" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <svg id="sun-icon" aria-hidden="true" class="w-5 h-5 text-text" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 1.25a.75.75 0 0 1 .75.75v1a.75.75 0 0 1-1.5 0V2a.75.75 0 0 1 .75-.75M1.25 12a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5H2a.75.75 0 0 1-.75-.75m19 0a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75M12 20.25a.75.75 0 0 1 .75.75v1a.75.75 0 0 1-1.5 0v-1a.75.75 0 0 1 .75-.75" clip-rule="evenodd" />
   <path fill="currentColor" d="M4.398 4.398a.75.75 0 0 1 1.061 0l.393.393a.75.75 0 0 1-1.06 1.06l-.394-.392a.75.75 0 0 1 0-1.06m15.202 0a.75.75 0 0 1 0 1.06l-.392.393a.75.75 0 0 1-1.06-1.06l.392-.393a.75.75 0 0 1 1.06 0m-1.453 13.748a.75.75 0 0 1 1.061 0l.393.393a.75.75 0 0 1-1.06 1.06l-.394-.392a.75.75 0 0 1 0-1.06m-12.295 0a.75.75 0 0 1 0 1.06l-.393.393a.75.75 0 1 1-1.06-1.06l.392-.393a.75.75 0 0 1 1.06 0"  clip-rule="evenodd"/>
           </svg>
           <!-- Moon Icon (shown in light mode to switch to dark) -->
-          <svg id="moon-icon" class="hidden w-5 h-5 text-text" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <svg id="moon-icon" aria-hidden="true" class="w-5 h-5 text-text" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 22c5.523 0 10-4.477 10-10c0-.463-.694-.54-.933-.143a6.5 6.5 0 1 1-8.924-8.924C12.54 2.693 12.463 2 12 2C6.477 2 2 6.477 2 12s4.477 10 10 10"/>
           </svg>
         </button>
@@ -128,25 +128,31 @@ const nav = [
       function applyTheme(theme: string) {
         html.setAttribute("data-theme", theme);
         try { localStorage.setItem("theme", theme); } catch {}
-        updateIcons(theme);
+        updateThemeLabel(theme);
       }
 
-      function updateIcons(theme: string) {
+      function updateThemeLabel(theme: string) {
         toggle?.setAttribute("aria-label", theme === "nord-dark" ? "Switch to light theme" : "Switch to dark theme");
-        const sun = document.getElementById("sun-icon");
-        const moon = document.getElementById("moon-icon");
-        if (theme === "nord-dark") {
-          sun?.classList.remove("hidden");
-          moon?.classList.add("hidden");
-        } else {
-          sun?.classList.add("hidden");
-          moon?.classList.remove("hidden");
-        }
       }
 
-      requestAnimationFrame(() => requestAnimationFrame(() => html.classList.add("theme-ready")));
-      updateIcons(getTheme());
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let themeTimer: ReturnType<typeof setTimeout> | undefined;
+      function finishThemeTransition() {
+        clearTimeout(themeTimer);
+        html.classList.remove('theme-switching');
+      }
+      reducedMotion.addEventListener('change', () => {
+        if (reducedMotion.matches) finishThemeTransition();
+      });
+      window.addEventListener('pagehide', finishThemeTransition);
+      window.addEventListener('pageshow', finishThemeTransition);
+      updateThemeLabel(getTheme());
       toggle?.addEventListener("click", () => {
+        clearTimeout(themeTimer);
+        if (!reducedMotion.matches) {
+          html.classList.add('theme-switching');
+          themeTimer = setTimeout(finishThemeTransition, 280);
+        }
         applyTheme(getTheme() === "nord-light" ? "nord-dark" : "nord-light");
       });
     </script>
