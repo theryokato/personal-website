@@ -52,9 +52,7 @@ const nav = [
         try { stored = localStorage.getItem("theme"); } catch {}
         const preferred =
           (stored === "nord-dark" || stored === "nord-light" ? stored : null) ||
-          (window.matchMedia("(prefers-color-scheme: dark)").matches
-            ? "nord-dark"
-            : "nord-light");
+          "nord-light";
         document.documentElement.setAttribute("data-theme", preferred);
       })();
     </script>

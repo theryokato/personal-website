@@ -7,59 +7,59 @@
   --font-mono: SFMono-Regular, Consolas, "Liberation Mono", "Courier New", monospace;
   --max-w-prose: 42rem;
 
-  /* Semantic tokens — default: Nord Light */
-  --color-base:    #FFFFFF;
-  --color-mantle:  #E5E9F0;
-  --color-crust:   #D8DEE9;
-  --color-surface0:#D8DEE9;
-  --color-surface1:#B0B8C3;
-  --color-surface2:#81A2B5;
-  --color-overlay0:#81A2B5;
-  --color-overlay1:#88C0D0;
-  --color-overlay2:#8B9ABB;
-  --color-subtext0:#4C566A;
-  --color-subtext1:#D8DEE9;
-  --color-text:    #2E3440;
-  --color-lavender:#B48EAD;
-  --color-blue:    #81A2B5;
-  --color-sapphire:#88C0D0;
-  --color-sky:     #8FBCBB;
-  --color-green:   #A3BE8C;
-  --color-yellow:  #EBCB8B;
-  --color-peach:   #D08770;
-  --color-red:     #BF616A;
-  --color-mauve:   #B48EAD;
-  --color-pink:    #B48EAD;
-  --color-flamingo:#D08770;
-  --color-rosewater:#EBCB8B;
+  /* Semantic tokens — default: Catppuccin Latte */
+  --color-base: #EFF1F5;
+  --color-mantle: #E6E9EF;
+  --color-crust: #DCE0E8;
+  --color-surface0: #CCD0DA;
+  --color-surface1: #BCC0CC;
+  --color-surface2: #ACB0BE;
+  --color-overlay0: #9CA0B0;
+  --color-overlay1: #8C8FA1;
+  --color-overlay2: #7C7F93;
+  --color-subtext0: #6C6F85;
+  --color-subtext1: #5C5F77;
+  --color-text: #4C4F69;
+  --color-lavender: #7287FD;
+  --color-blue: #1E66F5;
+  --color-sapphire: #209FB5;
+  --color-sky: #04A5E5;
+  --color-green: #40A02B;
+  --color-yellow: #DF8E1D;
+  --color-peach: #FE640B;
+  --color-red: #D20F39;
+  --color-mauve: #8839EF;
+  --color-pink: #EA76CB;
+  --color-flamingo: #DD7878;
+  --color-rosewater: #DC8A78;
 }
 
-/* ─── Nord Dark overrides ────────────────────────────────── */
+/* Catppuccin Mocha; retain the legacy theme ID for saved preferences. */
 [data-theme="nord-dark"] {
-  --color-base:    #2E3440;
-  --color-mantle:  #242933;
-  --color-crust:   #1B1E23;
-  --color-surface0:#3B4252;
-  --color-surface1:#434C5E;
-  --color-surface2:#4C566A;
-  --color-overlay0:#4C566A;
-  --color-overlay1:#D8DEE9;
-  --color-overlay2:#E5E9F0;
-  --color-subtext0:#D8DEE9;
-  --color-subtext1:#E5E9F0;
-  --color-text:    #ECEFF4;
-  --color-lavender:#B48EAD;
-  --color-blue:    #81A2B5;
-  --color-sapphire:#88C0D0;
-  --color-sky:     #8FBCBB;
-  --color-green:   #A3BE8C;
-  --color-yellow:  #EBCB8B;
-  --color-peach:   #D08770;
-  --color-red:     #BF616A;
-  --color-mauve:   #B48EAD;
-  --color-pink:    #B48EAD;
-  --color-flamingo:#D08770;
-  --color-rosewater:#EBCB8B;
+  --color-base: #1E1E2E;
+  --color-mantle: #181825;
+  --color-crust: #11111B;
+  --color-surface0: #313244;
+  --color-surface1: #45475A;
+  --color-surface2: #585B70;
+  --color-overlay0: #6C7086;
+  --color-overlay1: #7F849C;
+  --color-overlay2: #9399B2;
+  --color-subtext0: #A6ADC8;
+  --color-subtext1: #BAC2DE;
+  --color-text: #CDD6F4;
+  --color-lavender: #B4BEFE;
+  --color-blue: #89B4FA;
+  --color-sapphire: #74C7EC;
+  --color-sky: #89DCEB;
+  --color-green: #A6E3A1;
+  --color-yellow: #F9E2AF;
+  --color-peach: #FAB387;
+  --color-red: #F38BA8;
+  --color-mauve: #CBA6F7;
+  --color-pink: #F5C2E7;
+  --color-flamingo: #F2CDCD;
+  --color-rosewater: #F5E0DC;
 }
 
 /* ─── Base styles ──────────────────────────────────────── */
