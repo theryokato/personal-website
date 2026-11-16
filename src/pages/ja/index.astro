@@ -1,15 +1,9 @@
 ---
 import Base from "../../layouts/Base.astro";
-import NavList from "../../components/NavList.astro";
+import ProjectGrid from "../../components/ProjectGrid.astro";
 import { socials } from "../../constants/socials";
 import { homeContent } from "../../content/home/ja";
 
-const currentPath = Astro.url.pathname;
-
-const sections = homeContent.sections.map(section => ({
-  ...section,
-  active: currentPath.startsWith(section.href),
-}));
 ---
 
 <Base title={homeContent.name} activeNav="home">
@@ -51,5 +45,15 @@ const sections = homeContent.sections.map(section => ({
 
   <br />
 
-  <NavList items={sections} />
+  <section id="projects" aria-labelledby="projects-heading">
+    <div class="py-3">
+      <h2 id="projects-heading" class="block text-lg font-normal text-text leading-snug">
+        {homeContent.sections[0].title}
+      </h2>
+      <p class="block text-sm text-subtext0 leading-snug mt-0.5">
+        {homeContent.sections[0].description}
+      </p>
+    </div>
+    <ProjectGrid locale="ja" />
+  </section>
 </Base>
