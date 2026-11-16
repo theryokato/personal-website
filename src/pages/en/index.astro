@@ -1,15 +1,9 @@
 ---
 import Base from "../../layouts/Base.astro";
-import NavList from "../../components/NavList.astro";
+import ProjectGrid from "../../components/ProjectGrid.astro";
 import { socials } from "../../constants/socials";
 import { homeContent } from "../../content/home/en";
 
-const currentPath = Astro.url.pathname;
-
-const sections = homeContent.sections.map(section => ({
-  ...section,
-  active: currentPath.startsWith(section.href),
-}));
 ---
 
 <Base title={homeContent.name} activeNav="home">
@@ -51,34 +45,9 @@ const sections = homeContent.sections.map(section => ({
 
   <br />
 
-  <NavList items={sections} />
+  <section id="projects" aria-label={homeContent.sections[0].title}>
+    <ProjectGrid locale="en" />
+  </section>
 </Base>
 
-<script>
-  // On hover of any .social-icon, replace the name text temporarily with a fade effect
-  const nameElement = document.getElementById("hero-name");
-  const originalText = nameElement?.textContent ?? "";
-
-  document.querySelectorAll(".social-icon").forEach((icon) => {
-    const handle = (icon as HTMLElement).dataset.handle ?? "";
-
-    icon.addEventListener("mouseenter", () => {
-      if (nameElement) {
-        nameElement.style.opacity = "0";
-        setTimeout(() => {
-          nameElement.textContent = handle;
-          nameElement.style.opacity = "1";
-        }, 150);
-      }
-    });
-    icon.addEventListener("mouseleave", () => {
-      if (nameElement) {
-        nameElement.style.opacity = "0";
-        setTimeout(() => {
-          nameElement.textContent = originalText;
-          nameElement.style.opacity = "1";
-        }, 150);
-      }
-    });
-  });
-</script>
+<script src="../../scripts/social-name.ts"></script>

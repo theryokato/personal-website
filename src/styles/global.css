@@ -1,65 +1,118 @@
 @import "tailwindcss";
 
-@theme {
+@theme static {
   /* Shared */
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-serif: Georgia, "Times New Roman", serif;
   --font-mono: SFMono-Regular, Consolas, "Liberation Mono", "Courier New", monospace;
   --max-w-prose: 42rem;
 
-  /* Semantic tokens — default: Nord Light */
-  --color-base:    #FFFFFF;
-  --color-mantle:  #E5E9F0;
-  --color-crust:   #D8DEE9;
-  --color-surface0:#D8DEE9;
-  --color-surface1:#B0B8C3;
-  --color-surface2:#81A2B5;
-  --color-overlay0:#81A2B5;
-  --color-overlay1:#88C0D0;
-  --color-overlay2:#8B9ABB;
-  --color-subtext0:#4C566A;
-  --color-subtext1:#D8DEE9;
-  --color-text:    #2E3440;
-  --color-lavender:#B48EAD;
-  --color-blue:    #81A2B5;
-  --color-sapphire:#88C0D0;
-  --color-sky:     #8FBCBB;
-  --color-green:   #A3BE8C;
-  --color-yellow:  #EBCB8B;
-  --color-peach:   #D08770;
-  --color-red:     #BF616A;
-  --color-mauve:   #B48EAD;
-  --color-pink:    #B48EAD;
-  --color-flamingo:#D08770;
-  --color-rosewater:#EBCB8B;
+  /* Warm Graphite: semantic roles, with AA text variants where needed. */
+  --color-background: var(--palette-background);
+  --color-surface: var(--palette-surface);
+  --color-surface-secondary: var(--palette-surface-secondary);
+  --color-border: var(--palette-border);
+  --color-text-primary: var(--palette-text-primary);
+  --color-text-secondary: var(--palette-text-secondary-readable);
+  --color-text-muted: var(--palette-text-muted-readable);
+  --color-link: var(--palette-steel-blue-readable);
+  --color-link-hover: var(--palette-text-primary);
+  --color-focus: var(--palette-steel-blue-readable);
+  --color-success: var(--palette-forest-green-readable);
+  --color-highlight: var(--palette-copper-readable);
+  --color-achievement: var(--palette-gold-readable);
+  --color-technical: var(--palette-plum-readable);
+  --color-technical-secondary: var(--palette-indigo-readable);
+  --color-info: var(--palette-teal-readable);
+  --color-danger: var(--palette-rust-readable);
+  /* Fixed neutral media colors remain readable over images in either mode. */
+  --color-media-overlay: #1C1B1A;
+  --color-media-text: #F1EEE9;
+  --color-media-danger: #E68B83;
+
+  /* Compatibility aliases for existing utility classes. */
+  --color-base: var(--color-background);
+  --color-mantle: var(--color-surface);
+  --color-crust: var(--color-surface-secondary);
+  --color-surface0: var(--color-border);
+  --color-surface1: var(--color-border);
+  --color-surface2: var(--color-text-muted);
+  --color-overlay0: var(--color-text-muted);
+  --color-overlay1: var(--color-text-secondary);
+  --color-overlay2: var(--color-text-primary);
+  --color-subtext0: var(--color-text-secondary);
+  --color-subtext1: var(--color-text-secondary);
+  --color-text: var(--color-text-primary);
+  --color-blue: var(--color-link);
+  --color-green: var(--color-success);
+  --color-yellow: var(--color-achievement);
+  --color-peach: var(--color-highlight);
+  --color-red: var(--color-danger);
+  --color-mauve: var(--color-technical);
+  --color-lavender: var(--color-technical-secondary);
+  --color-sapphire: var(--color-info);
+  --color-sky: var(--color-info);
+  --color-pink: var(--color-technical);
+  --color-flamingo: var(--color-highlight);
+  --color-rosewater: var(--color-highlight);
 }
 
-/* ─── Nord Dark overrides ────────────────────────────────── */
+/* Supplied reference colors, followed by contrast-adjusted text shades. */
+:root {
+  --palette-background: #F7F6F3;
+  --palette-surface: #FFFFFF;
+  --palette-surface-secondary: #F0EEEA;
+  --palette-border: #E0DCD5;
+  --palette-text-primary: #292724;
+  --palette-text-secondary: #746F69;
+  --palette-text-muted: #8A857E;
+  --palette-steel-blue: #3973A3;
+  --palette-forest-green: #26806A;
+  --palette-copper: #B86C35;
+  --palette-gold: #A88320;
+  --palette-plum: #8055A0;
+  --palette-rust: #B84944;
+  --palette-teal: #258A91;
+  --palette-indigo: #5966A5;
+  --palette-text-secondary-readable: #706B65;
+  --palette-text-muted-readable: #6F6B66;
+  --palette-steel-blue-readable: #37709F;
+  --palette-forest-green-readable: #247864;
+  --palette-copper-readable: #9C5C2D;
+  --palette-gold-readable: #856719;
+  --palette-plum-readable: #8055A0;
+  --palette-rust-readable: #B54843;
+  --palette-teal-readable: #20767C;
+  --palette-indigo-readable: #5966A5;
+}
+
+/* Preserve legacy theme IDs so saved preferences keep working. */
 [data-theme="nord-dark"] {
-  --color-base:    #2E3440;
-  --color-mantle:  #242933;
-  --color-crust:   #1B1E23;
-  --color-surface0:#3B4252;
-  --color-surface1:#434C5E;
-  --color-surface2:#4C566A;
-  --color-overlay0:#4C566A;
-  --color-overlay1:#D8DEE9;
-  --color-overlay2:#E5E9F0;
-  --color-subtext0:#D8DEE9;
-  --color-subtext1:#E5E9F0;
-  --color-text:    #ECEFF4;
-  --color-lavender:#B48EAD;
-  --color-blue:    #81A2B5;
-  --color-sapphire:#88C0D0;
-  --color-sky:     #8FBCBB;
-  --color-green:   #A3BE8C;
-  --color-yellow:  #EBCB8B;
-  --color-peach:   #D08770;
-  --color-red:     #BF616A;
-  --color-mauve:   #B48EAD;
-  --color-pink:    #B48EAD;
-  --color-flamingo:#D08770;
-  --color-rosewater:#EBCB8B;
+  --palette-background: #1C1B1A;
+  --palette-surface: #262421;
+  --palette-surface-secondary: #302D29;
+  --palette-border: #393631;
+  --palette-text-primary: #F1EEE9;
+  --palette-text-secondary: #A9A39B;
+  --palette-text-muted: #918B83;
+  --palette-steel-blue: #80B5E1;
+  --palette-forest-green: #75C5A6;
+  --palette-copper: #DDA06E;
+  --palette-gold: #E0BC65;
+  --palette-plum: #BEA0DD;
+  --palette-rust: #E68B83;
+  --palette-teal: #73C6C9;
+  --palette-indigo: #A0ACE7;
+  --palette-text-secondary-readable: #A9A39B;
+  --palette-text-muted-readable: #9A948D;
+  --palette-steel-blue-readable: #80B5E1;
+  --palette-forest-green-readable: #75C5A6;
+  --palette-copper-readable: #DDA06E;
+  --palette-gold-readable: #E0BC65;
+  --palette-plum-readable: #BEA0DD;
+  --palette-rust-readable: #E68B83;
+  --palette-teal-readable: #73C6C9;
+  --palette-indigo-readable: #A0ACE7;
 }
 
 /* ─── Base styles ──────────────────────────────────────── */
@@ -70,7 +123,7 @@ html {
   font-size: 15px;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
-  transition: background-color 0.2s ease, color 0.2s ease;
+
 }
 
 body {
@@ -102,12 +155,13 @@ body {
 .prose li         { margin-bottom: 0.5rem; }
 
 .prose a {
-  color: var(--color-blue);
+  color: var(--color-link);
   text-decoration: underline;
   text-underline-offset: 3px;
   text-decoration-thickness: 1px;
 }
-.prose a:hover { color: var(--color-lavender); }
+.prose a:hover { color: var(--color-link-hover); }
+.social-icon:hover { color: var(--color-text-primary); }
 
 .prose blockquote {
   border-left: 2px solid var(--color-surface1);
@@ -120,8 +174,8 @@ body {
 .prose code {
   font-family: var(--font-mono);
   font-size: 0.875em;
-  background-color: var(--color-surface0);
-  color: var(--color-peach);
+  background-color: var(--color-surface-secondary);
+  color: var(--color-technical);
   padding: 0.1em 0.35em;
   border-radius: 2px;
 }
@@ -160,4 +214,102 @@ body {
 /* ─── Reduced motion ────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   html, * { transition: none !important; }
+}
+/* Shared, gentle feedback; focus remains immediate. */
+:root { --motion-ease: cubic-bezier(0.4, 0, 0.2, 1); }
+/* Enable palette interpolation only for a user toggle, never initial paint. */
+html.theme-switching, html.theme-switching *,
+html.theme-switching *::before, html.theme-switching *::after {
+  transition-property: color, background-color, border-color, fill, stroke, opacity, transform, filter, text-underline-offset !important;
+  transition-duration: 240ms !important;
+  transition-timing-function: var(--motion-ease) !important;
+}
+.theme-toggle { display: grid; }
+.theme-toggle svg { grid-area: 1 / 1; }
+#sun-icon { opacity: 0; }
+#moon-icon { opacity: 1; }
+[data-theme="nord-dark"] #sun-icon { opacity: 1; }
+[data-theme="nord-dark"] #moon-icon { opacity: 0; }
+a, button { transition: color 200ms var(--motion-ease), background-color 200ms var(--motion-ease), border-color 200ms var(--motion-ease); }
+:focus-visible { outline: 2px solid var(--color-focus) !important; outline-offset: 3px; }
+button, .language-picker a {
+  transition-property: color, background-color, border-color, transform;
+  transition-duration: 200ms, 200ms, 200ms, 180ms;
+  transition-timing-function: var(--motion-ease), var(--motion-ease), var(--motion-ease), ease-out;
+}
+button:active, .language-picker a:active {
+  transform: scale(0.985);
+  transition-duration: 200ms, 200ms, 200ms, 100ms;
+}
+a.underline, .prose a {
+  transition: color 200ms var(--motion-ease), background-color 200ms var(--motion-ease), border-color 200ms var(--motion-ease), text-underline-offset 200ms var(--motion-ease);
+}
+.project-preview { transition: transform 220ms var(--motion-ease); }
+@media (hover: hover) {
+  a.underline:hover, .prose a:hover { text-underline-offset: 4px; }
+  .group:hover .project-preview { transform: scale(1.012); }
+}
+a[data-project-image] img { transition: filter 200ms var(--motion-ease); }
+@media (hover: hover) { a[data-project-image]:hover img { filter: brightness(0.97); } }
+@media (max-width: 600px) {
+  .project-summary { flex-direction: column; align-items: flex-start; gap: 0.125rem; }
+  .project-summary > :first-child { white-space: normal; overflow: visible; overflow-wrap: anywhere; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+  button:active, .language-picker a:active, .group:hover img {
+    transform: none !important;
+  }
+  a.underline:hover, .prose a:hover { text-underline-offset: 3px !important; }
+}
+
+/* Paint-only language typing preserves complete text, shaping, and layout. */
+::highlight(language-typing) {
+  color: transparent;
+  text-decoration-color: transparent;
+  text-shadow: none;
+}
+
+/* Native page crossfades also provide the unsupported-typing locale fallback. */
+@view-transition { navigation: auto; }
+::view-transition-group(root) { animation: none; }
+::view-transition-old(root), ::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+html[data-page-transition] main { view-transition-name: language-content; }
+html[data-language-transition] .language-picker { view-transition-name: language-control; }
+::view-transition-group(language-content), ::view-transition-group(language-control) { animation: none; }
+::view-transition-old(language-content), ::view-transition-old(language-control) {
+  height: auto;
+  animation: locale-fade-out 220ms var(--motion-ease) both;
+}
+::view-transition-new(language-content), ::view-transition-new(language-control) {
+  height: auto;
+  animation: locale-fade-in 220ms var(--motion-ease) both;
+}
+@keyframes locale-fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes locale-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+}
+
+/* Use the same neutral media palette for the existing zoom viewer. */
+.pswp.pswp {
+  --pswp-bg: var(--color-media-overlay);
+  --pswp-placeholder-bg: var(--color-media-overlay);
+  --pswp-icon-color: var(--color-media-text);
+  --pswp-icon-color-secondary: var(--color-media-overlay);
+  --pswp-icon-stroke-color: var(--color-media-overlay);
+  --pswp-preloader-color: var(--color-media-overlay);
+  --pswp-preloader-color-secondary: var(--color-media-text);
+  --pswp-error-text-color: var(--color-media-danger);
+}
+
+.pswp__error-msg { background-color: var(--color-media-overlay); }
+
+/* Back the existing focus outline with a neutral halo over variable images. */
+.pswp :focus-visible {
+  outline-color: var(--color-media-text) !important;
+  box-shadow: 0 0 0 5px var(--color-media-overlay);
 }

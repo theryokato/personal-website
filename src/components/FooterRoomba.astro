@@ -1,0 +1,48 @@
+<!-- Piixpal 0.4.0, MIT. Keep the original sprite and load only Roomba + its engine. -->
+<script is:inline src="/vendor/piixpal/0.4.0/core.min.js" defer></script>
+<script is:inline src="/vendor/piixpal/0.4.0/c/roomba.min.js" defer></script>
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const footer = document.querySelector('footer');
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+    let pal;
+    const remove = () => {
+      pal?.remove();
+      pal = undefined;
+    };
+    const sync = () => {
+      if (reducedMotion.matches) return remove();
+      if (!footer || pal || !customElements.get('piix-pal')) return;
+      pal = document.createElement('piix-pal');
+      pal.setAttribute('pal', 'roomba');
+      pal.addEventListener('piix:ready', event => {
+        const canvas = event.currentTarget.actor.cv;
+        canvas.tabIndex = 0;
+        canvas.setAttribute('role', 'button');
+        canvas.setAttribute('aria-label', document.documentElement.lang === 'ja'
+          ? 'ルンバをつつく' : 'Poke the Roomba');
+        const root = canvas.getRootNode();
+        root.host.removeAttribute('aria-hidden');
+        event.currentTarget.actor.bub.setAttribute('aria-hidden', 'true');
+        if (!root.querySelector('[data-roomba-focus]')) {
+          const style = document.createElement('style');
+          style.setAttribute('data-roomba-focus', '');
+          style.textContent = 'canvas:focus-visible{outline:2px solid var(--color-focus);outline-offset:3px}';
+          root.append(style);
+        }
+        canvas.addEventListener('keydown', event => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            pal?.dispatchEvent(new CustomEvent('piix:poke', { bubbles: true }));
+            pal?.poke();
+          }
+        });
+      }, { once: true });
+      footer.append(pal);
+    };
+    customElements.whenDefined('piix-pal').then(sync);
+    reducedMotion.addEventListener('change', sync);
+    window.addEventListener('pagehide', remove);
+    window.addEventListener('pageshow', sync);
+  }, { once: true });
+</script>

@@ -1,0 +1,66 @@
+---
+import { preview, previewSet } from "../utils/previews";
+import { formatDate } from "../utils/dates";
+
+interface Props {
+  locale: 'en' | 'ja';
+}
+
+interface Project {
+  slug: string;
+  title: string;
+  image?: string;
+  startDate?: string;
+  endDate?: string;
+  url?: string;
+}
+
+const { locale } = Astro.props;
+const en = import.meta.glob("../content/projects/en/*.mdx", { eager: true });
+const ja = import.meta.glob("../content/projects/ja/*.mdx", { eager: true });
+const modules = (locale === 'ja' ? ja : en) as Record<string, { frontmatter: Project }>;
+// Lead with engineering work; keep the same editorial order in both languages.
+const projectOrder = new Map(
+  ['dron', 'blnc', 'red', 'herc', 'kb', 'website'].map((slug, index) => [slug, index])
+);
+const projects = Object.values(modules)
+  .map(module => module.frontmatter)
+  .sort((a, b) =>
+    (projectOrder.get(a.slug) ?? projectOrder.size) - (projectOrder.get(b.slug) ?? projectOrder.size)
+    || (b.startDate ?? "").localeCompare(a.startDate ?? "")
+  );
+const dateLocale = locale === 'ja' ? 'ja-JP' : 'en-US';
+---
+
+<div class="grid grid-cols-1 min-[601px]:grid-cols-2 gap-5 mt-4">
+    {projects.map((p: any) => (
+        <a
+            href={p.url || `/${locale}/projects/${p.slug}`}
+            target={p.url ? "_blank" : undefined}
+            rel={p.url ? "noopener noreferrer" : undefined}
+            class="group no-underline block"
+        >
+            <div class="overflow-hidden rounded-sm bg-mantle aspect-4/3 mb-2">
+                {p.image ? (
+                    <img
+                        src={preview(p.image)} srcset={previewSet(p.image)} sizes="(max-width: 600px) calc(100vw - 2rem), 310px" loading="lazy" decoding="async"
+                        alt={p.title}
+                        class="project-preview w-full h-full object-cover"
+                    />
+                ) : (
+                    <div class="w-full h-full bg-surface-secondary" />
+                )}
+            </div>
+            <div class="project-summary flex flex-col items-start gap-0.5">
+                <span class="text-sm text-text leading-snug break-words">
+                    {p.title}
+                </span>
+                <span class="font-mono text-xs text-subtext0 whitespace-nowrap">
+                    {formatDate(p.startDate, dateLocale)}
+                    {" — "}
+                    {formatDate(p.endDate, dateLocale)}
+                </span>
+            </div>
+        </a>
+    ))}
+</div>

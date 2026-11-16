@@ -1,0 +1,136 @@
+<!-- Classic head script registers pagereveal before the first render. -->
+<script is:inline>
+  (() => {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let activeTransition;
+    let typingFrame;
+    const canType = Boolean(CSS.highlights && typeof Highlight === 'function' && typeof Intl.Segmenter === 'function');
+
+    function finishTyping() {
+      cancelAnimationFrame(typingFrame);
+      CSS.highlights?.delete('language-typing');
+    }
+
+    function revealText() {
+      finishTyping();
+      if (!document.body || reducedMotion.matches) return;
+      const segmenter = new Intl.Segmenter(document.documentElement.lang, { granularity: 'grapheme' });
+      const highlight = new Highlight();
+      const groups = [];
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      let node;
+      while ((node = walker.nextNode())) {
+        const parent = node.parentElement;
+        if (!node.data.trim() || !parent || parent.closest('script, style, noscript, svg, canvas, video, audio, template, [hidden], [aria-hidden="true"]')) continue;
+        if (getComputedStyle(parent).visibility !== 'visible') continue;
+        const range = document.createRange();
+        range.selectNodeContents(node);
+        if (!range.getClientRects().length) continue;
+        // Inline links share their paragraph's progress; independent blocks type together.
+        let block = parent;
+        while (block.parentElement && ['inline', 'contents'].includes(getComputedStyle(block).display)) {
+          block = block.parentElement;
+        }
+        // A single continuous range avoids separate highlight paint boundaries at links.
+        // Start a new run at nested blocks so masks never overlap independent content.
+        let group = groups.at(-1);
+        if (!group || group.block !== block) {
+          group = { block, total: 0, entries: [], range };
+          groups.push(group);
+          highlight.add(range);
+        } else {
+          group.range.setEnd(node, node.length);
+        }
+        const boundaries = [...segmenter.segment(node.data)].map(part => part.index);
+        boundaries.push(node.length);
+        group.entries.push({ node, text: node.data, boundaries });
+        group.total += boundaries.length - 1;
+      }
+      if (!groups.length) return;
+      CSS.highlights.set('language-typing', highlight);
+      const started = performance.now();
+      const tick = now => {
+        const progress = Math.min((now - started) / 900, 1);
+        if (progress >= 1) {
+          finishTyping();
+          return;
+        }
+        for (const group of groups) {
+          // Existing components may replace text; expose that block rather than stale ranges.
+          if (group.entries.some(entry => !entry.node.isConnected || entry.node.data !== entry.text)) {
+            highlight.delete(group.range);
+            continue;
+          }
+          let count = Math.floor(group.total * progress);
+          for (const entry of group.entries) {
+            const length = entry.boundaries.length - 1;
+            if (count < length) {
+              group.range.setStart(entry.node, entry.boundaries[Math.max(0, count)]);
+              break;
+            }
+            count -= length;
+          }
+        }
+        typingFrame = requestAnimationFrame(tick);
+      };
+      typingFrame = requestAnimationFrame(tick);
+    }
+
+    function localizedPath(value) {
+      if (typeof value !== 'string') return null;
+      try {
+        const url = new URL(value, location.href);
+        if (url.origin !== location.origin) return null;
+        const match = url.pathname.match(/^\/(en|ja)(\/.*)?$/);
+        return match ? { locale: match[1], path: (match[2] || '/').replace(/\/$/, '') } : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function prepare(transition, from, to, reveal = false) {
+      const previous = localizedPath(from);
+      const next = localizedPath(to);
+      if (reducedMotion.matches || !previous || !next || (previous.locale === next.locale && previous.path === next.path)) {
+        transition?.skipTransition();
+        return;
+      }
+      if (previous.locale !== next.locale && previous.path === next.path && canType) {
+        transition?.skipTransition();
+        if (reveal) revealText();
+        return;
+      }
+      if (!transition) return;
+      activeTransition = transition;
+      document.documentElement.setAttribute('data-page-transition', '');
+      if (previous.locale !== next.locale && previous.path === next.path) {
+        document.documentElement.setAttribute('data-language-transition', '');
+      }
+      const clear = () => {
+        if (activeTransition !== transition) return;
+        document.documentElement.removeAttribute('data-page-transition');
+        document.documentElement.removeAttribute('data-language-transition');
+        activeTransition = undefined;
+      };
+      transition.finished.then(clear, clear);
+    }
+
+    window.addEventListener('pageswap', event => {
+      finishTyping();
+      prepare(event.viewTransition, location.href, event.activation?.entry?.url);
+    });
+    window.addEventListener('pagereveal', event => {
+      prepare(event.viewTransition, window.navigation?.activation?.from?.url, location.href, true);
+    });
+    window.addEventListener('pagehide', finishTyping);
+    window.addEventListener('keydown', finishTyping);
+    window.addEventListener('focusin', finishTyping);
+    window.addEventListener('pointerdown', finishTyping, { passive: true });
+    reducedMotion.addEventListener('change', () => {
+      if (reducedMotion.matches) {
+        activeTransition?.skipTransition();
+        finishTyping();
+      }
+    });
+  })();
+</script>
