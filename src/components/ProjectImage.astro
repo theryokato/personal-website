@@ -6,9 +6,10 @@ interface Props {
   caption: string;
   width: number;
   height: number;
+  paper?: boolean;
 }
 
-const { src, alt, caption, width, height } = Astro.props;
+const { src, alt, caption, width, height, paper = false } = Astro.props;
 const finalAlt = alt ?? caption;
 ---
 
@@ -16,6 +17,7 @@ const finalAlt = alt ?? caption;
   <a
     href={src}
     data-project-image
+    data-project-paper={paper ? "" : undefined}
     data-pswp-width={width}
     data-pswp-height={height}
     data-pswp-caption={caption}
@@ -25,16 +27,16 @@ const finalAlt = alt ?? caption;
     <img
       src={preview(src)}
       srcset={previewSet(src)}
-      sizes="(max-width: 660px) 100vw, 660px"
+      sizes="(max-width: 600px) calc(100vw - 2rem), (max-width: 45rem) calc(100vw - 3rem), 42rem"
       loading="lazy"
       decoding="async"
       alt={finalAlt}
       width={width}
       height={height}
-      class="w-full h-auto block"
+      class:list={["w-full h-auto block", { "project-image-paper": paper }]}
     />
   </a>
-  <figcaption class="mt-2 text-xs text-text font-mono text-center">
+  <figcaption class="mt-2 text-caption text-subtext0 font-mono text-center">
     {caption}
   </figcaption>
 </figure>
@@ -49,6 +51,12 @@ const finalAlt = alt ?? caption;
     pswpModule: () => import('photoswipe'),
     showAnimationDuration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 150,
     hideAnimationDuration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 150,
+  });
+
+  lightbox.on('contentAppend', ({ content }) => {
+    if (content.data.element?.hasAttribute('data-project-paper')) {
+      content.element?.classList.add('project-image-paper');
+    }
   });
 
   lightbox.on('uiRegister', () => {
