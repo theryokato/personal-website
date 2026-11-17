@@ -245,11 +245,33 @@ body {
 }
 /* Shared, gentle feedback; focus remains immediate. */
 :root { --motion-ease: cubic-bezier(0.4, 0, 0.2, 1); }
+/* Interpolate shared palette inputs once, rather than every descendant color. */
+@property --palette-background { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --palette-surface { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --palette-surface-secondary { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --palette-border { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --palette-text-primary { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --palette-text-secondary-readable { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --palette-text-muted-readable { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --palette-steel-blue-readable { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --palette-forest-green-readable { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --palette-copper-readable { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --palette-gold-readable { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --palette-plum-readable { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --palette-rust-readable { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --palette-teal-readable { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --palette-indigo-readable { syntax: "<color>"; inherits: true; initial-value: transparent; }
+
 /* Enable palette interpolation only for a user toggle, never initial paint. */
 @media (prefers-reduced-motion: no-preference) {
-  html.theme-switching, html.theme-switching *,
+  html.theme-switching {
+    transition-property: --palette-background, --palette-surface, --palette-surface-secondary, --palette-border, --palette-text-primary, --palette-text-secondary-readable, --palette-text-muted-readable, --palette-steel-blue-readable, --palette-forest-green-readable, --palette-copper-readable, --palette-gold-readable, --palette-plum-readable, --palette-rust-readable, --palette-teal-readable, --palette-indigo-readable !important;
+    transition-duration: 240ms !important;
+    transition-timing-function: var(--motion-ease) !important;
+  }
+  html.theme-switching *,
   html.theme-switching *::before, html.theme-switching *::after {
-    transition-property: color, background-color, border-color, fill, stroke, opacity, transform, filter, text-underline-offset !important;
+    transition-property: opacity, transform, filter, text-underline-offset !important;
     transition-duration: 240ms !important;
     transition-timing-function: var(--motion-ease) !important;
   }
