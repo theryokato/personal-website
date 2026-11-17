@@ -4,11 +4,25 @@
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     let activeTransition;
     let typingFrame;
+    let cleanupFrame;
     const canType = Boolean(CSS.highlights && typeof Highlight === 'function' && typeof Intl.Segmenter === 'function');
 
     function finishTyping() {
       cancelAnimationFrame(typingFrame);
+      cancelAnimationFrame(cleanupFrame);
       CSS.highlights?.delete('language-typing');
+    }
+
+    function completeTyping(highlight) {
+      // Paint the final text before removing the highlight's rendering layer.
+      for (const range of highlight) {
+        if (!range.collapsed) range.collapse(false);
+      }
+      cleanupFrame = requestAnimationFrame(() => {
+        if (CSS.highlights?.get('language-typing') === highlight) {
+          CSS.highlights.delete('language-typing');
+        }
+      });
     }
 
     function revealText() {
@@ -54,7 +68,7 @@
       const tick = now => {
         const progress = Math.min((now - started) / 900, 1);
         if (progress >= 1) {
-          finishTyping();
+          completeTyping(highlight);
           return;
         }
         for (const group of groups) {
@@ -71,7 +85,7 @@
           if (count === group.revealed) continue;
           group.revealed = count;
           if (count === group.total) {
-            highlight.delete(group.range);
+            group.range.collapse(false);
             group.done = true;
             continue;
           }
@@ -84,8 +98,8 @@
             count -= length;
           }
         }
-        if (!highlight.size) {
-          finishTyping();
+        if (groups.every(group => group.done)) {
+          completeTyping(highlight);
           return;
         }
         typingFrame = requestAnimationFrame(tick);
