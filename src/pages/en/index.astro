@@ -8,19 +8,21 @@ import { homeContent } from "../../content/home/en";
 
 <Base title={homeContent.name} activeNav="home">
   <section class="mb-1">
-    <p
+    <h1
       id="hero-name"
-      class="mb-4 text-text text-lg font-bold leading-relaxed transition-opacity duration-200"
+      class="mb-4 text-text text-2xl font-semibold leading-[1.95rem] whitespace-nowrap transition-opacity duration-200"
     >
       {homeContent.name}
-    </p>
+    </h1>
 
     <!-- Bio -->
-    <p class="mb-4 text-text text-lg leading-relaxed" set:html={homeContent.bio} />
+    {homeContent.bio.map(paragraph => (
+      <p class="mb-4 text-text text-lg leading-relaxed" set:html={paragraph} />
+    ))}
   </section>
 
   <!-- Social icons row -->
-  <div class="flex items-center gap-3 mb-2 mt-0">
+  <div class="flex items-center gap-3 mt-0">
     {socials.map((social) => (
       <a
         href={social.href}
@@ -43,9 +45,7 @@ import { homeContent } from "../../content/home/en";
     ))}
   </div>
 
-  <br />
-
-  <section id="projects" aria-label={homeContent.sections[0].title}>
+  <section id="projects" class="mt-12" aria-label={homeContent.sections[0].title}>
     <ProjectGrid locale="en" />
   </section>
 </Base>

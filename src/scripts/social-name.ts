@@ -9,6 +9,24 @@ if (nameElement) {
   let generation = 0;
   let animation: Animation | null = null;
 
+  const fitName = () => {
+    nameElement.style.removeProperty('font-size');
+    const range = document.createRange();
+    range.selectNodeContents(nameElement);
+    const textWidth = range.getBoundingClientRect().width;
+    const available = nameElement.clientWidth;
+    if (available > 0 && textWidth > available) {
+      const size = parseFloat(getComputedStyle(nameElement).fontSize);
+      nameElement.style.fontSize = `${size * available / textWidth}px`;
+    }
+  };
+  const setName = (text: string) => {
+    nameElement.textContent = text;
+    fitName();
+  };
+  new ResizeObserver(fitName).observe(nameElement);
+  void document.fonts.ready.then(fitName);
+
   const updateName = async (icon: HTMLAnchorElement | null, animate = true) => {
     const nextName = icon?.dataset.handle || originalName;
     if (animate && nextName === desiredName) return;
@@ -19,7 +37,7 @@ if (nameElement) {
     animation = null;
 
     if (!animate || reducedMotion.matches || !nameElement.animate || nameElement.textContent === nextName) {
-      nameElement.textContent = nextName;
+      setName(nextName);
       return;
     }
 
@@ -29,7 +47,7 @@ if (nameElement) {
     animation = fadeOut;
     await fadeOut.finished.catch(() => {});
     if (current !== generation) return;
-    nameElement.textContent = nextName;
+    setName(nextName);
     fadeOut.cancel();
     const fadeIn = nameElement.animate([{ opacity: 0 }, { opacity: 1 }], {
       duration: 110, easing: 'ease-in-out',
@@ -64,7 +82,7 @@ if (nameElement) {
       ++generation;
       animation?.cancel();
       animation = null;
-      nameElement.textContent = desired;
+      setName(desired);
     }
   });
   window.addEventListener('pagehide', () => {

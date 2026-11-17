@@ -132,8 +132,13 @@ const loadingLabel = isJapanese ? '3Dモデルを読み込み中…' : 'Loading 
   figcaption {
     margin: 0.5rem 0 0;
     color: var(--color-subtext0);
-    font: 0.75rem/1.25 monospace;
+    font: 0.75rem/1.25 var(--font-mono);
     text-align: center;
+  }
+
+  figcaption {
+    font-size: var(--text-caption);
+    line-height: var(--text-caption--line-height);
   }
 
   .download a {
