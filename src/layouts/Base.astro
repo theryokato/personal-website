@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import LanguagePicker from "../components/LanguagePicker.astro";
+import LanguageHistory from "../components/LanguageHistory.astro";
 import LanguageMotion from "../components/LanguageMotion.astro";
 import FooterRoomba from "../components/FooterRoomba.astro";
 
@@ -59,6 +60,7 @@ const nav = [
         document.documentElement.setAttribute("data-theme", preferred);
       })();
     </script>
+    <LanguageHistory />
     <LanguageMotion />
   </head>
   <body>

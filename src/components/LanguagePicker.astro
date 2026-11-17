@@ -65,6 +65,7 @@ const jaPath = getLocalizedPath('ja');
         if (destination.origin !== window.location.origin) return;
 
         event.preventDefault();
+        try { sessionStorage.setItem('preferred-language', link.hreflang); } catch {}
         if (link.getAttribute('aria-current') === 'true') return;
 
         // A language choice updates this visit rather than adding a page visit.

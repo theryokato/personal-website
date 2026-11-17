@@ -1,0 +1,30 @@
+<!-- Restore the tab's language choice before revealing a history destination. -->
+<script is:inline>
+  (() => {
+    let restoring = false;
+    function restoreLanguage() {
+      if (restoring) return;
+      let preferred;
+      try { preferred = sessionStorage.getItem('preferred-language'); } catch { return; }
+      if (preferred !== 'en' && preferred !== 'ja') return;
+
+      const destination = new URL(location.href);
+      const locale = destination.pathname.match(/^\/(en|ja)(?=\/|$)/);
+      if (!locale || locale[1] === preferred) return;
+
+      restoring = true;
+      destination.pathname = destination.pathname.replace(/^\/(en|ja)(?=\/|$)/, `/${preferred}`);
+      // Replace the restored entry so Back/Forward still move between pages.
+      location.replace(destination.href);
+    }
+
+    // Fresh documents and cached documents have different restoration events.
+    if (performance.getEntriesByType('navigation')[0]?.type === 'back_forward') restoreLanguage();
+    window.addEventListener('pagereveal', () => {
+      if (window.navigation?.activation?.navigationType === 'traverse') restoreLanguage();
+    });
+    window.addEventListener('pageshow', event => {
+      if (event.persisted) restoreLanguage();
+    });
+  })();
+</script>
