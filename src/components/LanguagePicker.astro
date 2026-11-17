@@ -50,3 +50,26 @@ const jaPath = getLocalizedPath('ja');
     JA
   </a>
 </div>
+
+<script is:inline>
+  (() => {
+    const picker = document.currentScript?.previousElementSibling;
+    picker?.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', event => {
+        if (event.defaultPrevented || event.button !== 0
+          || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey
+          || (link.target && link.target.toLowerCase() !== '_self')
+          || link.hasAttribute('download')) return;
+
+        const destination = new URL(link.href);
+        if (destination.origin !== window.location.origin) return;
+
+        event.preventDefault();
+        if (link.getAttribute('aria-current') === 'true') return;
+
+        // A language choice updates this visit rather than adding a page visit.
+        window.location.replace(destination.href);
+      });
+    });
+  })();
+</script>
