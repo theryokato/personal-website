@@ -65,8 +65,8 @@
             group.done = true;
             continue;
           }
-          // Short labels finish promptly; longer paragraphs retain the 900ms cap.
-          const duration = Math.min(900, group.total * 25);
+          // Keep short names and navigation deliberate without slowing long paragraphs.
+          const duration = Math.min(900, Math.max(650, group.total * 25));
           let count = Math.floor(group.total * Math.min((now - started) / duration, 1));
           if (count === group.revealed) continue;
           group.revealed = count;
