@@ -132,6 +132,8 @@
 
 /* ─── Base styles ──────────────────────────────────────── */
 html {
+  /* Keep navigation live; only explicitly named content should be snapshotted. */
+  view-transition-name: none;
   background-color: var(--color-base);
   color: var(--color-text);
   font-family: var(--font-sans);
