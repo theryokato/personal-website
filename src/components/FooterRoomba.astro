@@ -1,4 +1,9 @@
 <!-- Piixpal 0.4.0, MIT. Keep the original sprite and load only Roomba + its engine. -->
+<style is:global>
+  /* Keep the mascot above page content and below image zoom overlays. */
+  :root { --piix-z: 20; }
+</style>
+
 <script is:inline>
   document.addEventListener('DOMContentLoaded', () => {
     const footer = document.querySelector('footer');
