@@ -2,11 +2,14 @@
 title: "DRON"
 slug: "dron"
 url: ""
-description: "Disaster Response Observation Network"
+description: "災害対応を支援する無人航空機"
+role: "機械システム担当リーダー"
 publishedAt: "2025-06-01"
 startDate: "2025-01"
 endDate: "Present"
 tags: ["CAD", "3D printing", "UAV", "disaster response"]
+featured: true
+caption: "DRON V4 機体下面のCADモデル"
 image: "/assets/DRON/v4-bottom.png"
 ---
 
@@ -14,34 +17,24 @@ import ProjectImage from '../../../components/ProjectImage.astro';
 import ProjectVideo from '../../../components/ProjectVideo.astro';
 import ProjectSlides from '../../../components/ProjectSlides.astro';
 
-## 概要
-DRON(Disaster Response Observation Network、災害対応観測ネットワーク)は、無人航空機(UAV)を活用して建物火災の際に情報を収集し、初動対応者による現場評価と緊急対応を支援することを目指す概念実証(PoC)プロジェクトです。
-自律型スウォーム機能により、DRONは最小限の人的操作で緊急事態に対応することができます。DRONは、使いやすさ、迅速な展開、そして収集・提示されるデータの質を重視して設計されています。
+## 火災現場での状況把握
+DRONは、建物火災の現場で消防隊員の状況把握を支援するための実証プロジェクトです。迅速に展開できる無人航空機で熱源を検出し、周囲を立体的に把握することを目指しています。
 
-私はこのプロジェクトにおいて、<strong className="project-contribution">機械システム担当リーダー</strong>を務めています。
+### 整備性を考慮した機体設計
+私は機械システム担当リーダーとして機体設計に携わっています。アームはプロペラのトルクを受け、中央の構造体は搭載機器を支えます。軽量化と剛性の確保に加え、修理時の分解しやすさも設計上の課題です。
 
-<ProjectSlides
-  src="/assets/DRON/DRON-S26-DR2.pptx.pdf"
-  totalPages={39}
-  caption="DRON 設計審査プレゼンテーション"
-/>
+V4では振動の抑制を狙い、アームに炭素繊維製のチューブを採用しました。各部は熱圧入インサートとねじで締結し、修理の際に取り外せる構造としています。CAD図は、搭載機器の筐体とアームの接続部を下面から見たものです。
 
-### 機械設計
-DRONは、重量、構造的安定性、モジュール性のバランスを考慮して設計されており、飛行中に生じる高いストレス、すなわちプロペラからのトルクやペイロードによる内部応力に耐え、任務を完了できるようになっています。次期V4設計では、飛行中に機体故障を引き起こしかねない振動を最小限に抑えるため、アーム部にカーボンファイバー製のチューブを採用しました。すべての部品は、修理のしやすさを考慮し、ヒートインサートとネジで接続されています。
+### センシングと自律飛行の統合
+画像処理班はステレオカメラ2台を校正し、ROS 2経由で画像をUnityに送り、可視化しました。自律制御班はPX4とGazeboで複数機の飛行をシミュレーションし、センサーデータをROS 2で配信しました。
 
-### ビジュアル(画像処理)
-ソフトウェアは、各コンポーネント間の通信管理、ホットスポットの検出、および環境の3Dマッピングという役割を担っています。2台のステレオカメラのキャリブレーションに成功し、周囲の奥行き情報を取得できるようになりました。ステレオ画像はROS2ノードを通じてUnityにパブリッシュされ、そこで可視化されます。ソフトウェアスタックは、飛行制御、データ収集、画像処理、環境の3D可視化のために、多数のモジュールおよびライブラリに依存しています。
-
-### 自律制御
-UAVの自律制御は、PX4ファームウェアのシミュレーションおよび実機展開によって実現されており、uORBメッセージングAPIを介してPX4とのインターフェースを行っています。チームは、GazeboによるマルチエージェントSoftware-In-The-Loop(SITL)シミュレーションを実演し、センサー出力をROS 2にパブリッシュしました。
-
-### 電気設計
-INAVを、フライトコントローラー(FC)およびESCスタックと連携させるための一元化された地上管制局(GCS)として構成しています。GPSとIMUは低レベルのウェイポイントベースの自律飛行を提供し、Raspberry Piがセンサーデータを収集し、Wi-Fiを使用してデータを送信し、飛行コマンドを受信します。選定したバッテリーは3000mAhの定格容量を持ち、機動飛行を約12分間、低速飛行およびホバリングを約15分間維持するのに十分な電力を供給できます。
+### 飛行試験と評価課題
+動画は試作機の飛行試験の様子です。電装系では容量3000 mAhのバッテリーを選定しました。飛行時間の設計上の見積もりは機動飛行で約12分、低速飛行・ホバリングで約15分です。V4の評価には、実測した飛行時間と振動データが必要です。
 
 <ProjectVideo
   src="/assets/DRON/drone-flight.mp4"
   caption="DRONの飛行試験"
-  poster="/assets/DRON/drone-flight-poster.webp"
+  poster="/assets/previews/flight-test-poster.webp"
 />
 
 <ProjectImage
@@ -49,4 +42,10 @@ INAVを、フライトコントローラー(FC)およびESCスタックと連携
   caption="2026年春 TURTLE Project Showcase ポスター"
   width={4608}
   height={3456}
+/>
+
+<ProjectSlides
+  src="/assets/DRON/DRON-S26-DR2.pptx.pdf"
+  totalPages={39}
+  caption="DRON 設計審査プレゼンテーション"
 />

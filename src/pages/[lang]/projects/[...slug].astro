@@ -1,0 +1,96 @@
+---
+import Base from "../../../layouts/Base.astro";
+import ProjectRows from "../../../components/ProjectRows.astro";
+import { projects } from "../../../utils/projects";
+import { formatDate } from "../../../utils/dates";
+import { preview, previewSet } from "../../../utils/previews";
+export function getStaticPaths() {
+  return (["en", "ja"] as const).flatMap((lang) => [
+    { params: { lang, slug: undefined }, props: { file: null, lang } },
+    ...projects(lang)
+      .filter((p) => !p.frontmatter.url)
+      .map((file) => ({
+        params: { lang, slug: file.frontmatter.slug },
+        props: { file, lang },
+      })),
+  ]);
+}
+const { lang, file } = Astro.props,
+  ja = lang === "ja";
+const p = file?.frontmatter,
+  Content = file?.Content;
+const label = ja ? "プロジェクト一覧" : "Project index";
+const list = "/" + lang + "/projects/";
+---
+
+<Base
+  title={p ? p.title + " — " + p.description : label}
+  description={
+    p
+      ? p.role + " · " + p.description
+      : ja
+        ? "機械設計、ロボット制御、研究活動の記録。"
+        : "Mechanical design, robotics controls and research by Ryo Kato."
+  }
+  image={p?.image ? preview(p.image) : undefined}
+  activeNav="projects"
+>
+  {p && Content ? (
+    <article>
+      <header class="case-head">
+        <a class="back" href={list}>
+          ← {label}
+        </a>
+        <div class="case-title">
+          <div>
+            <p class="kicker">{p.title}</p>
+            <h1>{p.description}</h1>
+          </div>
+          <dl>
+            <dt>{ja ? "担当" : "My role"}</dt>
+            <dd>{p.role}</dd>
+            <dt>{ja ? "活動期間" : "Period"}</dt>
+            <dd>
+              {formatDate(p.startDate, lang)} –{" "}
+              {formatDate(p.endDate, ja ? "ja-JP" : "en")}
+            </dd>
+          </dl>
+        </div>
+      </header>
+      <div class="case-body">
+        {p.image && (
+          <aside>
+            <figure>
+              <img
+                src={preview(p.image)}
+                srcset={previewSet(p.image)}
+                fetchpriority="high"
+                sizes="(max-width:740px) 90vw, 360px"
+                alt={p.description}
+                width="480"
+                height="360"
+              />
+              {p.caption && <figcaption>{p.caption}</figcaption>}
+            </figure>
+          </aside>
+        )}
+        <div class="prose">
+          <Content />
+        </div>
+      </div>
+      <a class="back" href={list}>
+        ← {label}
+      </a>
+    </article>
+  ) : (
+    <>
+      <header class="index-head">
+        <p class="kicker">
+          {ja ? "設計・制御・研究" : "Design, controls & research"}
+        </p>
+        <h1>{label}</h1>
+      </header>
+      <ProjectRows lang={lang} />
+    </>
+  )}
+</Base>

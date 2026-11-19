@@ -27,7 +27,7 @@ if (showDetailedStatus) {
 
   {reading.length > 0 && (
     <section class="mb-10">
-      <p class="section-label">Currently Reading</p>
+      <p class="section-label">{Astro.currentLocale==='ja'?'進行中':'In progress'}</p>
       <ul class="media-rows">
         {reading.map(item => (
           <li class="media-row">
@@ -52,7 +52,7 @@ if (showDetailedStatus) {
     <>
       {finished.length > 0 && (
         <section class="mb-10">
-          <p class="section-label">Finished</p>
+          <p class="section-label">{Astro.currentLocale==='ja'?'完了':'Finished'}</p>
           <ul class="media-rows">
             {finished.map(item => (
               <li class="media-row">
@@ -74,7 +74,7 @@ if (showDetailedStatus) {
       )}
       {others.length > 0 && (
         <section class="mb-10">
-          <p class="section-label">Paused/Abandoned</p>
+          <p class="section-label">{Astro.currentLocale==='ja'?'中断':'Paused/Abandoned'}</p>
           <ul class="media-rows">
             {others.map(item => (
               <li class="media-row">
@@ -98,7 +98,7 @@ if (showDetailedStatus) {
   ) : (
     done.length > 0 && (
       <section class="mb-10">
-        <p class="section-label">Finished / Others</p>
+        <p class="section-label">{Astro.currentLocale==='ja'?'完了・その他':'Finished / Others'}</p>
         <ul class="media-rows">
           {done.map(item => (
             <li class="media-row">

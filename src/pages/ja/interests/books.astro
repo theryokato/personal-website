@@ -4,7 +4,7 @@ import MediaList from '../../../components/MediaList.astro';
 import { InterestService } from '../../../services/interests';
 
 const items = await InterestService.getBooks('ja');
-if (!items) return Astro.redirect('/404');
+
 ---
 
 <Base title="本棚" activeNav="interests">
@@ -15,5 +15,5 @@ if (!items) return Astro.redirect('/404');
     私が読んだ本の不完全なリストです。
   </p>
 
-  <MediaList items={items} />
+  {items?.length ? <MediaList items={items} /> : <p>現在、一覧を取得できません。</p>}
 </Base>

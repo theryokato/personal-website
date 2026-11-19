@@ -4,7 +4,7 @@ import MediaList from '../../../components/MediaList.astro';
 import { InterestService } from '../../../services/interests';
 
 const items = await InterestService.getAnime('en');
-if (!items) return Astro.redirect('/404');
+
 ---
 
 <Base title="Anime" activeNav="interests">
@@ -15,5 +15,5 @@ if (!items) return Astro.redirect('/404');
     Incomplete list of the anime I've watched.
   </p>
 
-  <MediaList items={items} showDetailedStatus={true} showAuthorOnRight={true} />
+  {items?.length ? <MediaList items={items} showDetailedStatus={true} showAuthorOnRight={true} /> : <p>This list is currently unavailable.</p>}
 </Base>

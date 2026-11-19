@@ -1,0 +1,125 @@
+---
+import Base from "../layouts/Base.astro";
+import ProjectRows from "./ProjectRows.astro";
+import { preview, previewSet } from "../utils/previews";
+import type { Locale } from "../utils/projects";
+interface Props {
+  lang: Locale;
+}
+const { lang } = Astro.props,
+  ja = lang === "ja";
+const t = (en: string, jp: string) => (ja ? jp : en);
+const photo = "dron-prototype.jpg",
+  dron = "/" + lang + "/projects/dron/";
+const experience = [
+  [
+    "KARURA",
+    t("Robotic arm software", "ロボットアームのソフトウェア開発"),
+    t("Software team member", "ソフトウェア班メンバー"),
+    "https://www.karurarobotics.org/",
+  ],
+  [
+    "TURTLE Robotics",
+    t("Student robotics organization", "学生ロボット開発団体の運営"),
+    t("Internal vice president", "内部運営担当副代表"),
+    "https://turtlerobotics.org",
+  ],
+  [
+    "HERC Lab",
+    t(
+      "Human–robot interaction and strength amplification",
+      "人とロボットの協調による筋力増幅",
+    ),
+    t("Undergraduate research", "学部研究"),
+    "https://herc.engr.tamu.edu/research/adapting-robust-controllers-to-a-changing-human-compliance/",
+  ],
+];
+---
+
+<Base title={t("Ryo Kato", "加藤 遼")} activeNav="home">
+  <section class="opening">
+    <div class="intro">
+      <p class="kicker">{t("Mechanical engineering", "機械工学")}</p>
+      <h1>{t("Ryo Kato", "加藤 遼")}</h1>
+      <p class="lede">
+        {t(
+          "I design mechanical systems for robotics and aerospace.",
+          "ロボティクスと航空宇宙の分野で、機械システムの設計に取り組んでいます。",
+        )}
+      </p>
+      <p class="edu">
+        {t(
+          "Mechanical engineering undergraduate · Texas A&M University",
+          "テキサスA&M大学 機械工学科",
+        )}
+        <br />
+        {t(
+          "Mathematics minor · Graduating May 2028",
+          "数学副専攻 ｜ 2028年5月卒業予定",
+        )}
+      </p>
+      <div class="actions">
+        <a class="solid" href="#projects">
+          {t("Selected work", "主なプロジェクト")}{" "}
+          <span aria-hidden="true">↓</span>
+        </a>
+        <a class="email-link" href="mailto:contact@theryokato.com">
+          {t("Email me", "メールで連絡")} →
+        </a>
+      </div>
+    </div>
+    <a class="lead-figure" href={dron}>
+      <img
+        src={preview(photo)}
+        srcset={previewSet(photo)}
+        sizes="(max-width:740px) 100vw, 52vw"
+        fetchpriority="high"
+        alt={t(
+          "Assembled DRON prototype with exposed wiring and blue propellers",
+          "配線と青いプロペラを備えたDRONの試作機",
+        )}
+        width="960"
+        height="720"
+      />
+      <div class="figure-caption">
+        <div>
+          <p class="micro">{t("Prototype / DRON", "試作機 / DRON")}</p>
+          <strong>{t("Disaster-response UAV", "災害対応無人航空機")}</strong>
+        </div>
+        <span class="circle" aria-hidden="true">
+          →
+        </span>
+      </div>
+    </a>
+  </section>
+  <section id="projects">
+    <header class="section-head">
+      <h2>{t("Selected work", "主なプロジェクト")}</h2>
+      <a href={"/" + lang + "/projects/"}>
+        {t("Full project index", "プロジェクト一覧")} →
+      </a>
+    </header>
+    <ProjectRows lang={lang} selected />
+  </section>
+  <section id="experience" class="experience">
+    <div>
+      <p class="kicker">{t("Background", "経歴")}</p>
+      <h2>{t("Experience", "活動歴")}</h2>
+      <p>
+        {t(
+          "I’m interested in opportunities in Japan’s space, aerospace and advanced robotics industries.",
+          "日本の宇宙・航空産業や先進ロボティクスの分野で、設計とシステム統合に携わることを志望しています。",
+        )}
+      </p>
+    </div>
+    <div>
+      {experience.map(([name, summary, role, url]) => (
+        <a href={url}>
+          <span class="micro">{role}</span>
+          <h3>{name} →</h3>
+          <p>{summary}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+</Base>

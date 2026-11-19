@@ -31,7 +31,7 @@ const jaPath = getLocalizedPath('ja');
     ]}
     lang="en" hreflang="en"
     aria-current={currentLocale === "en" ? "true" : undefined}
-    aria-label="English"
+    aria-label="EN — English"
   >
     EN
   </a>
@@ -45,8 +45,14 @@ const jaPath = getLocalizedPath('ja');
     ]}
     lang="ja" hreflang="ja"
     aria-current={currentLocale === "ja" ? "true" : undefined}
-    aria-label="日本語"
+    aria-label="JA — 日本語"
   >
     JA
   </a>
 </div>
+<script>
+  // Keep section links intact when moving between editions of the same page.
+  for (const link of document.querySelectorAll<HTMLAnchorElement>('.language-picker a')) {
+    link.addEventListener('click', () => { link.hash = location.hash; });
+  }
+</script>

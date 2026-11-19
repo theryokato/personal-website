@@ -21,7 +21,7 @@ const finalAlt = alt ?? caption;
     data-pswp-width={width}
     data-pswp-height={height}
     data-pswp-caption={caption}
-    aria-label={`Open full-size image: ${finalAlt}`}
+    aria-label={`${Astro.currentLocale === "ja" ? "拡大表示" : "Open full-size image"}: ${finalAlt}`}
     class="block cursor-zoom-in focus:outline-none focus:ring-2 focus:ring-blue"
   >
     <img

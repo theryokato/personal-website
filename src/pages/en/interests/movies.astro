@@ -4,7 +4,7 @@ import MediaList from '../../../components/MediaList.astro';
 import { InterestService } from '../../../services/interests';
 
 const items = await InterestService.getMovies('en');
-if (!items) return Astro.redirect('/404');
+
 ---
 
 <Base title="Movies" activeNav="interests">
@@ -15,5 +15,5 @@ if (!items) return Astro.redirect('/404');
     Good weekend watch after a tiring week
   </p>
 
-  <MediaList items={items} />
+  {items?.length ? <MediaList items={items} /> : <p>This list is currently unavailable.</p>}
 </Base>

@@ -1,0 +1,48 @@
+---
+import { projects, type Locale } from "../utils/projects";
+import { preview, previewSet } from "../utils/previews";
+import { formatDate } from "../utils/dates";
+interface Props {
+  lang: Locale;
+  selected?: boolean;
+}
+const { lang, selected = false } = Astro.props;
+const entries = projects(lang).filter(
+  (p) => !selected || p.frontmatter.featured,
+);
+---
+
+<div class="project-rows">
+  {entries.map(({ frontmatter: p }) => (
+    <a
+      class="work-row"
+      href={p.url || "/" + lang + "/projects/" + p.slug + "/"}
+    >
+      {p.image ? (
+        <img
+          src={preview(p.image)}
+          srcset={previewSet(p.image)}
+          sizes="(max-width:600px) 76px, 145px"
+          width="145"
+          height="92"
+          alt=""
+          loading="lazy"
+        />
+      ) : (
+        <span aria-hidden="true" />
+      )}
+      <div>
+        <p class="micro">{p.title}</p>
+        <h3>{p.description}</h3>
+        <p class="row-role">{p.role}</p>
+      </div>
+      <span class="row-date">
+        {formatDate(p.startDate, lang)} –{" "}
+        {formatDate(p.endDate, lang === "ja" ? "ja-JP" : "en")}
+      </span>
+      <span class="arrow" aria-hidden="true">
+        {p.url ? "↗" : "→"}
+      </span>
+    </a>
+  ))}
+</div>

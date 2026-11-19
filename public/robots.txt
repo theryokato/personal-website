@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://theryokato.com/sitemap.xml

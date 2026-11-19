@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import NavList from '../../components/NavList.astro';
-const currentPath = Astro.url.pathname;
+
 
 const sections = [
   //{ title: '本棚',    description: '文学のコレクション', href: '/ja/interests/books'},
@@ -12,5 +12,6 @@ const sections = [
 ---
 
 <Base title="興味" activeNav="interests">
+<h1>趣味</h1>
 <NavList items={sections} />
 </Base>

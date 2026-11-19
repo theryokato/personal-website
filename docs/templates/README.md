@@ -56,9 +56,8 @@ repeatability when available. Select only evidence you actually have.
   link and prevents generation of its local detail page.
 - `image` is optional. Leave it empty until an appropriate asset exists. The layout renders
   the project title and dates, so do not add a second page title or duplicate date block.
-- `description` supplies page metadata; it does not add a short description to the homepage card.
-- Existing projects have a curated order in `src/components/ProjectGrid.astro`. New slugs appear
-  after that list, ordered by start date. Edit `projectOrder` only when intentionally promoting work.
+- Use a concise system or problem description as the display title. The project name, dates and individual role appear alongside it. Add a localized `caption` for the lead image.
+- Set `featured: true` in both languages to include a project on the homepage. The editorial order lives in `src/utils/projects.ts`. New records follow curated work in descending start-date order.
 
 ## Media
 

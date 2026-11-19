@@ -2,11 +2,14 @@
 title: "BLNC"
 slug: "blnc"
 url: ""
-description: "Self Balancing Rover"
+description: "倒立二輪ローバー"
+role: "制御班メンバー"
 publishedAt: "2026-08-11"
 startDate: "2025-08"
 endDate: "2025-12"
 tags: ["Rover", "Self-Balancing", "Inverted Pendulum"]
+featured: true
+caption: "BLNC V1 の試作機"
 image: "/assets/BLNC/blnc_card.png"
 ---
 
@@ -21,13 +24,10 @@ BLNCでは、極限環境下において安定性を維持するため、重心�
 
 V1 Roverは、制御システムの検証・試験を目的としたBLNCの二輪倒立振子型テストベッドです。ローバーの大部分は3Dプリントで製作されており、スペーサーなどの機械部品やその他のハードウェアにはCOTS（Commercial Off-The-Shelf）部品を使用しています。
 
-私はこのプロジェクトで<strong className="project-contribution">制御システムサブチーム</strong>のメンバーとして活動しました。
+私はこのプロジェクトで**制御システムサブチーム**のメンバーとして活動しました。
 
-### 機械設計
+### 試験機の諸元
 
-V1 Roverは、制御システムの検証・試験を目的としたBLNCの二輪倒立振子型テストベッドです。ローバーの大部分は3Dプリントで製作されており、スペーサーなどの機械部品やその他のハードウェアにはCOTS部品を使用しています。
-
-**設計仕様：**
 
 * 総質量：1.45 kg
 * 重心高さ：回転軸から20 cm
@@ -41,8 +41,8 @@ V1 Roverは、制御システムの検証・試験を目的としたBLNCの二�
 開発した制御手法の一つとして、カスケード型PID制御器があります。外側のループでは、ローバーを目標位置へ移動させるために必要なピッチ角を決定します。内側のループでは、ローバーを目標ピッチ角まで回転させるために必要なモーター速度を決定します。6つのゲインはすべて、Ziegler–Nichols法を用いて手動でチューニングしました。
 
 <ProjectImage
-src="/assets/BLNC/blnc_pid.png"
 paper
+  src="/assets/BLNC/blnc_pid.png"
 caption="カスケード型PID制御器のブロック線図"
 width={1086}
 height={477}

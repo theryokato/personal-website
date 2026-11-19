@@ -2,11 +2,14 @@
 title: "BLNC"
 slug: "blnc"
 url: ""
-description: "Self Balancing Rover"
+description: "Self-balancing rover"
+role: "Controls subteam member"
 publishedAt: "2026-08-11"
 startDate: "2025-08"
 endDate: "2025-12"
 tags: ["Rover", "Self-Balancing", "Inverted Pendulum"]
+featured: true
+caption: "BLNC V1 · Rover testbed"
 image: "/assets/BLNC/blnc_card.png"
 ---
 
@@ -20,11 +23,10 @@ BLNC is focusing on developing rovers that can adjust the location of their cent
 
 The V1 Rover is BLNC’s two-wheeled inverted pendulum testbed to verify and test control systems. The rover is primarily 3D printed with certain mechanical components, such as standoffs and other hardware being COTS parts.
 
-I served as a <strong className="project-contribution">Controls System Subteam member</strong> on this project.
+I served as a **Controls System Subteam member** on this project.
 
-### Mechanical
-The V1 Rover is BLNC’s two-wheeled inverted pendulum testbed to verify and test control systems. The rover is primarily 3D printed with certain mechanical components, such as standoffs and other hardware being COTS parts.
-Design Specifications:
+### Testbed specifications
+
 - Total mass: 1.45 kg
 - CoM height: 20 cm from pivot point
 - Wheels: 100 mm diameter
@@ -37,8 +39,8 @@ Design Specifications:
 A cascade Proportional-Integral-Derivative (PID) controller is one of the control solutions we have developed. The outer loop of the controller determines the necessary pitch angle to move the rover to the desired position. The inner loop of the controller determines the necessary motor velocity to rotate the rover to the desired pitch angle. All 6 gains were manually tuned using the Ziegler–Nichols tuning method.
 
 <ProjectImage
-  src="/assets/BLNC/blnc_pid.png"
   paper
+  src="/assets/BLNC/blnc_pid.png"
   caption="Cascade PID Controller Block Diagram"
   width={1086}
   height={477}

@@ -29,14 +29,14 @@ for (const path of ['/en/', '/ja/', '/en/projects/dron', '/ja/projects/dron']) {
   test(`existing ${path} remains available`, async () => {
     const response = await fetch(new URL(path, base));
     assert.equal(response.status, 200);
-    assert.match(await response.text(), /<main>/);
+    assert.match(await response.text(), /<main(?:\s|>)/);
   });
 }
 
-test('existing project-list redirect remains intact', async () => {
-  const response = await fetch(new URL('/ja/projects', base), { redirect: 'manual' });
-  assert.equal(response.status, 301);
-  assert.equal(new URL(response.headers.get('location'), base).pathname, '/ja/');
+test('Japanese project index is directly accessible', async () => {
+  const response = await fetch(new URL('/ja/projects/', base));
+  assert.equal(response.status, 200);
+  assert.match(await response.text(), /プロジェクト一覧/);
 });
 
 for (const lang of ['en', 'ja']) {

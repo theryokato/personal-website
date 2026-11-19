@@ -1,162 +1,157 @@
 ---
 import "../styles/global.css";
 import LanguagePicker from "../components/LanguagePicker.astro";
-import LanguageMotion from "../components/LanguageMotion.astro";
-import FooterRoomba from "../components/FooterRoomba.astro";
-
+import { socials } from "../constants/socials";
 interface Props {
   title?: string;
   description?: string;
   activeNav?: string;
+  image?: string;
 }
-
+const ja = Astro.url.pathname.startsWith("/ja");
+const lang = ja ? "ja" : "en";
 const {
   title = "Ryo Kato",
-  description = title === "Ryo Kato"
-    ? "Ryo Kato’s personal website — mechanical engineering, robotics, projects, and interests."
-    : `${title} — Ryo Kato’s personal website.`,
+  description = ja
+    ? "加藤遼の機械設計、ロボット制御、航空宇宙分野での活動記録。"
+    : "Engineering projects and technical experience of Ryo Kato, a mechanical engineering undergraduate at Texas A&M.",
   activeNav,
+  image = "/assets/previews/dron-prototype.jpg.960.webp",
 } = Astro.props;
-
-const currentLocale = Astro.currentLocale || 'en';
-const fullTitle = title === "Ryo Kato" ? title : `${title} — Ryo Kato`;
-
-const navLabels: Record<string, Record<string, string>> = {
-  en: { home: "home", interests: "interests" },
-  ja: { home: "ホーム", interests: "興味" },
-};
-
-const nav = [
-  { href: `/${currentLocale}/`, key: "home" },
-  { href: `/${currentLocale}/interests`, key: "interests" },
-].map(link => ({
-  ...link,
-  label: navLabels[currentLocale][link.key]
-}));
+const name = ja ? "加藤 遼" : "Ryo Kato";
+const fullTitle =
+  title === name
+    ? name + " | " + (ja ? "機械工学" : "Mechanical Engineering")
+    : title + " | " + name;
+const origin = "https://theryokato.com";
+const path = Astro.url.pathname.replace(/\/?$/, "/");
+const missing = title.startsWith("404");
 ---
 
 <!doctype html>
-<html lang={currentLocale}>
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content={description} />
     <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    {missing ? (
+      <meta name="robots" content="noindex" />
+    ) : (
+      <>
+        <link rel="canonical" href={origin + path} />
+        {["en", "ja"].map((l) => (
+          <link
+            rel="alternate"
+            hreflang={l}
+            href={origin + path.replace(/^\/(en|ja)/, "/" + l)}
+          />
+        ))}
+      </>
+    )}
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content={currentLocale === 'ja' ? 'ja_JP' : 'en_US'} />
-    <meta name="twitter:card" content="summary" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="preload" href="/fonts/source-sans-3-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <meta property="og:url" content={origin + path} />
+    <meta property="og:image" content={origin + image} />
+    <meta property="og:locale" content={ja ? "ja_JP" : "en_US"} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/favicon.svg" />
+    {activeNav === "home" && !missing && (
+      <script
+        is:inline
+        type="application/ld+json"
+        set:html={JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Person",
+          name: "Ryo Kato",
+          alternateName: "加藤 遼",
+          url: origin + path,
+          affiliation: {
+            "@type": "CollegeOrUniversity",
+            name: "Texas A&M University",
+          },
+          sameAs: socials
+            .filter((s) => s.platform !== "Email")
+            .map((s) => s.href),
+        })}
+      />
+    )}
     <script is:inline>
-      (function () {
-        let stored;
-        try { stored = localStorage.getItem("theme"); } catch {}
-        const preferred =
-          (stored === "nord-dark" || stored === "nord-light" ? stored : null) ||
-          "nord-light";
-        document.documentElement.setAttribute("data-theme", preferred);
-      })();
+      let theme = matchMedia("(prefers-color-scheme: dark)").matches
+        ? "nord-dark"
+        : "nord-light";
+      try {
+        const saved = localStorage.getItem("theme");
+        if (["nord-dark", "nord-light"].includes(saved)) theme = saved;
+      } catch {}
+      document.documentElement.dataset.theme = theme;
     </script>
-    <LanguageMotion />
   </head>
   <body>
-    <div class="mx-auto max-w-2xl">
-      <!-- Nav: just links + theme toggle, no name -->
-      <nav class="mb-12 flex items-center justify-between">
-        <ul class="flex flex-wrap gap-x-4 gap-y-1 list-none p-0 m-0">
-          {
-            nav.map(({ href, key, label }) => (
-              <li>
-                <a
-                  href={href}
-                  aria-current={activeNav === key ? "page" : undefined}
-                  class:list={[
-                    "font-mono text-xs tracking-widest lowercase no-underline transition-colors",
-                    activeNav === key
-                      ? "text-text underline underline-offset-[3px]"
-                      : "text-subtext0 hover:text-text",
-                  ]}
-                >
-                  {label}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-        <div class="flex items-center gap-3">
-          <LanguagePicker currentLocale={currentLocale} />
-        
-        </div>
-      </nav>
-
-      <!-- Main content -->
-      <main>
-        <slot />
-      </main>
-
-      <!-- Footer -->
-      <footer
-        class="mt-24 pt-2 border-t border-surface0 font-mono text-xs text-subtext0 flex items-center justify-between"
-      >
-        <span>© {new Date().getFullYear()} Ryo Kato</span>
-
-      <button
-          id="theme-toggle"
-          class="theme-toggle bg-transparent p-0 outline-none border-none cursor-pointer"
-          aria-label="Switch theme"
+    <a class="skip" href="#main">
+      {ja ? "本文へ" : "Skip to content"}
+    </a>
+    <header class="mast wrap">
+      <a class="signature" href={"/" + lang + "/"}>
+        <i aria-hidden="true"></i> Ryo Kato<span lang="ja">加藤 遼</span>
+      </a>
+      <nav aria-label={ja ? "メインメニュー" : "Main navigation"}>
+        <a
+          aria-current={activeNav === "projects" ? "page" : undefined}
+          href={"/" + lang + "/projects/"}
         >
-          <!-- Sun Icon (shown in dark mode to switch to light) -->
-          <svg id="sun-icon" aria-hidden="true" class="w-5 h-5 text-text" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 1.25a.75.75 0 0 1 .75.75v1a.75.75 0 0 1-1.5 0V2a.75.75 0 0 1 .75-.75M1.25 12a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5H2a.75.75 0 0 1-.75-.75m19 0a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75M12 20.25a.75.75 0 0 1 .75.75v1a.75.75 0 0 1-1.5 0v-1a.75.75 0 0 1 .75-.75" clip-rule="evenodd" />
-  <path fill="currentColor" d="M4.398 4.398a.75.75 0 0 1 1.061 0l.393.393a.75.75 0 0 1-1.06 1.06l-.394-.392a.75.75 0 0 1 0-1.06m15.202 0a.75.75 0 0 1 0 1.06l-.392.393a.75.75 0 0 1-1.06-1.06l.392-.393a.75.75 0 0 1 1.06 0m-1.453 13.748a.75.75 0 0 1 1.061 0l.393.393a.75.75 0 0 1-1.06 1.06l-.394-.392a.75.75 0 0 1 0-1.06m-12.295 0a.75.75 0 0 1 0 1.06l-.393.393a.75.75 0 1 1-1.06-1.06l.392-.393a.75.75 0 0 1 1.06 0"  clip-rule="evenodd"/>
-          </svg>
-          <!-- Moon Icon (shown in light mode to switch to dark) -->
-          <svg id="moon-icon" aria-hidden="true" class="w-5 h-5 text-text" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 22c5.523 0 10-4.477 10-10c0-.463-.694-.54-.933-.143a6.5 6.5 0 1 1-8.924-8.924C12.54 2.693 12.463 2 12 2C6.477 2 2 6.477 2 12s4.477 10 10 10"/>
-          </svg>
+          {ja ? "プロジェクト" : "Projects"}
+        </a>
+        <a href={"/" + lang + "/#experience"}>{ja ? "活動歴" : "Experience"}</a>
+      </nav>
+      <div class="settings">
+        <LanguagePicker currentLocale={lang} />
+        <button
+          id="theme-toggle"
+          aria-label={ja ? "ダークモード" : "Dark mode"}
+          title={ja ? "配色を切り替える" : "Change theme"}
+        >
+          ◐
         </button>
-        <FooterRoomba />
-      </footer>
-    </div>
-
+      </div>
+    </header>
+    <main
+      id="main"
+      tabindex="-1"
+      class:list={["wrap", { secondary: activeNav === "interests" || missing }]}
+    >
+      <slot />
+    </main>
+    <footer class="wrap foot">
+      <span>© {new Date().getFullYear()} Ryo Kato</span>
+      <a href={"/" + lang + "/interests/"}>
+        {ja ? "趣味" : "Personal interests"}
+      </a>
+      <a href="/pgp">PGP</a>
+      {socials
+        .filter((s) => s.platform !== "Email")
+        .map((s) => (
+          <a href={s.href}>{s.platform}</a>
+        ))}
+      <a href="mailto:contact@theryokato.com">contact@theryokato.com</a>
+    </footer>
     <script>
-      const toggle = document.getElementById("theme-toggle");
-      const html = document.documentElement;
-
-      function getTheme() {
-        return html.getAttribute("data-theme") || "nord-light";
-      }
-      function applyTheme(theme: string) {
-        html.setAttribute("data-theme", theme);
-        try { localStorage.setItem("theme", theme); } catch {}
-        updateThemeLabel(theme);
-      }
-
-      function updateThemeLabel(theme: string) {
-        toggle?.setAttribute("aria-label", theme === "nord-dark" ? "Switch to light theme" : "Switch to dark theme");
-      }
-
-      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-      let themeTimer: ReturnType<typeof setTimeout> | undefined;
-      function finishThemeTransition() {
-        clearTimeout(themeTimer);
-        html.classList.remove('theme-switching');
-      }
-      reducedMotion.addEventListener('change', () => {
-        if (reducedMotion.matches) finishThemeTransition();
-      });
-      window.addEventListener('pagehide', finishThemeTransition);
-      window.addEventListener('pageshow', finishThemeTransition);
-      updateThemeLabel(getTheme());
+      const root = document.documentElement,
+        toggle = document.getElementById("theme-toggle");
+      const sync = () =>
+        toggle?.setAttribute(
+          "aria-pressed",
+          String(root.dataset.theme === "nord-dark"),
+        );
+      sync();
       toggle?.addEventListener("click", () => {
-        clearTimeout(themeTimer);
-        if (!reducedMotion.matches) {
-          html.classList.add('theme-switching');
-          themeTimer = setTimeout(finishThemeTransition, 280);
-        }
-        applyTheme(getTheme() === "nord-light" ? "nord-dark" : "nord-light");
+        root.dataset.theme =
+          root.dataset.theme === "nord-dark" ? "nord-light" : "nord-dark";
+        try {
+          localStorage.setItem("theme", root.dataset.theme);
+        } catch {}
+        sync();
       });
     </script>
   </body>

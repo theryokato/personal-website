@@ -4,7 +4,7 @@ import MediaList from '../../../components/MediaList.astro';
 import { InterestService } from '../../../services/interests';
 
 const items = await InterestService.getMovies('ja');
-if (!items) return Astro.redirect('/404');
+
 ---
 
 <Base title="映画" activeNav="interests">
@@ -15,5 +15,5 @@ if (!items) return Astro.redirect('/404');
     疲れた週の後の最高の週末の楽しみ。
   </p>
 
-  <MediaList items={items} />
+  {items?.length ? <MediaList items={items} /> : <p>現在、一覧を取得できません。</p>}
 </Base>

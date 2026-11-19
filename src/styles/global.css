@@ -1,146 +1,78 @@
 @import "tailwindcss";
 
-/* Source Sans 3 Latin variable subset; SIL Open Font License in /fonts/OFL.txt. */
-@font-face {
-  font-family: "Source Sans 3";
-  font-style: normal;
-  font-weight: 400 700;
-  font-display: optional;
-  src: url("/fonts/source-sans-3-latin.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@theme static {
+@theme {
   /* Shared */
-  --font-sans: "Source Sans 3", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-sans:
+    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
   --font-serif: Georgia, "Times New Roman", serif;
-  --font-mono: SFMono-Regular, Consolas, "Liberation Mono", "Courier New", monospace;
-  --text-caption: 0.8125rem;
-  --text-caption--line-height: 1.5;
+  --font-mono:
+    SFMono-Regular, Consolas, "Liberation Mono", "Courier New", monospace;
   --max-w-prose: 42rem;
 
-  /* Warm Graphite: semantic roles, with AA text variants where needed. */
-  --color-background: var(--palette-background);
-  --color-surface: var(--palette-surface);
-  --color-surface-secondary: var(--palette-surface-secondary);
-  --color-border: var(--palette-border);
-  --color-text-primary: var(--palette-text-primary);
-  --color-text-secondary: var(--palette-text-secondary-readable);
-  --color-text-muted: var(--palette-text-muted-readable);
-  --color-link: var(--palette-steel-blue-readable);
-  --color-link-hover: var(--palette-text-primary);
-  --color-focus: var(--palette-steel-blue-readable);
-  --color-success: var(--palette-forest-green-readable);
-  --color-highlight: var(--palette-copper-readable);
-  --color-achievement: var(--palette-gold-readable);
-  --color-technical: var(--palette-plum-readable);
-  --color-technical-secondary: var(--palette-indigo-readable);
-  --color-info: var(--palette-teal-readable);
-  --color-danger: var(--palette-rust-readable);
-  --color-section-rule: var(--palette-forest-green-readable);
-  /* Fixed light canvas for black-on-transparent diagrams in either theme. */
-  --color-figure-paper: #FFFFFF;
-  /* Fixed neutral media colors remain readable over images in either mode. */
-  --color-media-overlay: #1C1B1A;
-  --color-media-text: #F1EEE9;
-  --color-media-danger: #E68B83;
-
-  /* Compatibility aliases for existing utility classes. */
-  --color-base: var(--color-background);
-  --color-mantle: var(--color-surface);
-  --color-crust: var(--color-surface-secondary);
-  --color-surface0: var(--color-border);
-  --color-surface1: var(--color-border);
-  --color-surface2: var(--color-text-muted);
-  --color-overlay0: var(--color-text-muted);
-  --color-overlay1: var(--color-text-secondary);
-  --color-overlay2: var(--color-text-primary);
-  --color-subtext0: var(--color-text-secondary);
-  --color-subtext1: var(--color-text-secondary);
-  --color-text: var(--color-text-primary);
-  --color-blue: var(--color-link);
-  --color-green: var(--color-success);
-  --color-yellow: var(--color-achievement);
-  --color-peach: var(--color-highlight);
-  --color-red: var(--color-danger);
-  --color-mauve: var(--color-technical);
-  --color-lavender: var(--color-technical-secondary);
-  --color-sapphire: var(--color-info);
-  --color-sky: var(--color-info);
-  --color-pink: var(--color-technical);
-  --color-flamingo: var(--color-highlight);
-  --color-rosewater: var(--color-highlight);
+  /* Semantic tokens — default: Nord Light */
+  --color-base: #ffffff;
+  --color-mantle: #e5e9f0;
+  --color-crust: #d8dee9;
+  --color-surface0: #d8dee9;
+  --color-surface1: #b0b8c3;
+  --color-surface2: #81a2b5;
+  --color-overlay0: #81a2b5;
+  --color-overlay1: #88c0d0;
+  --color-overlay2: #8b9abb;
+  --color-subtext0: #4c566a;
+  --color-subtext1: #d8dee9;
+  --color-text: #2e3440;
+  --color-lavender: #b48ead;
+  --color-blue: #81a2b5;
+  --color-sapphire: #88c0d0;
+  --color-sky: #8fbcbb;
+  --color-green: #a3be8c;
+  --color-yellow: #ebcb8b;
+  --color-peach: #d08770;
+  --color-red: #bf616a;
+  --color-mauve: #b48ead;
+  --color-pink: #b48ead;
+  --color-flamingo: #d08770;
+  --color-rosewater: #ebcb8b;
 }
 
-/* Supplied reference colors, followed by contrast-adjusted text shades. */
-:root {
-  --palette-background: #F7F6F3;
-  --palette-surface: #FFFFFF;
-  --palette-surface-secondary: #F0EEEA;
-  --palette-border: #E0DCD5;
-  --palette-text-primary: #292724;
-  --palette-text-secondary: #746F69;
-  --palette-text-muted: #8A857E;
-  --palette-steel-blue: #3973A3;
-  --palette-forest-green: #26806A;
-  --palette-copper: #B86C35;
-  --palette-gold: #A88320;
-  --palette-plum: #8055A0;
-  --palette-rust: #B84944;
-  --palette-teal: #258A91;
-  --palette-indigo: #5966A5;
-  --palette-text-secondary-readable: #706B65;
-  --palette-text-muted-readable: #6F6B66;
-  --palette-steel-blue-readable: #37709F;
-  --palette-forest-green-readable: #247864;
-  --palette-copper-readable: #9C5C2D;
-  --palette-gold-readable: #856719;
-  --palette-plum-readable: #8055A0;
-  --palette-rust-readable: #B54843;
-  --palette-teal-readable: #20767C;
-  --palette-indigo-readable: #5966A5;
-}
-
-/* Preserve legacy theme IDs so saved preferences keep working. */
+/* ─── Nord Dark overrides ────────────────────────────────── */
 [data-theme="nord-dark"] {
-  --palette-background: #1C1B1A;
-  --palette-surface: #262421;
-  --palette-surface-secondary: #302D29;
-  --palette-border: #393631;
-  --palette-text-primary: #F1EEE9;
-  --palette-text-secondary: #A9A39B;
-  --palette-text-muted: #918B83;
-  --palette-steel-blue: #80B5E1;
-  --palette-forest-green: #75C5A6;
-  --palette-copper: #DDA06E;
-  --palette-gold: #E0BC65;
-  --palette-plum: #BEA0DD;
-  --palette-rust: #E68B83;
-  --palette-teal: #73C6C9;
-  --palette-indigo: #A0ACE7;
-  --palette-text-secondary-readable: #A9A39B;
-  --palette-text-muted-readable: #9A948D;
-  --palette-steel-blue-readable: #80B5E1;
-  --palette-forest-green-readable: #75C5A6;
-  --palette-copper-readable: #DDA06E;
-  --palette-gold-readable: #E0BC65;
-  --palette-plum-readable: #BEA0DD;
-  --palette-rust-readable: #E68B83;
-  --palette-teal-readable: #73C6C9;
-  --palette-indigo-readable: #A0ACE7;
+  --color-base: #2e3440;
+  --color-mantle: #242933;
+  --color-crust: #1b1e23;
+  --color-surface0: #3b4252;
+  --color-surface1: #434c5e;
+  --color-surface2: #4c566a;
+  --color-overlay0: #4c566a;
+  --color-overlay1: #d8dee9;
+  --color-overlay2: #e5e9f0;
+  --color-subtext0: #d8dee9;
+  --color-subtext1: #e5e9f0;
+  --color-text: #eceff4;
+  --color-lavender: #b48ead;
+  --color-blue: #81a2b5;
+  --color-sapphire: #88c0d0;
+  --color-sky: #8fbcbb;
+  --color-green: #a3be8c;
+  --color-yellow: #ebcb8b;
+  --color-peach: #d08770;
+  --color-red: #bf616a;
+  --color-mauve: #b48ead;
+  --color-pink: #b48ead;
+  --color-flamingo: #d08770;
+  --color-rosewater: #ebcb8b;
 }
 
 /* ─── Base styles ──────────────────────────────────────── */
 html {
-  /* Keep navigation live; only explicitly named content should be snapshotted. */
-  view-transition-name: none;
   background-color: var(--color-base);
   color: var(--color-text);
   font-family: var(--font-sans);
-  font-size: 100%;
+  font-size: 15px;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
-
 }
 
 body {
@@ -149,44 +81,62 @@ body {
 }
 
 @media (max-width: 600px) {
-  body { padding: 2rem 1rem; }
+  body {
+    padding: 2rem 1rem;
+  }
 }
 
 /* ─── Prose styles for MDX ──────────────────────────────── */
-.prose h1, .prose h2, .prose h3, .prose h4 {
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
   font-family: var(--font-sans);
-  font-weight: 500;
+  font-weight: normal;
   line-height: 1.25;
   letter-spacing: -0.01em;
   color: var(--color-text);
-}
-.prose h2 {
-  font-size: 1.5rem;
-  line-height: 1.35;
-  margin-top: 2rem;
-  margin-bottom: 0.75rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--color-section-rule);
-}
-.prose h3 { font-size: 1.125rem; line-height: 1.4; margin-top: 1.5rem; margin-bottom: 0.5rem; }
-
-:lang(ja) .prose { line-height: 1.8; }
-:lang(ja) .prose :is(h1, h2, h3, h4),
-:lang(ja) article > header h1 { letter-spacing: normal; }
-
-.prose p          { margin-bottom: 1rem; }
-.prose ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; }
-.prose ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1rem; }
-.prose li         { margin-bottom: 0.5rem; }
-
-.prose a {
-  color: var(--color-link);
   text-decoration: underline;
   text-underline-offset: 3px;
   text-decoration-thickness: 1px;
 }
-.prose a:hover { color: var(--color-link-hover); }
-.social-icon:hover { color: var(--color-text-primary); }
+.prose h2 {
+  font-size: 1.375rem;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+.prose h3 {
+  font-size: 1.125rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose p {
+  margin-bottom: 1rem;
+}
+.prose ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+.prose ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+.prose li {
+  margin-bottom: 0.5rem;
+}
+
+.prose a {
+  color: var(--color-blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+.prose a:hover {
+  color: var(--color-lavender);
+}
 
 .prose blockquote {
   border-left: 2px solid var(--color-surface1);
@@ -199,8 +149,8 @@ body {
 .prose code {
   font-family: var(--font-mono);
   font-size: 0.875em;
-  background-color: var(--color-surface-secondary);
-  color: var(--color-technical);
+  background-color: var(--color-surface0);
+  color: var(--color-peach);
   padding: 0.1em 0.35em;
   border-radius: 2px;
 }
@@ -233,137 +183,553 @@ body {
   margin: 1.5rem 0;
 }
 
-/* Component figures own their spacing; ordinary Markdown images keep theirs. */
-.prose a[data-project-image] > img { margin: 0; }
-
-.prose strong { color: var(--color-text); font-weight: 600; }
-.prose .project-contribution { color: var(--color-highlight); }
-.project-image-paper { background-color: var(--color-figure-paper); }
-
+.prose strong {
+  color: var(--color-text);
+  font-weight: 600;
+}
 
 /* ─── Reduced motion ────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  html, * { transition: none !important; }
-}
-/* Shared, gentle feedback; focus remains immediate. */
-:root { --motion-ease: cubic-bezier(0.4, 0, 0.2, 1); }
-/* Interpolate shared palette inputs once, rather than every descendant color. */
-@property --palette-background { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --palette-surface { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --palette-surface-secondary { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --palette-border { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --palette-text-primary { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --palette-text-secondary-readable { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --palette-text-muted-readable { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --palette-steel-blue-readable { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --palette-forest-green-readable { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --palette-copper-readable { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --palette-gold-readable { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --palette-plum-readable { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --palette-rust-readable { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --palette-teal-readable { syntax: "<color>"; inherits: true; initial-value: transparent; }
-@property --palette-indigo-readable { syntax: "<color>"; inherits: true; initial-value: transparent; }
-
-/* Enable palette interpolation only for a user toggle, never initial paint. */
-@media (prefers-reduced-motion: no-preference) {
-  html.theme-switching {
-    transition-property: --palette-background, --palette-surface, --palette-surface-secondary, --palette-border, --palette-text-primary, --palette-text-secondary-readable, --palette-text-muted-readable, --palette-steel-blue-readable, --palette-forest-green-readable, --palette-copper-readable, --palette-gold-readable, --palette-plum-readable, --palette-rust-readable, --palette-teal-readable, --palette-indigo-readable !important;
-    transition-duration: 240ms !important;
-    transition-timing-function: var(--motion-ease) !important;
-  }
-  html.theme-switching *,
-  html.theme-switching *::before, html.theme-switching *::after {
-    transition-property: opacity, transform, filter, text-underline-offset !important;
-    transition-duration: 240ms !important;
-    transition-timing-function: var(--motion-ease) !important;
+  html,
+  * {
+    transition: none !important;
   }
 }
-.theme-toggle { display: grid; }
-.theme-toggle svg { grid-area: 1 / 1; }
-#sun-icon { opacity: 0; }
-#moon-icon { opacity: 1; }
-[data-theme="nord-dark"] #sun-icon { opacity: 1; }
-[data-theme="nord-dark"] #moon-icon { opacity: 0; }
-a, button { transition: color 200ms var(--motion-ease), background-color 200ms var(--motion-ease), border-color 200ms var(--motion-ease); }
-:focus-visible { outline: 2px solid var(--color-focus) !important; outline-offset: 3px; }
-button, .language-picker a {
+/* Keep feedback brief and focus immediate. */
+html.theme-ready {
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
+}
+a,
+button {
+  transition:
+    color 150ms ease,
+    background-color 150ms ease,
+    border-color 150ms ease;
+}
+:focus-visible {
+  outline: 2px solid var(--color-blue) !important;
+  outline-offset: 3px;
+}
+button {
+  transition-duration: 150ms;
   transition-property: color, background-color, border-color, transform;
-  transition-duration: 200ms, 200ms, 200ms, 180ms;
-  transition-timing-function: var(--motion-ease), var(--motion-ease), var(--motion-ease), ease-out;
 }
-button:active, .language-picker a:active {
-  transform: scale(0.985);
-  transition-duration: 200ms, 200ms, 200ms, 100ms;
+button:active {
+  transform: scale(0.97);
 }
-a.underline, .prose a {
-  transition: color 200ms var(--motion-ease), background-color 200ms var(--motion-ease), border-color 200ms var(--motion-ease), text-underline-offset 200ms var(--motion-ease);
+a[data-project-image] img {
+  transition: filter 150ms ease;
 }
-.project-preview { transition: transform 220ms var(--motion-ease); }
 @media (hover: hover) {
-  a.underline:hover, .prose a:hover { text-underline-offset: 4px; }
-  .group:hover .project-preview { transform: scale(1.012); }
+  a[data-project-image]:hover img {
+    filter: brightness(0.97);
+  }
 }
-a[data-project-image] img { transition: filter 200ms var(--motion-ease); }
-@media (hover: hover) { a[data-project-image]:hover img { filter: brightness(0.97); } }
 @media (max-width: 600px) {
-  .project-summary { flex-direction: column; align-items: flex-start; gap: 0.125rem; }
-  .project-summary > :first-child { white-space: normal; overflow: visible; overflow-wrap: anywhere; }
+  .project-summary {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.125rem;
+  }
+  .project-summary > :first-child {
+    white-space: normal;
+    overflow: visible;
+    overflow-wrap: anywhere;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { transition: none !important; animation: none !important; }
-  button:active, .language-picker a:active, .group:hover img {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+  button:active,
+  .group:hover img {
     transform: none !important;
   }
-  a.underline:hover, .prose a:hover { text-underline-offset: 3px !important; }
 }
 
-/* Paint-only language typing preserves complete text, shaping, and layout. */
-::highlight(language-typing) {
-  color: transparent;
-  text-decoration-color: transparent;
-  text-shadow: none;
+/* Paper, ink and an oxide accent, shared by the English and Japanese editions. */
+:root {
+  --color-base: #f8f7f2;
+  --color-text: #252722;
+  --color-subtext0: #565b53;
+  --color-mantle: #edece5;
+  --color-surface0: #c9cbc1;
+  --color-surface1: #9c9e94;
+  --color-blue: #864022;
+  --accent: #944325;
+  --serif: Georgia, "Yu Mincho", "Noto Serif CJK JP", serif;
 }
-
-/* Native page crossfades also provide the unsupported-typing locale fallback. */
-@view-transition { navigation: auto; }
-::view-transition-group(root) { animation: none; }
-::view-transition-old(root), ::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
+[data-theme="nord-dark"] {
+  --color-base: #20231f;
+  --color-text: #f4f2e8;
+  --color-subtext0: #c0c3b8;
+  --color-mantle: #2b2e28;
+  --color-surface0: #494e43;
+  --color-surface1: #73796b;
+  --color-blue: #efaa83;
+  --accent: #efaa83;
+  color-scheme: dark;
 }
-html[data-page-transition] main { view-transition-name: language-content; }
-html[data-language-transition] .language-picker { view-transition-name: language-control; }
-::view-transition-group(language-content), ::view-transition-group(language-control) { animation: none; }
-::view-transition-old(language-content), ::view-transition-old(language-control) {
+html {
+  font-size: 16px;
+}
+body {
+  padding: 0;
+}
+.wrap {
+  width: min(calc(100% - 9vw), 1200px);
+  margin-inline: auto;
+}
+.skip {
+  position: fixed;
+  top: -6rem;
+  left: 1rem;
+  background: var(--color-base);
+  padding: 0.75rem;
+  z-index: 99;
+}
+.skip:focus {
+  top: 1rem;
+}
+.mast {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--color-text);
+  font-size: 0.87rem;
+}
+.signature {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-right: auto;
+  font-weight: 650;
+  letter-spacing: -0.035em;
+}
+.signature span {
+  font-size: 0.76rem;
+  color: var(--color-subtext0);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+}
+.signature i {
+  background: var(--accent);
+  width: 0.65rem;
+  height: 0.65rem;
+  display: inline-block;
+  transform: rotate(-12deg);
+}
+.mast nav,
+.settings,
+.actions,
+.foot,
+.section-head,
+.figure-caption {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+.settings {
+  gap: 1rem;
+}
+.mast a:hover,
+.foot a:hover,
+.back:hover,
+.section-head a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+.mast [aria-current="page"] {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+.settings button {
+  font: 1.4rem/1 sans-serif;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+}
+.opening {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 5%;
+  padding: clamp(34px, 5vw, 72px) 0;
+  align-items: center;
+}
+.kicker,
+.micro,
+dt,
+.row-date,
+.back,
+figcaption,
+.foot {
+  font: 500 0.73rem/1.5 var(--font-mono);
+}
+.kicker,
+.micro,
+dt {
+  text-transform: uppercase;
+  letter-spacing: 0.085em;
+}
+.kicker {
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+.intro h1,
+.case-title h1,
+.index-head h1,
+.section-head h2,
+.experience h2,
+.secondary h1 {
+  font-family: var(--serif);
+  font-weight: 400;
+  letter-spacing: -0.055em;
+  line-height: 1.04;
+}
+.intro h1 {
+  font-size: clamp(4rem, 7.3vw, 7rem);
+  margin: 0 0 1.35rem;
+}
+.lede {
+  max-width: 24em;
+  font-size: clamp(1.2rem, 1.8vw, 1.65rem);
+  line-height: 1.38;
+  letter-spacing: -0.025em;
+}
+.edu,
+.experience p,
+.row-role,
+figcaption,
+.row-date,
+.back {
+  color: var(--color-subtext0);
+}
+.edu {
+  margin: 1.3rem 0 1.8rem;
+  font-size: 0.95rem;
+}
+.actions,
+.section-head a,
+.email-link {
+  font-size: 0.87rem;
+  font-weight: 550;
+}
+.solid {
+  padding: 0.63rem 1rem;
+  color: var(--color-base);
+  background: var(--color-text);
+  display: inline-flex;
+  gap: 1.2rem;
+  align-items: center;
+}
+.solid:hover {
+  background: var(--accent);
+}
+.email-link {
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
+}
+.lead-figure {
+  display: block;
+  background: #242720;
+  color: #fff;
+}
+.lead-figure > img {
+  width: 100%;
+  aspect-ratio: 1.78;
+  object-fit: cover;
+  object-position: center 54%;
+}
+.figure-caption {
+  padding: 16px 22px;
+  justify-content: space-between;
+}
+.figure-caption .micro {
+  color: #d7cfab;
+  font-size: 0.66rem;
+}
+.figure-caption strong {
+  font: 400 1.43rem/1.4 var(--serif);
+}
+.circle {
+  border: 1px solid #93968b;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+}
+.section-head {
+  padding: 1.5rem 0;
+  justify-content: space-between;
+  border-top: 1px solid var(--color-text);
+}
+h2 {
+  font-weight: 400;
+}
+.section-head h2,
+.experience h2,
+.secondary h1 {
+  font-size: clamp(2.2rem, 4vw, 3.6rem);
+}
+.work-row {
+  display: grid;
+  grid-template-columns: 145px 1fr auto 30px;
+  gap: clamp(16px, 2.2vw, 34px);
+  align-items: center;
+  border-top: 1px solid var(--color-surface0);
+  padding: 18px 0;
+}
+.work-row img {
+  width: 100%;
+  height: 92px;
+  object-fit: cover;
+}
+.work-row .micro,
+.experience .micro {
+  color: var(--accent);
+}
+.work-row h3,
+.experience h3 {
+  font: 400 clamp(1.25rem, 2.4vw, 2rem)/1.2 var(--serif);
+  letter-spacing: -0.035em;
+  margin: 0.25rem 0;
+}
+.row-role {
+  font-size: 0.9rem;
+}
+.arrow {
+  justify-self: end;
+  font-size: 1.3rem;
+}
+.work-row:hover h3,
+.experience a:hover h3 {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+.experience {
+  margin-top: 4rem;
+  border-top: 1px solid var(--color-text);
+  padding: 2.4rem 0;
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 10%;
+}
+.experience h2 {
+  margin-bottom: 1rem;
+}
+.experience a {
+  display: block;
+  border-bottom: 1px solid var(--color-surface0);
+  padding: 0 0 1rem;
+  margin-bottom: 1rem;
+}
+.foot {
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--color-text);
+  padding: 1.25rem 0 2rem;
+  margin-top: 4rem;
+  color: var(--color-subtext0);
+}
+.foot span {
+  margin-right: auto;
+}
+.index-head,
+.secondary {
+  padding-top: 3.5rem;
+}
+.index-head h1,
+.case-title h1 {
+  font-size: clamp(2.75rem, 5.5vw, 5.5rem);
+}
+.index-head {
+  padding-bottom: 2rem;
+}
+.case-head {
+  padding-top: 2rem;
+}
+.case-title {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  align-items: end;
+  gap: 7%;
+  padding: 2.5rem 0;
+  border-bottom: 1px solid var(--color-text);
+}
+.case-title dl {
+  border-left: 1px solid var(--color-surface0);
+  padding-left: 1.5rem;
+}
+.case-title dt {
+  color: var(--accent);
+}
+.case-title dd + dt {
+  margin-top: 0.7rem;
+}
+.case-body {
+  display: grid;
+  grid-template-columns: 1fr 1.8fr;
+  gap: 6%;
+  padding: 2.5rem 0;
+}
+.case-body img {
+  width: 100%;
+}
+.case-body aside img {
   height: auto;
-  animation: locale-fade-out 220ms var(--motion-ease) both;
 }
-::view-transition-new(language-content), ::view-transition-new(language-control) {
-  height: auto;
-  animation: locale-fade-in 220ms var(--motion-ease) both;
+.case-body figcaption {
+  margin-top: 0.5rem;
 }
-@keyframes locale-fade-out { from { opacity: 1; } to { opacity: 0; } }
-@keyframes locale-fade-in { from { opacity: 0; } to { opacity: 1; } }
-@media (prefers-reduced-motion: reduce) {
-  @view-transition { navigation: none; }
+.prose {
+  min-width: 0;
+  line-height: 1.75;
 }
-
-/* Use the same neutral media palette for the existing zoom viewer. */
-.pswp.pswp {
-  --pswp-bg: var(--color-media-overlay);
-  --pswp-placeholder-bg: var(--color-media-overlay);
-  --pswp-icon-color: var(--color-media-text);
-  --pswp-icon-color-secondary: var(--color-media-overlay);
-  --pswp-icon-stroke-color: var(--color-media-overlay);
-  --pswp-preloader-color: var(--color-media-overlay);
-  --pswp-preloader-color-secondary: var(--color-media-text);
-  --pswp-error-text-color: var(--color-media-danger);
+.prose h2,
+.prose h3 {
+  font: 400 2rem/1.2 var(--serif);
+  text-decoration: none;
 }
-
-.pswp__error-msg { background-color: var(--color-media-overlay); }
-
-/* Back the existing focus outline with a neutral halo over variable images. */
-.pswp :focus-visible {
-  outline-color: var(--color-media-text) !important;
-  box-shadow: 0 0 0 5px var(--color-media-overlay);
+.prose h3 {
+  font-size: 1.6rem;
 }
+.prose > :first-child {
+  margin-top: 0;
+}
+.secondary {
+  max-width: 800px;
+}
+.secondary h1 {
+  margin-bottom: 1.4rem;
+}
+:lang(ja) h1,
+:lang(ja) h2,
+:lang(ja) h3 {
+  letter-spacing: -0.035em;
+  line-height: 1.25;
+}
+@media (max-width: 740px) {
+  .mast {
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 12px 0;
+  }
+  .mast nav {
+    gap: 12px;
+  }
+  .settings {
+    gap: 5px;
+  }
+  .signature span {
+    display: none;
+  }
+  .opening,
+  .experience,
+  .case-title,
+  .case-body {
+    grid-template-columns: 1fr;
+  }
+  .opening {
+    gap: 26px;
+  }
+  .intro h1 {
+    margin-bottom: 0.8rem;
+  }
+  .edu {
+    margin: 0.9rem 0 1.1rem;
+  }
+  .lead-figure > img {
+    aspect-ratio: 2.05;
+  }
+  .figure-caption {
+    padding: 10px 14px;
+  }
+  .work-row {
+    grid-template-columns: 76px 1fr 18px;
+    gap: 12px;
+  }
+  .work-row img {
+    height: 70px;
+  }
+  .row-date {
+    display: none;
+  }
+  .experience,
+  .case-title,
+  .case-body {
+    gap: 1.5rem;
+  }
+  .foot span {
+    width: 100%;
+  }
+  .case-body aside img {
+    max-height: 340px;
+    object-fit: contain;
+    background: var(--color-mantle);
+  }
+  .case-title dl {
+    padding-left: 1rem;
+  }
+  .micro {
+    font-size: 0.65rem;
+  }
+  .row-role {
+    font-size: 0.8rem;
+  }
+  .section-head {
+    gap: 0.5rem;
+  }
+  .section-head a {
+    font-size: 0.8rem;
+  }
+  .experience {
+    margin-top: 2rem;
+  }
+}
+@media (max-width: 360px) {
+  .mast {
+    column-gap: 8px;
+  }
+  .settings {
+    margin-left: auto;
+  }
+  .mast nav {
+    order: 3;
+    width: 100%;
+  }
+}
+@font-face {
+  font-family: "Source Sans 3";
+  src: url("/fonts/source-sans-3-latin.woff2") format("woff2");
+  font-display: swap;
+  font-weight: 200 900;
+}
+@theme {
+  --font-sans: "Source Sans 3", system-ui, sans-serif;
+  --text-caption: 0.8rem;
+  --text-caption--line-height: 1.5;
+  --color-media-text: #fff;
+  --color-media-overlay: #242720;
+  --color-info: var(--accent);
+  --color-link: var(--accent);
+  --color-border: var(--color-surface0);
+  --color-surface: var(--color-mantle);
+}
+.project-image-paper,
+.pswp__img.project-image-paper {
+  background: white;
+}
+@media (hover: none) {
+  .project-slides-container .pointer-events-none:has(button) {
+    opacity: 1;
+  }
+}
+.case-body:not(:has(aside)) { display: block; max-width: 48rem; }
