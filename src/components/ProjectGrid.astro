@@ -9,6 +9,8 @@ interface Props {
 interface Project {
   slug: string;
   title: string;
+  cardTitle?: string;
+  role: string;
   image?: string;
   startDate?: string;
   endDate?: string;
@@ -32,34 +34,35 @@ const projects = Object.values(modules)
 const dateLocale = locale === 'ja' ? 'ja-JP' : 'en-US';
 ---
 
-<div class="grid grid-cols-1 min-[601px]:grid-cols-2 gap-5">
-    {projects.map((p: any) => (
+<div class="grid grid-cols-1 min-[601px]:grid-cols-2 gap-x-5 gap-y-7">
+    {projects.map((p) => (
         <a
             href={p.url || `/${locale}/projects/${p.slug}`}
             target={p.url ? "_blank" : undefined}
             rel={p.url ? "noopener noreferrer" : undefined}
-            class="group no-underline block"
+            class="group flex flex-col rounded-sm no-underline"
         >
-            <div class="overflow-hidden rounded-sm bg-mantle aspect-4/3 mb-2">
-                {p.image ? (
-                    <img
-                        src={preview(p.image)} srcset={previewSet(p.image)} sizes="(max-width: 600px) calc(100vw - 2rem), (max-width: 45rem) calc(50vw - 2.125rem), 20.375rem" loading="lazy" decoding="async"
-                        alt={p.title}
-                        class="project-preview w-full h-full object-cover"
-                    />
-                ) : (
-                    <div class="w-full h-full bg-surface-secondary" />
-                )}
-            </div>
             <div class="project-summary flex flex-col items-start gap-0.5">
-                <span class="text-sm font-medium text-text leading-5 break-words">
-                    {p.title}
+                <span class="text-base font-semibold leading-snug text-text group-hover:underline underline-offset-4">
+                    {p.cardTitle ?? p.title}
                 </span>
+                <span class="text-sm leading-snug text-subtext0">{p.role}</span>
                 <span class="font-mono text-xs leading-[1.5] text-subtext0 whitespace-nowrap">
                     {formatDate(p.startDate, dateLocale)}
                     {" — "}
                     {formatDate(p.endDate, dateLocale)}
                 </span>
+            </div>
+            <div class="overflow-hidden rounded-sm bg-mantle aspect-4/3 mt-3 min-[601px]:order-first min-[601px]:mt-0 min-[601px]:mb-3">
+                {p.image ? (
+                    <img
+                        src={preview(p.image)} srcset={previewSet(p.image)} sizes="(max-width: 600px) calc(100vw - 2rem), (max-width: 45rem) calc(50vw - 2.125rem), 20.375rem" loading="lazy" decoding="async"
+                        alt=""
+                        class="project-preview w-full h-full object-cover"
+                    />
+                ) : (
+                    <div class="w-full h-full bg-surface-secondary" />
+                )}
             </div>
         </a>
     ))}

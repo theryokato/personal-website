@@ -3,50 +3,52 @@ import Base from "../../layouts/Base.astro";
 import ProjectGrid from "../../components/ProjectGrid.astro";
 import { socials } from "../../constants/socials";
 import { homeContent } from "../../content/home/en";
-
 ---
 
 <Base title={homeContent.name} activeNav="home">
   <section class="mb-1">
     <h1
       id="hero-name"
-      class="mb-4 text-text text-2xl font-semibold leading-[1.95rem] whitespace-nowrap transition-opacity duration-200"
+      class="mb-4 text-text text-4xl font-semibold leading-tight tracking-tight whitespace-nowrap transition-opacity duration-200"
     >
       {homeContent.name}
     </h1>
 
-    <!-- Bio -->
+    <p class="text-text text-base leading-relaxed">Mechanical engineering at Texas A&M · Robotics, controls, and mechanical design</p>
+  </section>
+
+  <section id="projects" class="mt-8 scroll-mt-6" aria-labelledby="selected-work">
+    <h2 id="selected-work" class="mb-5 text-xl font-semibold text-text">Selected work</h2>
+    <ProjectGrid locale="en" />
+  </section>
+
+  <section class="mt-12" aria-labelledby="about-contact">
+    <h2 id="about-contact" class="mb-3 text-xl font-semibold text-text">About & contact</h2>
     {homeContent.bio.map(paragraph => (
       <p class="mb-4 text-text text-lg leading-relaxed" set:html={paragraph} />
     ))}
-  </section>
-
-  <!-- Social icons row -->
-  <div class="flex items-center gap-3 mt-0">
-    {socials.map((social) => (
-      <a
-        href={social.href}
-        target="_blank"
-        rel="noopener"
-        class="social-icon text-subtext0 hover:text-text transition-colors no-underline"
-        data-handle={social.handle}
-        aria-label={social.platform}
-      >
-        <svg
-          width="25"
-          height="25"
-          viewBox={social.viewBox}
-          fill="currentColor"
-          aria-hidden="true"
+    <div class="flex items-center gap-3 mt-0">
+      {socials.map((social) => (
+        <a
+          href={social.href}
+          target="_blank"
+          rel="noopener"
+          class="social-icon inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm text-subtext0 hover:text-text transition-colors no-underline"
+          data-handle={social.handle}
+          aria-label={social.platform}
         >
-          <path d={social.svgPath}></path>
-        </svg>
-      </a>
-    ))}
-  </div>
-
-  <section id="projects" class="mt-12" aria-label={homeContent.sections[0].title}>
-    <ProjectGrid locale="en" />
+          <svg
+            width="25"
+            height="25"
+            viewBox={social.viewBox}
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d={social.svgPath}></path>
+          </svg>
+        </a>
+      ))}
+    </div>
   </section>
 </Base>
 

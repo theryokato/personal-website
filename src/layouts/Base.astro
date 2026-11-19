@@ -22,12 +22,13 @@ const currentLocale = Astro.currentLocale || 'en';
 const fullTitle = title === "Ryo Kato" ? title : `${title} — Ryo Kato`;
 
 const navLabels: Record<string, Record<string, string>> = {
-  en: { home: "home", interests: "interests" },
-  ja: { home: "ホーム", interests: "興味" },
+  en: { home: "home", projects: "projects", interests: "interests" },
+  ja: { home: "ホーム", projects: "プロジェクト", interests: "興味" },
 };
 
 const nav = [
   { href: `/${currentLocale}/`, key: "home" },
+  { href: `/${currentLocale}/#projects`, key: "projects" },
   { href: `/${currentLocale}/interests`, key: "interests" },
 ].map(link => ({
   ...link,

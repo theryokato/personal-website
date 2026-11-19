@@ -1,4 +1,7 @@
 ---
+role: "制御サブチームメンバー"
+cardTitle: "BLNC · 自立バランス型ローバー"
+summary: "二輪ローバーの制御サブチームに参加しました。チームでは姿勢と位置を制御するカスケード型PID制御器を開発しました。"
 title: "BLNC"
 slug: "blnc"
 url: ""
@@ -14,6 +17,13 @@ import ProjectImage from '../../../components/ProjectImage.astro';
 import ProjectVideo from '../../../components/ProjectVideo.astro';
 import ProjectSlides from '../../../components/ProjectSlides.astro';
 
+<ProjectImage
+src="/assets/BLNC/blnc_pid.png"
+paper
+caption="カスケード型PID制御器のブロック線図"
+width={1086}
+height={477}
+/>
 
 ## 概要
 
@@ -40,13 +50,7 @@ V1 Roverは、制御システムの検証・試験を目的としたBLNCの二�
 
 開発した制御手法の一つとして、カスケード型PID制御器があります。外側のループでは、ローバーを目標位置へ移動させるために必要なピッチ角を決定します。内側のループでは、ローバーを目標ピッチ角まで回転させるために必要なモーター速度を決定します。6つのゲインはすべて、Ziegler–Nichols法を用いて手動でチューニングしました。
 
-<ProjectImage
-src="/assets/BLNC/blnc_pid.png"
-paper
-caption="カスケード型PID制御器のブロック線図"
-width={1086}
-height={477}
-/>
+## 参考資料
 
 <ProjectImage
 src="/assets/BLNC/BLNC_F25_Poster.svg"

@@ -1,4 +1,7 @@
 ---
+role: "Controls subteam member"
+cardTitle: "BLNC · Self-balancing rover"
+summary: "I worked on the controls subteam for a two-wheeled testbed. The team developed a cascade PID controller for balancing and positioning."
 title: "BLNC"
 slug: "blnc"
 url: ""
@@ -14,6 +17,13 @@ import ProjectImage from '../../../components/ProjectImage.astro';
 import ProjectVideo from '../../../components/ProjectVideo.astro';
 import ProjectSlides from '../../../components/ProjectSlides.astro';
 
+<ProjectImage
+  src="/assets/BLNC/blnc_pid.png"
+  paper
+  caption="Cascade PID Controller Block Diagram"
+  width={1086}
+  height={477}
+/>
 
 ## Overview
 BLNC is focusing on developing rovers that can adjust the location of their center of gravity to maintain stability in extreme terrains. These rovers follow a two-wheeled inverted pendulum architecture.
@@ -32,17 +42,10 @@ Design Specifications:
 - Batteries and motors positioned high to raise the CoM as much as possible
 - Material: PLA-CF (main body), PETG (wheel hubs)
 
-
 ### Controls
 A cascade Proportional-Integral-Derivative (PID) controller is one of the control solutions we have developed. The outer loop of the controller determines the necessary pitch angle to move the rover to the desired position. The inner loop of the controller determines the necessary motor velocity to rotate the rover to the desired pitch angle. All 6 gains were manually tuned using the Ziegler–Nichols tuning method.
 
-<ProjectImage
-  src="/assets/BLNC/blnc_pid.png"
-  paper
-  caption="Cascade PID Controller Block Diagram"
-  width={1086}
-  height={477}
-/>
+## Supporting materials
 
 <ProjectImage
   src="/assets/BLNC/BLNC_F25_Poster.svg"
