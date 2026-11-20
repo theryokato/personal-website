@@ -150,13 +150,38 @@ const nav = [
       window.addEventListener('pagehide', finishThemeTransition);
       window.addEventListener('pageshow', finishThemeTransition);
       updateThemeLabel(getTheme());
+      // Reveal the new theme in a circle growing from the toggle.
+      function radiateTheme(theme: string) {
+        const bounds = toggle!.getBoundingClientRect();
+        const x = bounds.left + bounds.width / 2;
+        const y = bounds.top + bounds.height / 2;
+        const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+        html.classList.add('theme-radiating');
+        const transition = document.startViewTransition(() => applyTheme(theme));
+        transition.ready.then(() => {
+          html.animate(
+            { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+            { duration: 450, easing: 'cubic-bezier(0.2, 0, 0, 1)', pseudoElement: '::view-transition-new(root)' },
+          );
+        }, () => {});
+        transition.finished.finally(() => html.classList.remove('theme-radiating'));
+      }
+
       toggle?.addEventListener("click", () => {
+        const theme = getTheme() === "nord-light" ? "nord-dark" : "nord-light";
         clearTimeout(themeTimer);
-        if (!reducedMotion.matches) {
-          html.classList.add('theme-switching');
-          themeTimer = setTimeout(finishThemeTransition, 280);
+        if (reducedMotion.matches) {
+          applyTheme(theme);
+          return;
         }
-        applyTheme(getTheme() === "nord-light" ? "nord-dark" : "nord-light");
+        if ('startViewTransition' in document) {
+          radiateTheme(theme);
+          return;
+        }
+        // Without view transitions, blend the palette instead.
+        html.classList.add('theme-switching');
+        themeTimer = setTimeout(finishThemeTransition, 280);
+        applyTheme(theme);
       });
     </script>
   </body>

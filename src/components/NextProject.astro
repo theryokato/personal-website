@@ -1,0 +1,54 @@
+---
+import { preview } from "../utils/previews";
+import { formatDate } from "../utils/dates";
+import { nextProject } from "../utils/projects";
+
+interface Props {
+  locale: 'en' | 'ja';
+  slug: string;
+}
+
+const { locale, slug } = Astro.props;
+const next = nextProject(locale, slug);
+const label = locale === 'ja' ? '次のプロジェクト' : 'Next project';
+const dateLocale = locale === 'ja' ? 'ja-JP' : 'en-US';
+---
+
+{next && (
+  <nav class="mt-16 pt-4 border-t border-surface0" aria-label={label}>
+    <p class="mb-3 font-mono text-xs tracking-widest lowercase text-subtext0">{label}</p>
+    <a
+      href={next.url || `/${locale}/projects/${next.slug}`}
+      target={next.url ? "_blank" : undefined}
+      rel={next.url ? "noopener noreferrer" : undefined}
+      class="group no-underline flex items-center gap-4"
+    >
+      <div
+        class="shrink-0 w-28 overflow-hidden rounded-sm bg-mantle aspect-4/3"
+        data-project-media={next.url ? undefined : next.slug}
+      >
+        {next.image && (
+          <img
+            src={preview(next.image)}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            class="project-preview w-full h-full object-cover"
+          />
+        )}
+      </div>
+      <div class="flex flex-col gap-0.5 min-w-0">
+        <span class="text-base font-medium text-text leading-snug group-hover:underline underline-offset-[3px] decoration-1">
+          {next.title}{next.url && <span aria-hidden="true"> ↗</span>}
+        </span>
+        {next.description && <span class="text-sm text-subtext0 leading-snug">{next.description}</span>}
+        <span class="font-mono text-xs leading-[1.5] text-subtext0">
+          {formatDate(next.startDate, dateLocale)}
+          {" — "}
+          {formatDate(next.endDate, dateLocale)}
+        </span>
+      </div>
+      <span aria-hidden="true" class="ml-auto shrink-0 font-mono text-subtext0 transition-transform group-hover:translate-x-0.5">→</span>
+    </a>
+  </nav>
+)}

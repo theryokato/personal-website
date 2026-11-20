@@ -1,5 +1,5 @@
 ---
-import { preview, previewSet } from "../utils/previews";
+import { preview, previewSet, zoom } from "../utils/previews";
 interface Props {
   src: string;
   alt?: string;
@@ -11,15 +11,16 @@ interface Props {
 
 const { src, alt, caption, width, height, paper = false } = Astro.props;
 const finalAlt = alt ?? caption;
+const full = zoom(src, width, height);
 ---
 
 <figure class="my-8">
   <a
-    href={src}
+    href={full.src}
     data-project-image
     data-project-paper={paper ? "" : undefined}
-    data-pswp-width={width}
-    data-pswp-height={height}
+    data-pswp-width={full.width}
+    data-pswp-height={full.height}
     data-pswp-caption={caption}
     aria-label={`Open full-size image: ${finalAlt}`}
     class="block cursor-zoom-in focus:outline-none focus:ring-2 focus:ring-blue"

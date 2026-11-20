@@ -37,7 +37,9 @@
         // Start a new run at nested blocks so masks never overlap independent content.
         let group = groups.at(-1);
         if (!group || group.block !== block) {
-          group = { block, total: 0, entries: [], range };
+          // Lower blocks start later, so typing flows down from the language picker.
+          const delay = Math.round(Math.max(0, bounds.top) / innerHeight * 150);
+          group = { block, total: 0, entries: [], range, delay };
           groups.push(group);
           highlight.add(range);
         } else {
@@ -52,7 +54,7 @@
       CSS.highlights.set('language-typing', highlight);
       const started = performance.now();
       const tick = now => {
-        const progress = Math.min((now - started) / 900, 1);
+        const progress = Math.min((now - started) / 700, 1);
         if (progress >= 1) {
           finishTyping();
           return;
@@ -66,8 +68,8 @@
             continue;
           }
           // Keep short names and navigation deliberate without slowing long paragraphs.
-          const duration = Math.min(900, Math.max(650, group.total * 25));
-          let count = Math.floor(group.total * Math.min((now - started) / duration, 1));
+          const duration = Math.min(500, Math.max(300, group.total * 15));
+          let count = Math.floor(group.total * Math.min(Math.max(now - started - group.delay, 0) / duration, 1));
           if (count === group.revealed) continue;
           group.revealed = count;
           if (count === group.total) {
@@ -93,6 +95,18 @@
       typingFrame = requestAnimationFrame(tick);
     }
 
+    // Slide the picker's highlight (and swap label colors) from the previous language.
+    function slideIndicator() {
+      const indicator = document.querySelector('.language-indicator');
+      const links = [...document.querySelectorAll('.language-picker a')];
+      if (!indicator || links.length !== 2) return;
+      const timing = { duration: 280, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' };
+      const ja = document.documentElement.lang === 'ja';
+      indicator.animate([{ translate: ja ? '0' : '100%' }, { translate: ja ? '100%' : '0' }], timing);
+      const colors = links.map(link => getComputedStyle(link).color);
+      links.forEach((link, index) => link.animate([{ color: colors[1 - index] }, { color: colors[index] }], timing));
+    }
+
     function localizedPath(value) {
       if (typeof value !== 'string') return null;
       try {
@@ -105,6 +119,19 @@
       }
     }
 
+    // A project's card and its page banner share one snapshot, so the image morphs between them.
+    function projectMedia(from, to, reveal) {
+      const slug = (to.match(/^\/projects\/([^/]+)$/) ?? from.match(/^\/projects\/([^/]+)$/))?.[1];
+      const element = slug && document.querySelector(`[data-project-media="${CSS.escape(slug)}"]`);
+      if (!element) return null;
+      if (!reveal) {
+        // Morphing from offscreen would fly in from nowhere.
+        const bounds = element.getBoundingClientRect();
+        if (bounds.bottom <= 0 || bounds.top >= innerHeight) return null;
+      }
+      return element;
+    }
+
     function prepare(transition, from, to, reveal = false) {
       const previous = localizedPath(from);
       const next = localizedPath(to);
@@ -112,6 +139,7 @@
         transition?.skipTransition();
         return;
       }
+      if (reveal && previous.locale !== next.locale) slideIndicator();
       if (previous.locale !== next.locale && previous.path === next.path && canType) {
         transition?.skipTransition();
         if (reveal) revealText();
@@ -123,7 +151,10 @@
       if (previous.locale !== next.locale && previous.path === next.path) {
         document.documentElement.setAttribute('data-language-transition', '');
       }
+      const media = previous.path !== next.path ? projectMedia(previous.path, next.path, reveal) : null;
+      if (media) media.style.viewTransitionName = 'project-media';
       const clear = () => {
+        media?.style.removeProperty('view-transition-name');
         if (activeTransition !== transition) return;
         document.documentElement.removeAttribute('data-page-transition');
         document.documentElement.removeAttribute('data-language-transition');

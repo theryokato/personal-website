@@ -241,10 +241,7 @@ body {
 .project-image-paper { background-color: var(--color-figure-paper); }
 
 
-/* ─── Reduced motion ────────────────────────────────────── */
-@media (prefers-reduced-motion: reduce) {
-  html, * { transition: none !important; }
-}
+/* ─── Motion ────────────────────────────────────────────── */
 /* Shared, gentle feedback; focus remains immediate. */
 :root { --motion-ease: cubic-bezier(0.4, 0, 0.2, 1); }
 /* Interpolate shared palette inputs once, rather than every descendant color. */
@@ -279,11 +276,17 @@ body {
   }
 }
 .theme-toggle { display: grid; }
-.theme-toggle svg { grid-area: 1 / 1; }
-#sun-icon { opacity: 0; }
+.theme-toggle svg {
+  grid-area: 1 / 1;
+  transition: opacity 240ms var(--motion-ease), transform 360ms var(--motion-ease);
+}
+/* The hidden icon waits rotated, so the swap turns like a dial. */
+#sun-icon { opacity: 0; transform: rotate(-90deg) scale(0.6); }
 #moon-icon { opacity: 1; }
-[data-theme="nord-dark"] #sun-icon { opacity: 1; }
-[data-theme="nord-dark"] #moon-icon { opacity: 0; }
+[data-theme="nord-dark"] #sun-icon { opacity: 1; transform: none; }
+[data-theme="nord-dark"] #moon-icon { opacity: 0; transform: rotate(90deg) scale(0.6); }
+/* Snapshot the page only while the theme radiates; navigation stays live. */
+html.theme-radiating { view-transition-name: root; }
 a, button { transition: color 200ms var(--motion-ease), background-color 200ms var(--motion-ease), border-color 200ms var(--motion-ease); }
 :focus-visible { outline: 2px solid var(--color-focus) !important; outline-offset: 3px; }
 button, .language-picker a {
@@ -303,6 +306,16 @@ a.underline, .prose a {
   a.underline:hover, .prose a:hover { text-underline-offset: 4px; }
   .group:hover .project-preview { transform: scale(1.012); }
 }
+/* Touch screens cannot hover to reveal slide controls. */
+@media (hover: none) { .slide-controls { opacity: 1; } }
+.project-slides-container:fullscreen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;
+  background-color: var(--color-media-overlay);
+}
+.project-slides-container:fullscreen .slide-stage { width: min(100vw, calc(100vh * 16 / 9)); }
 a[data-project-image] img { transition: filter 200ms var(--motion-ease); }
 @media (hover: hover) { a[data-project-image]:hover img { filter: brightness(0.97); } }
 @media (max-width: 600px) {
@@ -334,14 +347,36 @@ a[data-project-image] img { transition: filter 200ms var(--motion-ease); }
 html[data-page-transition] main { view-transition-name: language-content; }
 html[data-language-transition] .language-picker { view-transition-name: language-control; }
 ::view-transition-group(language-content), ::view-transition-group(language-control) { animation: none; }
+/* Stagger the fades so old and new text barely overlap. */
 ::view-transition-old(language-content), ::view-transition-old(language-control) {
   height: auto;
-  animation: locale-fade-out 220ms var(--motion-ease) both;
+  animation: locale-fade-out 100ms var(--motion-ease) both;
 }
 ::view-transition-new(language-content), ::view-transition-new(language-control) {
   height: auto;
-  animation: locale-fade-in 220ms var(--motion-ease) both;
+  animation: locale-fade-in 160ms var(--motion-ease) 80ms both;
 }
+::view-transition-group(project-media) {
+  overflow: clip;
+  border-radius: 2px;
+  animation-duration: 320ms;
+  animation-timing-function: var(--motion-ease);
+}
+/* Card (4:3) and banner (16:7) differ in shape; crop rather than stretch while morphing. */
+::view-transition-old(project-media), ::view-transition-new(project-media) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Without typing, a language switch blurs through: Latin and Japanese glyphs share no shapes to fade between. */
+html[data-language-transition]::view-transition-old(language-content) {
+  animation: locale-blur-out 140ms var(--motion-ease) both;
+}
+html[data-language-transition]::view-transition-new(language-content) {
+  animation: locale-blur-in 200ms var(--motion-ease) 60ms both;
+}
+@keyframes locale-blur-out { from { opacity: 1; filter: blur(0); } to { opacity: 0; filter: blur(4px); } }
+@keyframes locale-blur-in { from { opacity: 0; filter: blur(4px); } to { opacity: 1; filter: blur(0); } }
 @keyframes locale-fade-out { from { opacity: 1; } to { opacity: 0; } }
 @keyframes locale-fade-in { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) {

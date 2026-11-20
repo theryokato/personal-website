@@ -1,46 +1,26 @@
 ---
 import { preview, previewSet } from "../utils/previews";
 import { formatDate } from "../utils/dates";
+import { projectsFor } from "../utils/projects";
 
 interface Props {
   locale: 'en' | 'ja';
 }
 
-interface Project {
-  slug: string;
-  title: string;
-  image?: string;
-  startDate?: string;
-  endDate?: string;
-  url?: string;
-}
-
 const { locale } = Astro.props;
-const en = import.meta.glob("../content/projects/en/*.mdx", { eager: true });
-const ja = import.meta.glob("../content/projects/ja/*.mdx", { eager: true });
-const modules = (locale === 'ja' ? ja : en) as Record<string, { frontmatter: Project }>;
-// Lead with engineering work; keep the same editorial order in both languages.
-const projectOrder = new Map(
-  ['dron', 'blnc', 'red', 'herc', 'kb', 'website'].map((slug, index) => [slug, index])
-);
-const projects = Object.values(modules)
-  .map(module => module.frontmatter)
-  .sort((a, b) =>
-    (projectOrder.get(a.slug) ?? projectOrder.size) - (projectOrder.get(b.slug) ?? projectOrder.size)
-    || (b.startDate ?? "").localeCompare(a.startDate ?? "")
-  );
+const projects = projectsFor(locale);
 const dateLocale = locale === 'ja' ? 'ja-JP' : 'en-US';
 ---
 
 <div class="grid grid-cols-1 min-[601px]:grid-cols-2 gap-5">
-    {projects.map((p: any) => (
+    {projects.map(p => (
         <a
             href={p.url || `/${locale}/projects/${p.slug}`}
             target={p.url ? "_blank" : undefined}
             rel={p.url ? "noopener noreferrer" : undefined}
             class="group no-underline block"
         >
-            <div class="overflow-hidden rounded-sm bg-mantle aspect-4/3 mb-2">
+            <div class="overflow-hidden rounded-sm bg-mantle aspect-4/3 mb-2" data-project-media={p.url ? undefined : p.slug}>
                 {p.image ? (
                     <img
                         src={preview(p.image)} srcset={previewSet(p.image)} sizes="(max-width: 600px) calc(100vw - 2rem), (max-width: 45rem) calc(50vw - 2.125rem), 20.375rem" loading="lazy" decoding="async"

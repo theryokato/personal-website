@@ -3,28 +3,35 @@ interface Props {
   src: string;
   totalPages: number;
   caption: string;
+  /** First-slide image shown until PDF.js renders. */
+  poster?: string;
 }
 
-const { src, totalPages, caption } = Astro.props;
+const { src, totalPages, caption, poster } = Astro.props;
 ---
 
 <figure class="my-8">
   <div
-    class="project-slides-container relative group cursor-pointer overflow-hidden rounded-lg bg-surface"
+    class="project-slides-container relative group cursor-pointer overflow-hidden rounded-lg bg-surface touch-pan-y touch-pinch-zoom"
     role="group"
+    aria-roledescription="slide deck"
     aria-label={caption}
+    tabindex="0"
     data-src={src}
     data-total={totalPages}
   >
     <!-- Canvas for PDF rendering -->
-    <div class="relative w-full aspect-video bg-surface flex items-center justify-center">
+    <div class="slide-stage relative w-full aspect-video bg-surface flex items-center justify-center">
       <canvas
         class="project-slide-canvas w-full h-full object-contain"
       ></canvas>
 
       <!-- Loading Indicator -->
       <div class="slide-loader absolute inset-0 flex items-center justify-center bg-surface text-xs font-mono text-text">
-        <span role="status">Loading slide...</span>
+        {poster && (
+          <img src={poster} alt="" loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-contain" />
+        )}
+        <span role="status" class:list={["relative rounded bg-surface px-2 py-1", { "sr-only": poster }]}>Loading slide...</span>
       </div>
     </div>
 
@@ -37,9 +44,14 @@ const { src, totalPages, caption } = Astro.props;
     </div>
 
     <!-- Navigation Hints -->
-    <div class="absolute inset-0 z-20 flex items-center justify-between px-4 pointer-events-none opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200">
-      <button type="button" aria-label="Previous slide" class="prev-slide pointer-events-auto w-8 h-8 flex items-center justify-center rounded-full bg-media-overlay/90 text-media-text cursor-pointer hover:bg-media-overlay transition-colors">‹</button>
-      <button type="button" aria-label="Next slide" class="next-slide pointer-events-auto w-8 h-8 flex items-center justify-center rounded-full bg-media-overlay/90 text-media-text cursor-pointer hover:bg-media-overlay transition-colors">›</button>
+    <div class="slide-controls absolute inset-0 z-20 flex items-center justify-between px-1.5 sm:px-3 pointer-events-none opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 focus-within:opacity-100 transition-opacity duration-200">
+      <button type="button" aria-label="Previous slide" class="prev-slide pointer-events-auto w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-media-overlay/90 text-media-text text-lg cursor-pointer hover:bg-media-overlay transition-colors">‹</button>
+      <button type="button" aria-label="Next slide" class="next-slide pointer-events-auto w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-media-overlay/90 text-media-text text-lg cursor-pointer hover:bg-media-overlay transition-colors">›</button>
+      <button type="button" aria-label="Enter full screen" hidden class="fullscreen-slide pointer-events-auto absolute top-1.5 right-1.5 sm:top-3 sm:right-3 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-media-overlay/90 text-media-text cursor-pointer hover:bg-media-overlay transition-colors">
+        <svg aria-hidden="true" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
+        </svg>
+      </button>
     </div>
   </div>
   <figcaption class="mt-2 text-caption text-subtext0 font-mono text-center">
@@ -93,8 +105,11 @@ const { src, totalPages, caption } = Astro.props;
     return pdf;
   }
 
-  const pixelWidth = (container: HTMLElement) =>
-    Math.max(1, Math.ceil(container.clientWidth * (window.devicePixelRatio || 1)));
+  // Measure the slide stage, which is narrower than the container in full screen.
+  const pixelWidth = (container: HTMLElement) => {
+    const stage = container.querySelector<HTMLElement>('.slide-stage') ?? container;
+    return Math.max(1, Math.ceil(stage.clientWidth * (window.devicePixelRatio || 1)));
+  };
 
   async function renderPage(container: HTMLElement, pageNum: number) {
     const src = container.dataset.src;
@@ -120,7 +135,10 @@ const { src, totalPages, caption } = Astro.props;
       const link = document.createElement('a');
       link.href = src;
       link.textContent = 'Open PDF';
-      loader?.replaceChildren(link);
+      // Keep the cover image visible behind the fallback link.
+      const status = loader?.querySelector('[role="status"]');
+      status?.classList.remove('sr-only');
+      status?.replaceChildren(link);
       return 0;
     }
   }
@@ -170,18 +188,65 @@ const { src, totalPages, caption } = Astro.props;
         }, 120);
       }).observe(container);
 
+      const previous = () => void show(currentIndex === 1 ? totalPages : currentIndex - 1);
+      const next = () => void show((currentIndex % totalPages) + 1);
+
       container.querySelector('.prev-slide')?.addEventListener('click', event => {
         event.stopPropagation();
-        void show(currentIndex === 1 ? totalPages : currentIndex - 1);
+        previous();
       });
       container.querySelector('.next-slide')?.addEventListener('click', event => {
         event.stopPropagation();
-        void show((currentIndex % totalPages) + 1);
+        next();
       });
+
+      // Horizontal swipes page through touch devices; vertical scrolling stays native.
+      let swipeStart: { x: number; y: number } | undefined;
+      let swiped = false;
+      container.addEventListener('pointerdown', event => {
+        swiped = false;
+        swipeStart = event.pointerType === 'mouse' ? undefined : { x: event.clientX, y: event.clientY };
+      });
+      container.addEventListener('pointerup', event => {
+        if (!swipeStart) return;
+        const dx = event.clientX - swipeStart.x;
+        const dy = event.clientY - swipeStart.y;
+        swipeStart = undefined;
+        if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+        swiped = true;
+        if (dx < 0) next();
+        else previous();
+      });
+      container.addEventListener('pointercancel', () => { swipeStart = undefined; });
+
       container.addEventListener('click', event => {
-        if ((event.target as Element).closest('a')) return;
-        void show((currentIndex % totalPages) + 1);
+        if (swiped) {
+          swiped = false;
+          return;
+        }
+        if ((event.target as Element).closest('a, button')) return;
+        next();
       });
+
+      container.addEventListener('keydown', event => {
+        if (event.key === 'ArrowRight') next();
+        else if (event.key === 'ArrowLeft') previous();
+        else return;
+        event.preventDefault();
+      });
+
+      const fullscreen = container.querySelector<HTMLButtonElement>('.fullscreen-slide');
+      if (fullscreen && document.fullscreenEnabled) {
+        fullscreen.hidden = false;
+        fullscreen.addEventListener('click', event => {
+          event.stopPropagation();
+          if (document.fullscreenElement === container) void document.exitFullscreen();
+          else void container.requestFullscreen().then(() => container.focus());
+        });
+        document.addEventListener('fullscreenchange', () => {
+          fullscreen.setAttribute('aria-label', document.fullscreenElement === container ? 'Exit full screen' : 'Enter full screen');
+        });
+      }
     });
   }
 

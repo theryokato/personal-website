@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 .wrangler
 .vscode
+
+# browser automation logs
+.playwright-mcp/

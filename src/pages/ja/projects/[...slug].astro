@@ -2,6 +2,7 @@
 import { preview, previewSet } from "../../../utils/previews";
 import Base from "../../../layouts/Base.astro";
 import { formatDate } from "../../../utils/dates";
+import NextProject from "../../../components/NextProject.astro";
 
 export async function getStaticPaths() {
     const modules = import.meta.glob("../../../content/projects/ja/*.mdx", {
@@ -34,7 +35,7 @@ const Content = proj.Content;
         &larr; プロジェクト一覧へ
     </a>
     {proj.frontmatter.image && (
-        <div class="mb-8 rounded-sm overflow-hidden border border-surface0 aspect-16/7">
+        <div class="mb-8 rounded-sm overflow-hidden border border-surface0 aspect-16/7" data-project-media={proj.frontmatter.slug}>
             <img
                 src={preview(proj.frontmatter.image)} srcset={previewSet(proj.frontmatter.image)} sizes="(max-width: 600px) calc(100vw - 2rem), (max-width: 45rem) calc(100vw - 3rem), 42rem" decoding="async"
                 alt={proj.frontmatter.title}
@@ -60,4 +61,5 @@ const Content = proj.Content;
             <Content />
         </div>
     </article>
+    <NextProject locale="ja" slug={proj.frontmatter.slug} />
 </Base>

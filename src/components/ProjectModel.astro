@@ -16,7 +16,7 @@ interface Props {
 
 const { src, alt, caption, poster, annotations = [] } = Astro.props;
 const isJapanese = Astro.currentLocale === 'ja';
-const modelLinkLabel = isJapanese ? '3Dモデルを開く' : 'Open 3D model';
+const modelLinkLabel = isJapanese ? '3Dモデルをダウンロード (GLB)' : 'Download 3D model (GLB)';
 const loadingLabel = isJapanese ? '3Dモデルを読み込み中…' : 'Loading 3D model…';
 ---
 
@@ -32,9 +32,16 @@ const loadingLabel = isJapanese ? '3Dモデルを読み込み中…' : 'Loading 
     loading="lazy"
     reveal="auto"
     shadow-intensity="1"
+    environment-image="neutral"
+    auto-rotate
+    auto-rotate-delay="1500"
+    rotation-per-second="20deg"
+    ar
+    ar-modes="webxr scene-viewer quick-look"
   >
     {annotations.map((annotation) => (
-      <div
+      <button
+        type="button"
         slot={`hotspot-${annotation.name}`}
         class="hotspot"
         data-position={annotation.position}
@@ -42,11 +49,11 @@ const loadingLabel = isJapanese ? '3Dモデルを読み込み中…' : 'Loading 
         data-visibility-attribute="visible"
       >
         <span>{annotation.label}</span>
-      </div>
+      </button>
     ))}
   </model-viewer>
   <p class="download">
-    <a href={src} target="_blank" rel="noopener noreferrer">{modelLinkLabel}</a>
+    <a href={src} download>{modelLinkLabel}</a>
   </p>
   <figcaption>{caption}</figcaption>
 </figure>
@@ -60,6 +67,10 @@ const loadingLabel = isJapanese ? '3Dモデルを読み込み中…' : 'Loading 
       if (loaded) return;
       loaded = true;
       observer?.disconnect();
+      // Hold the model still for people who prefer reduced motion.
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        viewers.forEach((viewer) => viewer.removeAttribute('auto-rotate'));
+      }
       void import('@google/model-viewer');
     };
     const observer = new IntersectionObserver(
@@ -95,7 +106,7 @@ const loadingLabel = isJapanese ? '3Dモデルを読み込み中…' : 'Loading 
 
   model-viewer:not(:defined)::after {
     content: attr(data-loading-label);
-    font-family: monospace;
+    font-family: var(--font-mono);
     font-size: 0.75rem;
   }
 
@@ -121,7 +132,7 @@ const loadingLabel = isJapanese ? '3Dモデルを読み込み中…' : 'Loading 
     background: var(--color-surface);
     border: 1px solid var(--color-surface1);
     border-radius: 0.25rem;
-    font: 0.75rem/1.25 monospace;
+    font: 0.75rem/1.25 var(--font-mono);
   }
 
   .hotspot:not([data-visible]) {
