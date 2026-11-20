@@ -16,8 +16,8 @@ Store project media in `public/assets/<PROJECT>/`.
 `ProjectImage` requires full-image `width` and `height` props for PhotoSwipe zooming.
 
 After adding or changing media, run `npm run previews`. It writes responsive WebP previews,
-WebP zoom renders for SVG posters (which embed large rasters), and first-page covers for
-PDF slide decks (`ProjectSlides` `poster`). PDF covers need poppler's `pdftoppm`.
+WebP zoom renders for SVG posters (which embed large rasters), and per-slide images that
+`ProjectSlides` pages through (its PDF stays linked for download). Slides need poppler's `pdftoppm`.
 
 `ProjectModel` renders GLB or glTF files. Export native CAD files to GLB first.
 It accepts optional annotations with `name`, `label`, `position`, and `normal`.

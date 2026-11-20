@@ -13,7 +13,7 @@ const dateLocale = locale === 'ja' ? 'ja-JP' : 'en-US';
 ---
 
 <div class="grid grid-cols-1 min-[601px]:grid-cols-2 gap-5">
-    {projects.map(p => (
+    {projects.map((p, index) => (
         <a
             href={p.url || `/${locale}/projects/${p.slug}`}
             target={p.url ? "_blank" : undefined}
@@ -23,7 +23,8 @@ const dateLocale = locale === 'ja' ? 'ja-JP' : 'en-US';
             <div class="overflow-hidden rounded-sm bg-mantle aspect-4/3 mb-2" data-project-media={p.url ? undefined : p.slug}>
                 {p.image ? (
                     <img
-                        src={preview(p.image)} srcset={previewSet(p.image)} sizes="(max-width: 600px) calc(100vw - 2rem), (max-width: 45rem) calc(50vw - 2.125rem), 20.375rem" loading="lazy" decoding="async"
+                        src={preview(p.image)} srcset={previewSet(p.image)} sizes="(max-width: 600px) calc(100vw - 2rem), (max-width: 45rem) calc(50vw - 2.125rem), 20.375rem"
+                        loading={index < 2 ? "eager" : "lazy"} fetchpriority={index === 0 ? "high" : undefined} decoding="async"
                         alt={p.title}
                         class="project-preview w-full h-full object-cover"
                     />

@@ -234,7 +234,7 @@ body {
 }
 
 /* Component figures own their spacing; ordinary Markdown images keep theirs. */
-.prose a[data-project-image] > img { margin: 0; }
+.prose a[data-project-image] > img, .prose .project-slide-image { margin: 0; }
 
 .prose strong { color: var(--color-text); font-weight: 600; }
 .prose .project-contribution { color: var(--color-highlight); }

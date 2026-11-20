@@ -37,7 +37,7 @@ const Content = proj.Content;
     {proj.frontmatter.image && (
         <div class="mb-8 rounded-sm overflow-hidden border border-surface0 aspect-16/7" data-project-media={proj.frontmatter.slug}>
             <img
-                src={preview(proj.frontmatter.image)} srcset={previewSet(proj.frontmatter.image)} sizes="(max-width: 600px) calc(100vw - 2rem), (max-width: 45rem) calc(100vw - 3rem), 42rem" decoding="async"
+                src={preview(proj.frontmatter.image)} srcset={previewSet(proj.frontmatter.image)} sizes="(max-width: 600px) calc(100vw - 2rem), (max-width: 45rem) calc(100vw - 3rem), 42rem" fetchpriority="high" decoding="async"
                 alt={proj.frontmatter.title}
                 class="w-full h-full object-cover"
             />

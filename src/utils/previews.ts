@@ -8,3 +8,7 @@ export const zoom = (src: string, width: number, height: number) =>
   src.endsWith('.svg')
     ? { src: `/assets/previews/${src.split('/').pop()}.zoom.webp`, width: zoomWidth, height: Math.round(height * zoomWidth / width) }
     : { src, width, height };
+
+// `npm run previews` exports each PDF page to /assets/slides/<file name>/<page>.webp.
+export const slides = (pdf: string) =>
+  `/assets/slides/${pdf.split('/').pop()!.replace(/\.pdf$/, '')}/`;

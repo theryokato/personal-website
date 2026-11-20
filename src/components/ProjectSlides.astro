@@ -1,38 +1,44 @@
 ---
+import { slides } from "../utils/previews";
+
 interface Props {
+  /** The PDF; `npm run previews` exports its pages to per-slide images. */
   src: string;
   totalPages: number;
   caption: string;
-  /** First-slide image shown until PDF.js renders. */
-  poster?: string;
 }
 
-const { src, totalPages, caption, poster } = Astro.props;
+const { src, totalPages, caption } = Astro.props;
+const ja = Astro.currentLocale === 'ja';
+const labels = ja
+  ? { deck: 'スライド', previous: '前のスライド', next: '次のスライド', enter: '全画面表示', exit: '全画面表示を終了', slide: 'スライド {n} / {total}', pdf: 'PDFを開く' }
+  : { deck: 'slide deck', previous: 'Previous slide', next: 'Next slide', enter: 'Enter full screen', exit: 'Exit full screen', slide: 'Slide {n} of {total}', pdf: 'Open PDF' };
+const slideAlt = (n: number) => `${caption}: ${labels.slide.replace('{n}', `${n}`).replace('{total}', `${totalPages}`)}`;
 ---
 
 <figure class="my-8">
   <div
     class="project-slides-container relative group cursor-pointer overflow-hidden rounded-lg bg-surface touch-pan-y touch-pinch-zoom"
     role="group"
-    aria-roledescription="slide deck"
+    aria-roledescription={labels.deck}
     aria-label={caption}
     tabindex="0"
-    data-src={src}
+    data-slides={slides(src)}
     data-total={totalPages}
+    data-alt={`${caption}: ${labels.slide}`}
+    data-enter-label={labels.enter}
+    data-exit-label={labels.exit}
   >
-    <!-- Canvas for PDF rendering -->
-    <div class="slide-stage relative w-full aspect-video bg-surface flex items-center justify-center">
-      <canvas
-        class="project-slide-canvas w-full h-full object-contain"
-      ></canvas>
-
-      <!-- Loading Indicator -->
-      <div class="slide-loader absolute inset-0 flex items-center justify-center bg-surface text-xs font-mono text-text">
-        {poster && (
-          <img src={poster} alt="" loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-contain" />
-        )}
-        <span role="status" class:list={["relative rounded bg-surface px-2 py-1", { "sr-only": poster }]}>Loading slide...</span>
-      </div>
+    <div class="slide-stage relative w-full aspect-video bg-surface">
+      <img
+        src={`${slides(src)}1.webp`}
+        alt={slideAlt(1)}
+        width="1600"
+        height="900"
+        loading="lazy"
+        decoding="async"
+        class="project-slide-image absolute inset-0 w-full h-full object-contain"
+      />
     </div>
 
     <!-- Counter -->
@@ -45,9 +51,9 @@ const { src, totalPages, caption, poster } = Astro.props;
 
     <!-- Navigation Hints -->
     <div class="slide-controls absolute inset-0 z-20 flex items-center justify-between px-1.5 sm:px-3 pointer-events-none opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 focus-within:opacity-100 transition-opacity duration-200">
-      <button type="button" aria-label="Previous slide" class="prev-slide pointer-events-auto w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-media-overlay/90 text-media-text text-lg cursor-pointer hover:bg-media-overlay transition-colors">‹</button>
-      <button type="button" aria-label="Next slide" class="next-slide pointer-events-auto w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-media-overlay/90 text-media-text text-lg cursor-pointer hover:bg-media-overlay transition-colors">›</button>
-      <button type="button" aria-label="Enter full screen" hidden class="fullscreen-slide pointer-events-auto absolute top-1.5 right-1.5 sm:top-3 sm:right-3 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-media-overlay/90 text-media-text cursor-pointer hover:bg-media-overlay transition-colors">
+      <button type="button" aria-label={labels.previous} class="prev-slide pointer-events-auto w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-media-overlay/90 text-media-text text-lg cursor-pointer hover:bg-media-overlay transition-colors">‹</button>
+      <button type="button" aria-label={labels.next} class="next-slide pointer-events-auto w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-media-overlay/90 text-media-text text-lg cursor-pointer hover:bg-media-overlay transition-colors">›</button>
+      <button type="button" aria-label={labels.enter} hidden class="fullscreen-slide pointer-events-auto absolute top-1.5 right-1.5 sm:top-3 sm:right-3 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-media-overlay/90 text-media-text cursor-pointer hover:bg-media-overlay transition-colors">
         <svg aria-hidden="true" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
         </svg>
@@ -55,141 +61,57 @@ const { src, totalPages, caption, poster } = Astro.props;
     </div>
   </div>
   <figcaption class="mt-2 text-caption text-subtext0 font-mono text-center">
-    {caption}
+    {caption} · <a href={src} target="_blank" rel="noopener" class="underline underline-offset-[3px] decoration-1 hover:text-text">{labels.pdf}</a>
   </figcaption>
 </figure>
 
 <script>
-  const pdfCache = new Map<string, Promise<any>>();
   const initialized = new WeakSet<Element>();
-  let library: Promise<void> | undefined;
-  let worker: any;
-
-  function loadLibrary() {
-    return library ??= new Promise<void>((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src = '/vendor/pdfjs/pdf.min.js';
-      script.onload = () => resolve();
-      script.onerror = () => {
-        script.remove();
-        library = undefined;
-        reject(new Error('Unable to load PDF viewer'));
-      };
-      document.head.append(script);
-    });
-  }
-
-  async function documentFor(src: string) {
-    await loadLibrary();
-    const lib = (window as any).pdfjsLib;
-    lib.GlobalWorkerOptions.workerSrc = '/vendor/pdfjs/pdf.worker.min.js';
-    // Every presentation on this page shares the same worker and initialization.
-    const currentWorker = worker ??= new lib.PDFWorker();
-    try {
-      await currentWorker.promise;
-    } catch (error) {
-      if (worker === currentWorker) {
-        worker = undefined;
-        // PDF.js also caches failed fake-worker initialization; reload only on failure.
-        library = undefined;
-        currentWorker.destroy();
-      }
-      throw error;
-    }
-    let pdf = pdfCache.get(src);
-    if (!pdf) {
-      pdf = lib.getDocument({ url: src, worker: currentWorker, isEvalSupported: false }).promise;
-      pdfCache.set(src, pdf!);
-      pdf!.catch(() => pdfCache.delete(src));
-    }
-    return pdf;
-  }
-
-  // Measure the slide stage, which is narrower than the container in full screen.
-  const pixelWidth = (container: HTMLElement) => {
-    const stage = container.querySelector<HTMLElement>('.slide-stage') ?? container;
-    return Math.max(1, Math.ceil(stage.clientWidth * (window.devicePixelRatio || 1)));
-  };
-
-  async function renderPage(container: HTMLElement, pageNum: number) {
-    const src = container.dataset.src;
-    const canvas = container.querySelector('canvas');
-    const loader = container.querySelector('.slide-loader');
-    const counter = container.querySelector('.project-slide-counter');
-    if (!src || !canvas || !counter) return 0;
-    loader?.classList.remove('hidden');
-    try {
-      const pdf = await documentFor(src);
-      const page = await pdf.getPage(pageNum);
-      const viewport = page.getViewport({ scale: pixelWidth(container) / page.getViewport({ scale: 1 }).width });
-      const context = canvas.getContext('2d');
-      if (!context) throw new Error('Unable to create slide canvas');
-      canvas.width = Math.ceil(viewport.width);
-      canvas.height = Math.ceil(viewport.height);
-      await page.render({ canvasContext: context, viewport }).promise;
-      counter.textContent = `${pageNum} / ${pdf.numPages}`;
-      loader?.classList.add('hidden');
-      return canvas.width;
-    } catch (error) {
-      console.error('Error rendering PDF page:', error);
-      const link = document.createElement('a');
-      link.href = src;
-      link.textContent = 'Open PDF';
-      // Keep the cover image visible behind the fallback link.
-      const status = loader?.querySelector('[role="status"]');
-      status?.classList.remove('sr-only');
-      status?.replaceChildren(link);
-      return 0;
-    }
-  }
 
   function initSlides() {
-    const observer = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
-      for (const entry of entries) if (entry.isIntersecting) {
-        observer?.unobserve(entry.target);
-        entry.target.dispatchEvent(new Event('slides:near'));
-      }
-    }, { rootMargin: '300px 0px' }) : undefined;
-
     document.querySelectorAll<HTMLElement>('.project-slides-container').forEach(container => {
       if (initialized.has(container)) return;
       initialized.add(container);
+      const image = container.querySelector<HTMLImageElement>('.project-slide-image');
+      const counter = container.querySelector('.project-slide-counter');
+      if (!image || !counter) return;
+      const base = container.dataset.slides ?? '';
       const totalPages = parseInt(container.dataset.total || '1');
+      const altTemplate = container.dataset.alt ?? '';
+      const url = (index: number) => `${base}${index}.webp`;
+      const wrap = (index: number) => ((index - 1 + totalPages) % totalPages) + 1;
       let currentIndex = 1;
-      let started = false;
-      let busy = false;
-      let renderedWidth = 0;
-      let resizeTimer: ReturnType<typeof setTimeout>;
-      let pendingResize = false;
 
-      async function show(index: number) {
-        if (busy) return;
-        started = true;
-        busy = true;
-        currentIndex = index;
-        renderedWidth = await renderPage(container, currentIndex);
-        busy = false;
-        if (pendingResize) {
-          pendingResize = false;
-          if (renderedWidth && pixelWidth(container) !== renderedWidth) void show(currentIndex);
-        }
+      // Warm the neighbours so the next click shows its slide immediately.
+      const preloaded = new Set<number>();
+      const preload = (index: number) => {
+        if (preloaded.has(index)) return;
+        preloaded.add(index);
+        new Image().src = url(index);
+      };
+
+      function show(index: number) {
+        currentIndex = wrap(index);
+        // The current slide stays painted until the new image has loaded.
+        image!.src = url(currentIndex);
+        image!.alt = altTemplate.replace('{n}', `${currentIndex}`).replace('{total}', `${totalPages}`);
+        counter!.textContent = `${currentIndex} / ${totalPages}`;
+        preload(wrap(currentIndex + 1));
+        preload(wrap(currentIndex - 1));
       }
 
-      container.addEventListener('slides:near', () => { if (!started) void show(1); }, { once: true });
-      if (observer) observer.observe(container);
-      else void show(1);
+      const previous = () => show(currentIndex - 1);
+      const next = () => show(currentIndex + 1);
 
-      if ('ResizeObserver' in window) new ResizeObserver(() => {
-        if (!started || pixelWidth(container) === renderedWidth) return;
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-          if (busy) pendingResize = true;
-          else void show(currentIndex);
-        }, 120);
-      }).observe(container);
-
-      const previous = () => void show(currentIndex === 1 ? totalPages : currentIndex - 1);
-      const next = () => void show((currentIndex % totalPages) + 1);
+      // Only fetch slide 2 once the deck is close to view, never on page load.
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(entries => {
+          if (!entries.some(entry => entry.isIntersecting)) return;
+          observer.disconnect();
+          preload(2);
+        }, { rootMargin: '200px 0px' });
+        observer.observe(container);
+      }
 
       container.querySelector('.prev-slide')?.addEventListener('click', event => {
         event.stopPropagation();
@@ -244,7 +166,8 @@ const { src, totalPages, caption, poster } = Astro.props;
           else void container.requestFullscreen().then(() => container.focus());
         });
         document.addEventListener('fullscreenchange', () => {
-          fullscreen.setAttribute('aria-label', document.fullscreenElement === container ? 'Exit full screen' : 'Enter full screen');
+          fullscreen.setAttribute('aria-label', (document.fullscreenElement === container
+            ? container.dataset.exitLabel : container.dataset.enterLabel) ?? '');
         });
       }
     });
